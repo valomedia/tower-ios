@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
-		E9E970B369B01B48B8324684 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9746165952B29C13CD5B8 /* ContentView.swift */; };
 		E9E975E90CDBECC6A22C2BE3 /* Tower_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */; };
 		E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */; };
 		E9E979589AE0CB1D1ECD8E98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E976112608FD8C951A230A /* Assets.xcassets */; };
+		E9E97AD55211643704B83C6C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */; };
 		E9E97E935578B91E74C5F7B9 /* Tower_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */; };
 		E9E97F39E2ED8B908232E0A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -38,8 +38,8 @@
 		E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITests.swift; sourceTree = "<group>"; };
 		E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSTests.swift; sourceTree = "<group>"; };
 		E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		E9E9746165952B29C13CD5B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9E976112608FD8C951A230A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9E97A368C0877C4B4E7B387 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSApp.swift; sourceTree = "<group>"; };
 		E9E97B2EB631D23B7381BB19 /* Tower_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tower_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,13 +80,21 @@
 			path = Tower_iOSTests;
 			sourceTree = "<group>";
 		};
+		E9E97433B81F994F7E441AE3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E9E975ED4B2377D212EEC753 /* Tower_iOS */ = {
 			isa = PBXGroup;
 			children = (
 				E9E976112608FD8C951A230A /* Assets.xcassets */,
 				E9E97626E2D685C8268AAD5C /* Preview Content */,
 				E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */,
-				E9E9746165952B29C13CD5B8 /* ContentView.swift */,
+				E9E97433B81F994F7E441AE3 /* Views */,
 			);
 			path = Tower_iOS;
 			sourceTree = "<group>";
@@ -266,7 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
-				E9E970B369B01B48B8324684 /* ContentView.swift in Sources */,
+				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

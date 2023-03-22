@@ -91,6 +91,13 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		E9E975997A8FE85D76C63200 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		E9E975ED4B2377D212EEC753 /* Tower_iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +105,7 @@
 				E9E97626E2D685C8268AAD5C /* Preview Content */,
 				E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */,
 				E9E97433B81F994F7E441AE3 /* Views */,
+				E9E975997A8FE85D76C63200 /* Models */,
 			);
 			path = Tower_iOS;
 			sourceTree = "<group>";

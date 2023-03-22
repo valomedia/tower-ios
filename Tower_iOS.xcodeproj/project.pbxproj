@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
+		E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */; };
 		E9E975E90CDBECC6A22C2BE3 /* Tower_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */; };
 		E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */; };
 		E9E978336D3894D97EF20AF5 /* TowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97ED01CF942BE20C639C8 /* TowerView.swift */; };
@@ -46,6 +47,7 @@
 		E9E97B2EB631D23B7381BB19 /* Tower_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tower_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E97E38F4729EC488328071 /* Tower_iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E97ED01CF942BE20C639C8 /* TowerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerView.swift; sourceTree = "<group>"; };
+		E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorWrapper.swift; sourceTree = "<group>"; };
 		E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +96,7 @@
 		E9E975997A8FE85D76C63200 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
 				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,
 				E9E978336D3894D97EF20AF5 /* TowerView.swift in Sources */,
+				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,7 +18,7 @@ import SwiftUI
 /// For example the functionality the user is looking for may not be implemented yet, there was an error, or some action
 /// is required from the user first (such as creating the content to be displayed).
 ///
-struct NoContentView {
+struct NoContentView: View {
 
     // MARK: - Life cycle methods
 

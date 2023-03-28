@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
+		E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9700F363770A1847466DE /* TowerEnvironment.swift */; };
 		E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */; };
 		E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */; };
 		E9E975E90CDBECC6A22C2BE3 /* Tower_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E970A06C0834C19E99DE33 /* Tower_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITests.swift; sourceTree = "<group>"; };
 		E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSTests.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 		E9E973C71B69A29E23AB9B0D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
+				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

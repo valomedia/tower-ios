@@ -129,6 +129,7 @@
 				E9E97433B81F994F7E441AE3 /* Views */,
 				E9E975997A8FE85D76C63200 /* Models */,
 				E9E973C71B69A29E23AB9B0D /* Controllers */,
+				E9E977DCDBBAEFA016EA4DD1 /* Extensions */,
 			);
 			path = Tower_iOS;
 			sourceTree = "<group>";
@@ -160,6 +161,13 @@
 				E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E9E977DCDBBAEFA016EA4DD1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		E9E97E86ECD27CC8CE71A6CF /* Tower_iOSUITests */ = {

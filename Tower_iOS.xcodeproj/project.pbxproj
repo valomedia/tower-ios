@@ -15,7 +15,6 @@
 		E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */; };
 		E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D9BDC1AF314FB168996 /* ErrorView.swift */; };
 		E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */; };
-		E9E978336D3894D97EF20AF5 /* TowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97ED01CF942BE20C639C8 /* TowerView.swift */; };
 		E9E979589AE0CB1D1ECD8E98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E976112608FD8C951A230A /* Assets.xcassets */; };
 		E9E97AD55211643704B83C6C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */; };
 		E9E97E935578B91E74C5F7B9 /* Tower_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */; };
@@ -56,7 +55,6 @@
 		E9E97D9BDC1AF314FB168996 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		E9E97E38F4729EC488328071 /* Tower_iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoContentView.swift; sourceTree = "<group>"; };
-		E9E97ED01CF942BE20C639C8 /* TowerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerView.swift; sourceTree = "<group>"; };
 		E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorWrapper.swift; sourceTree = "<group>"; };
 		E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,7 +104,6 @@
 			isa = PBXGroup;
 			children = (
 				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
-				E9E97ED01CF942BE20C639C8 /* TowerView.swift */,
 				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */,
 				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
@@ -322,7 +319,6 @@
 			files = (
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
 				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,
-				E9E978336D3894D97EF20AF5 /* TowerView.swift in Sources */,
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,

@@ -32,7 +32,7 @@ struct NoContentView: View {
     ///
     init(
             image: Image? = nil,
-            title: String = "There is nothing here",
+            title: String = "Hier gibt es nichts zu sehen",
             headline: String,
             caption: String) {
         self.image = image

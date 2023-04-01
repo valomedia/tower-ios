@@ -62,7 +62,7 @@ class ErrorView_Previews: PreviewProvider {
     /// The Error and guidance to display in the preview.
     ///
     static var wrapper: ErrorWrapper {
-        ErrorWrapper(error: SampleError.errorRequired, guidance: "You can safely ignore this error.")
+        ErrorWrapper(error: SampleError.errorRequired, guidance: "Sie können diesen Fehler gefahrlos ignorieren.")
     }
 
     static var previews: some View {

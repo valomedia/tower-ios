@@ -252,11 +252,10 @@
 			};
 			buildConfigurationList = E9E970F6DA87A4BAAFC4B611 /* Build configuration list for PBXProject "Tower_iOS" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = de;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
-				en,
+				de
 			);
 			mainGroup = E9E9760709A79B2745E1F42B;
 			productRefGroup = E9E97619175184055759984A /* Products */;

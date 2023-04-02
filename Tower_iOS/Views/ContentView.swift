@@ -19,9 +19,16 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hallo, Welt!")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.accentColor)
+                    .padding()
+            Text("Willkommen bei Tower!")
+                    .font(.largeTitle)
+            Button {} label: {
+                Label("Hilfe erhalten", systemImage: "phone.fill")
+            }
+                    .buttonStyle(.borderedProminent)
         }
         .padding()
     }

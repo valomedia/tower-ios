@@ -30,7 +30,10 @@ struct ContentView: View {
             }
                     .buttonStyle(.borderedProminent)
         }
-        .padding()
+                .padding()
+                .sheet(item: $env.errorWrapper) { errorWrapper in
+                    ErrorView(errorWrapper: errorWrapper)
+                }
     }
 
     @StateObject private var env = TowerEnvironment()

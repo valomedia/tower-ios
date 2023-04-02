@@ -33,6 +33,8 @@ struct ContentView: View {
         .padding()
     }
 
+    @StateObject private var env = TowerEnvironment()
+
 }
 
 

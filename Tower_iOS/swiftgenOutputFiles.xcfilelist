@@ -12,4 +12,5 @@
 # This is a list of files that swiftgen generates.
 #
 
-$(SRCROOT)/Chronos/Models/Assets+Generated.swift
+$(SRCROOT)/Tower_iOS/Models/Assets+Generated.swift
+$(SRCROOT)/Tower_iOS/Models/Settings+Generated.swift

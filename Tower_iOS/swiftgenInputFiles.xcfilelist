@@ -22,3 +22,5 @@ $(SRCROOT)/Tower_iOS/Templates/Strings.stencil
 $(SRCROOT)/Tower_iOS/Assets.xcassets/Contents.json
 $(SRCROOT)/Tower_iOS/Assets.xcassets/AppIcon.appiconset/Contents.json
 $(SRCROOT)/Tower_iOS/Preview Content/Preview Assets.xcassets/Contents.json
+
+$(SRCROOT)/Tower_iOS/Settings.bundle/Root.plist

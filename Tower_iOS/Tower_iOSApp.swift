@@ -14,6 +14,20 @@ import SwiftUI
 
 @main struct Tower_iOSApp: App {
 
+    // MARK: - Life cycle methods
+
+    /// Constructor.
+    ///
+    /// This is the first thing that runs when the app starts up.  Currently the only thing it does is setting a few
+    /// title items in the Settings.bundle to reflect the parameters this app was built with.
+    ///
+    init() {
+        Settings.namePreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
+        Settings.identifierPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
+        Settings.versionPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        Settings.buildPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+    }
+
     // MARK: - Properties
 
     var body: some Scene {

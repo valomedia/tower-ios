@@ -1,0 +1,15 @@
+#
+# swiftgenOutputFiles.xcfilelist
+# Tower_iOS
+#
+# Created by Jean-Pierre Höhmann on 2023-04-05.
+#
+#
+
+#
+# Output files for swiftgen.
+#
+# This is a list of files that swiftgen generates.
+#
+
+$(SRCROOT)/Chronos/Models/Assets+Generated.swift

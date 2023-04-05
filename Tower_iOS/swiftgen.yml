@@ -1,0 +1,24 @@
+#
+# swiftgen.yml
+# Tower_iOS
+#
+# Created by Jean-Pierre Höhmann on 2022-04-05.
+#
+#
+
+#
+# Configuration for swiftgen.
+#
+
+# Generate constants for Assets Catalogs
+#
+# This will generate constants for images, colors, ARKit resources, etc.
+#
+xcassets:
+  inputs:
+    - Assets.xcassets
+  outputs:
+    - templatePath: Templates/Assets.stencil
+      params:
+        forceProvidesNamespaces: true
+      output: Models/Assets+Generated.swift

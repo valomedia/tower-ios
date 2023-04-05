@@ -1,0 +1,23 @@
+#
+# swiftgenInputFiles.xcfilelist
+# Tower_iOS
+#
+# Created by Jean-Pierre Höhmann on 2023-04-05.
+#
+#
+
+#
+# Input files for swiftgen.
+#
+# This is a list of files that swiftgen uses during code generation. Any change to any of these files causes a
+# regeneration of all the generated code.
+#
+
+$(SRCROOT)/Tower_iOS/swiftgen.yml
+
+$(SRCROOT)/Tower_iOS/Templates/Assets.stencil
+$(SRCROOT)/Tower_iOS/Templates/Settings.stencil
+$(SRCROOT)/Tower_iOS/Templates/Strings.stencil
+
+$(SRCROOT)/Tower_iOS/Assets.xcassets/Contents.json
+$(SRCROOT)/Tower_iOS/Assets.xcassets/AppIcon.appiconset/Contents.json

@@ -25,7 +25,9 @@ struct ContentView: View {
                     .padding()
             Text("Willkommen bei Tower!")
                     .font(.largeTitle)
-            Button {} label: {
+            Button {
+                isPresentingMissingFeatureView = true
+            } label: {
                 Label("Hilfe erhalten", systemImage: "phone.fill")
             }
                     .buttonStyle(.borderedProminent)
@@ -34,9 +36,26 @@ struct ContentView: View {
                 .sheet(item: $env.errorWrapper) { errorWrapper in
                     ErrorView(errorWrapper: errorWrapper)
                 }
+                .sheet(isPresented: $isPresentingMissingFeatureView) {
+                    NavigationView {
+                        MissingFeatureView()
+                    }
+                            .toolbar {
+                                ToolbarItem(placement: .navigationBarTrailing) {
+                                    Button(role: .destructive) {
+                                        isPresentingMissingFeatureView = false
+                                    } label: {
+                                        Label("Auflegen", systemImage: "phone.down.fill")
+                                    }
+                                            .buttonStyle(.borderedProminent)
+                                }
+                            }
+                }
     }
 
     @StateObject private var env = TowerEnvironment()
+
+    @State private var isPresentingMissingFeatureView = false
 
 }
 

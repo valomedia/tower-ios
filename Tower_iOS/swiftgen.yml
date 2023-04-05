@@ -17,6 +17,7 @@
 xcassets:
   inputs:
     - Assets.xcassets
+    - Preview Content/Preview Assets.xcassets
   outputs:
     - templatePath: Templates/Assets.stencil
       params:

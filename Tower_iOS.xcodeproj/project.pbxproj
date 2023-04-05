@@ -52,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		E1D03DAB29DDFDC20061E831 /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tower-iOS-Info.plist"; sourceTree = SOURCE_ROOT; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E97082EE84DC39CD0A5259 /* Settings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Settings.stencil; sourceTree = "<group>"; };
 		E9E970A06C0834C19E99DE33 /* Tower_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +159,7 @@
 		E9E975ED4B2377D212EEC753 /* Tower_iOS */ = {
 			isa = PBXGroup;
 			children = (
+				E1D03DAB29DDFDC20061E831 /* Tower-iOS-Info.plist */,
 				E9E976112608FD8C951A230A /* Assets.xcassets */,
 				E9E97626E2D685C8268AAD5C /* Preview Content */,
 				E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */,
@@ -576,9 +578,9 @@
 				DEVELOPMENT_TEAM = PKW2VF887G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Tower-iOS-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tower;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -622,9 +624,9 @@
 				DEVELOPMENT_TEAM = PKW2VF887G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Tower-iOS-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tower;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
 		E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E97449F17B1C6ABD985920 /* Strings.stencil */; };
+		E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */; };
 		E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9700F363770A1847466DE /* TowerEnvironment.swift */; };
 		E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973F83FB2243F93C24577 /* Assets+Generated.swift */; };
 		E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */; };
@@ -72,6 +73,7 @@
 		E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoContentView.swift; sourceTree = "<group>"; };
 		E9E97ED05425606EE0CF25B0 /* swiftgenOutputFiles.xcfilelist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcfilelist; path = swiftgenOutputFiles.xcfilelist; sourceTree = "<group>"; };
 		E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorWrapper.swift; sourceTree = "<group>"; };
+		E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PreviewProvider+env.swift"; sourceTree = "<group>"; };
 		E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
+				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,
 				E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */,
 				E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */,
+				E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

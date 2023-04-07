@@ -10,7 +10,7 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>API Endpoint</string>
+			<string>Server</string>
 			<key>Key</key>
 			<string>endpoint_preference</string>
 			<key>DefaultValue</key>

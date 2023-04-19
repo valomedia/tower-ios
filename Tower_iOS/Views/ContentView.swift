@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 
 
 // MARK: ContentView
@@ -21,7 +22,6 @@ struct ContentView: View {
             Image(uiImage: Asset.Assets.logo.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.accentColor)
                     .padding()
             Text("Willkommen bei Tower!")
                     .font(.largeTitle)
@@ -51,11 +51,21 @@ struct ContentView: View {
                                 }
                     }
                 }
+                .sheet(isPresented: $isPresentingOnboardingSheet) {
+                    NavigationView {
+                        OnboardingSheet()
+                    }
+                            .interactiveDismissDisabled()
+                }
     }
 
     @StateObject private var env = TowerEnvironment()
 
     @State private var isPresentingCallSheet = false
+
+    @State private var isPresentingOnboardingSheet
+            = AVAudioSession.sharedInstance().recordPermission != .granted
+                    || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
 
 }
 

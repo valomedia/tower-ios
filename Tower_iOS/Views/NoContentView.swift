@@ -18,7 +18,7 @@ import SwiftUI
 /// For example the functionality the user is looking for may not be implemented yet, there was an error, or some action
 /// is required from the user first (such as creating the content to be displayed).
 ///
-struct NoContentView: View {
+struct NoContentView<Content: View>: View {
 
     // MARK: - Life cycle methods
 
@@ -29,16 +29,19 @@ struct NoContentView: View {
     ///   - title: The title for the message, displayed below the Image.
     ///   - headline: The headline for the message, displayed below the title.
     ///   - caption: The caption for the message, displayed below the headline.
+    ///   - content: Additional content, to be displayed below the caption.
     ///
     init(
             image: Image? = nil,
             title: String = "Hier gibt es nichts zu sehen",
             headline: String,
-            caption: String) {
+            caption: String,
+            @ViewBuilder content: @escaping () -> Content = EmptyView.init) {
         self.image = image
         self.title = title
         self.headline = headline
         self.caption = caption
+        self.content = content
     }
 
     // MARK: - Properties
@@ -83,7 +86,11 @@ struct NoContentView: View {
         Wrapper {
             VStack {
                 if let image {
-                    image.accessibility(hidden: true)
+                    image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding()
+                            .accessibility(hidden: true)
                 }
                 Text(title)
                         .font(.title)
@@ -93,6 +100,7 @@ struct NoContentView: View {
                 Text(caption)
                         .font(.caption)
                         .padding(.top)
+                content().padding()
                 Spacer()
             }
                     .padding()
@@ -102,6 +110,14 @@ struct NoContentView: View {
         }
                 .padding()
     }
+
+    // MARK: - Methods
+
+    /// The additional content to display below the caption.
+    ///
+    /// This allows the caller to add additional elements to the box, such as a Button to get more information.
+    ///
+    @ViewBuilder let content: () -> Content
 
 }
 

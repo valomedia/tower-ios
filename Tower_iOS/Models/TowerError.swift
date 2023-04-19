@@ -13,11 +13,41 @@ import Foundation
 
 /// An error representing an issue while communicating with the service.
 ///
-enum TowerError: Error {
+enum TowerError: Error, LocalizedError, CustomStringConvertible {
     case invalidEndpoint
     case missingCredentials
     case badCredentials
     case serverError
     case unexpectedError
+
+    public var description: String {
+        switch self {
+        case .invalidEndpoint:
+            return "Server-URL invalid"
+        case .missingCredentials:
+            return "Credentials are missing"
+        case .badCredentials:
+            return "Credentials are invalid"
+        case .serverError:
+            return "Server error"
+        case .unexpectedError:
+            return "Unexpected error"
+        }
+    }
+
+    public var errorDescription: String? {
+        switch self {
+        case .invalidEndpoint:
+            return "Server-URL ungültig"
+        case .missingCredentials:
+            return "Zugangsdaten fehlen"
+        case .badCredentials:
+            return "Zugangsdaten falsch"
+        case .serverError:
+            return "Serverfehler"
+        case .unexpectedError:
+            return "Unerwarteter Fehler"
+        }
+    }
 
 }

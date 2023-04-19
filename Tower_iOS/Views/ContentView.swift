@@ -26,7 +26,7 @@ struct ContentView: View {
             Text("Willkommen bei Tower!")
                     .font(.largeTitle)
             Button {
-                isPresentingMissingFeatureView = true
+                isPresentingCallSheet = true
             } label: {
                 Label("Hilfe erhalten", systemImage: "phone.fill")
             }
@@ -36,26 +36,26 @@ struct ContentView: View {
                 .sheet(item: $env.errorWrapper) { errorWrapper in
                     ErrorView(errorWrapper: errorWrapper)
                 }
-                .sheet(isPresented: $isPresentingMissingFeatureView) {
+                .sheet(isPresented: $isPresentingCallSheet) {
                     NavigationView {
-                        MissingFeatureView()
-                    }
-                            .toolbar {
-                                ToolbarItem(placement: .navigationBarTrailing) {
-                                    Button(role: .destructive) {
-                                        isPresentingMissingFeatureView = false
-                                    } label: {
-                                        Label("Auflegen", systemImage: "phone.down.fill")
+                        CallSheet()
+                                .toolbar {
+                                    ToolbarItem(placement: .navigationBarTrailing) {
+                                        Button(role: .destructive) {
+                                            isPresentingCallSheet = false
+                                        } label: {
+                                            Label("Auflegen", systemImage: "phone.down.fill")
+                                        }
+                                                .buttonStyle(.borderedProminent)
                                     }
-                                            .buttonStyle(.borderedProminent)
                                 }
-                            }
+                    }
                 }
     }
 
     @StateObject private var env = TowerEnvironment()
 
-    @State private var isPresentingMissingFeatureView = false
+    @State private var isPresentingCallSheet = false
 
 }
 

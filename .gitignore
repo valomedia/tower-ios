@@ -42,6 +42,10 @@ DerivedData/
 timeline.xctimeline
 playground.xcworkspace
 
+# Frameworks
+*.xcframework/
+*.framework/
+
 #
 # Swift Package Manager
 #

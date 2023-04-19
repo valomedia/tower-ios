@@ -62,7 +62,7 @@ struct ContentView: View {
 
 // MARK: ContentView_Previews
 
-struct ContentView_Previews: PreviewProvider {
+class ContentView_Previews: PreviewProvider {
 
     // MARK: - Static properties
 

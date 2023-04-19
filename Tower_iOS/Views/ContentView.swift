@@ -18,7 +18,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            Image(systemName: "globe")
+            Image(uiImage: Asset.Assets.logo.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(.accentColor)

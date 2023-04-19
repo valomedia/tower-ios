@@ -27,13 +27,13 @@ struct ErrorView: View {
     var body: some View {
         NavigationView {
             NoContentView(
-                    title: "An error has occurred!",
+                    title: "Es ist ein Fehler aufgetreten!",
                     headline: errorWrapper.error.localizedDescription,
                     caption: errorWrapper.guidance)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Dismiss") {
+                            Button("Schließen") {
                                 dismiss()
                             }
                         }

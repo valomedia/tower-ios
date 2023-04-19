@@ -14,7 +14,7 @@
 			<key>Key</key>
 			<string>endpoint_preference</string>
 			<key>DefaultValue</key>
-			<string>tower-backend.valo-dev.de</string>
+			<string>https://tower-backend.valo-dev.de</string>
 			<key>AutocapitalizationType</key>
 			<string>None</string>
 			<key>AutocorrectionType</key>
@@ -45,6 +45,8 @@
 			<string>password_preference</string>
 			<key>IsSecure</key>
 			<true/>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>

@@ -73,6 +73,8 @@ import Foundation
             {% call specifierBlock setting["Key"] "Bool" setting["DefaultValue"] %}
         {%- elif setting["Type"] == "PSTitleValueSpecifier" -%}
             {% call specifierBlock setting["Key"] metadata.properties["DefaultValue"] setting["DefaultValue"] %}
+        {%- elif setting["Type"] == "PSTextFieldSpecifier" -%}
+            {% call specifierBlock setting["Key"] metadata.properties["DefaultValue"] setting["DefaultValue"] %}
         {%- endif -%}
     {%- endif -%}
 {% endmacro %}

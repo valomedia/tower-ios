@@ -23,7 +23,7 @@ struct ContentView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding()
-            Text("Willkommen bei Tower!")
+            Text(isConnected ? "Willkommen bei Tower!" : "Verbinden…")
                     .font(.largeTitle)
             Button {
                 isPresentingCallSheet = true
@@ -31,9 +31,10 @@ struct ContentView: View {
                 Label("Hilfe erhalten", systemImage: "phone.fill")
             }
                     .buttonStyle(.borderedProminent)
+                    .disabled(!isConnected)
         }
                 .padding()
-                .sheet(item: $env.errorWrapper) { errorWrapper in
+                .sheet(item: $env.errorWrapper, onDismiss: { env.errorWrapper = nil }) { errorWrapper in
                     ErrorView(errorWrapper: errorWrapper)
                 }
                 .sheet(isPresented: $isPresentingCallSheet) {
@@ -57,6 +58,74 @@ struct ContentView: View {
                     }
                             .interactiveDismissDisabled()
                 }
+                .onChange(of: phase) { phase in
+                    if (phase == .active) {
+                        let user = Settings.usernamePreference
+                        let pass = Settings.passwordPreference
+                        let auth = (user + ":" + pass).data(using: .utf8)?.base64EncodedString()
+                        guard let auth, user != "" && pass != "" else {
+                            env.errorWrapper = ErrorWrapper(
+                                    error: TowerError.missingCredentials,
+                                    guidance: "Bitte füge in der Einstellungen-App Zugangsdaten hinzu.")
+                            return
+                        }
+
+                        let url = URL(string: Settings.endpointPreference)
+                        guard let url else {
+                            env.errorWrapper = ErrorWrapper(
+                                    error: TowerError.invalidEndpoint,
+                                    guidance: "Bitte überprüfe die Einstellung „Server“.")
+                            return
+                        }
+
+                        var request = URLRequest(url: url)
+                        request.setValue("Basic " + auth, forHTTPHeaderField: "Authorization")
+                        URLSession.shared.dataTask(with: request) { data, response, error in
+                            if let error {
+                                DispatchQueue.main.async {
+                                    env.errorWrapper = ErrorWrapper(
+                                            error: error,
+                                            guidance: "Bitte überprüfe die Einstellung „Server“.")
+                                }
+                            } else {
+                                guard let response = response as? HTTPURLResponse else {
+                                    DispatchQueue.main.async {
+                                        env.errorWrapper = ErrorWrapper(
+                                                error: TowerError.invalidEndpoint,
+                                                guidance: "Bitte überprüfe die Einstellung „Server“.")
+                                    }
+                                    return
+                                }
+                                switch response.statusCode {
+                                case 200:
+                                    isConnected = true
+                                case 401:
+                                    DispatchQueue.main.async {
+                                        env.errorWrapper = ErrorWrapper(
+                                                error: TowerError.badCredentials,
+                                                guidance: "Bitte überprüfe Benutzername und Passwort.")
+                                    }
+                                    return
+                                case 503:
+                                    DispatchQueue.main.async {
+                                        env.errorWrapper = ErrorWrapper(
+                                                error: TowerError.serverError,
+                                                guidance: "Bitte versuche es später erneut.")
+                                    }
+                                    return
+                                default:
+                                    DispatchQueue.main.async {
+                                        env.errorWrapper = ErrorWrapper(
+                                                error: TowerError.unexpectedError,
+                                                guidance: "Frag den Entwickler, ob er besseren Code schreiben kann ;-)")
+                                    }
+                                    return
+                                }
+                            }
+                        }
+                                .resume()
+                    }
+                }
     }
 
     @StateObject private var env = TowerEnvironment()
@@ -66,6 +135,11 @@ struct ContentView: View {
     @State private var isPresentingOnboardingSheet
             = AVAudioSession.sharedInstance().recordPermission != .granted
                     || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+
+    @State private var isConnected = false
+
+    @Environment(\.scenePhase)
+    private var phase
 
 }
 

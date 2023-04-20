@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AmazonChimeSDK
 
 
 // MARK: TowerApi
@@ -41,11 +42,33 @@ class TowerApi {
     /// - Returns: A MeetingSessionConfiguration with the new meeting and attendee already configured in it.
     /// - Throws:
     ///
-    class func join() async throws -> JoinResponse {
+    class func join() async throws -> MeetingSessionConfiguration {
         let data = try await request(
                 "POST",
                 "/join?title=\(Settings.usernamePreference)&name=\(Settings.usernamePreference)")
-        return try JSONDecoder.shared.decode(JoinResponse.self, from: data)
+        let joinResponse = try JSONDecoder.shared.decode(JoinResponse.self, from: data)
+
+        return MeetingSessionConfiguration(
+                createMeetingResponse: CreateMeetingResponse(
+                        meeting: Meeting(
+                                externalMeetingId: joinResponse.meeting.externalMeetingId,
+                                mediaPlacement: MediaPlacement(
+                                        audioFallbackUrl: joinResponse.meeting.mediaPlacement.audioFallbackUrl ?? "",
+                                        audioHostUrl: joinResponse.meeting.mediaPlacement.audioHostUrl,
+                                        signalingUrl: joinResponse.meeting.mediaPlacement.signalingUrl,
+                                        turnControlUrl: joinResponse.meeting.mediaPlacement.turnControlUrl ?? "",
+                                        eventIngestionUrl: joinResponse.meeting.mediaPlacement.eventIngestionUrl),
+                                mediaRegion: joinResponse.meeting.mediaRegion,
+                                meetingId: joinResponse.meeting.meetingId
+                        )
+                ),
+                createAttendeeResponse: CreateAttendeeResponse(
+                        attendee: Attendee(
+                                attendeeId: joinResponse.attendee.attendeeId,
+                                externalUserId: joinResponse.attendee.externalUserId,
+                                joinToken: joinResponse.attendee.joinToken)
+                )
+        )
     }
 
     /// Make a request to the end endpoint.

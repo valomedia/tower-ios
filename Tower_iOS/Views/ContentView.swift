@@ -40,17 +40,8 @@ struct ContentView: View {
                 .sheet(isPresented: $isPresentingCallSheet) {
                     NavigationView {
                         CallSheet()
-                                .toolbar {
-                                    ToolbarItem(placement: .navigationBarTrailing) {
-                                        Button(role: .destructive) {
-                                            isPresentingCallSheet = false
-                                        } label: {
-                                            Label("Auflegen", systemImage: "phone.down.fill")
-                                        }
-                                                .buttonStyle(.borderedProminent)
-                                    }
-                                }
                     }
+                            .interactiveDismissDisabled()
                 }
                 .sheet(isPresented: $isPresentingOnboardingSheet) {
                     NavigationView {

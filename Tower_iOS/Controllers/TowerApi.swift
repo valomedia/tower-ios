@@ -25,24 +25,41 @@ class TowerApi {
     ///
     /// The index endpoint will return return a JSON-Object with a single field called message, that contains the
     /// string “success”, if the request is successful.  It is useful to verify that the credentials and api endpoint
-    /// are set correctly in the settings.
+    /// are set correctly in the settings.  Since the return value isn't used for anything, this function doesn't
+    /// bother with parsing it and instead just returns Void.
     ///
-    /// - Returns:
     /// - Throws:
     ///
-    @discardableResult class func index() async throws -> [String: String] {
-        let url = URL(string: Settings.endpointPreference)
-        guard let url else { throw TowerError.invalidEndpoint }
-
-        let data = try await request(url: url)
-
-        let result = try JSONSerialization.jsonObject(with: data) as? [String: String]
-        guard let result else { throw TowerError.unexpectedError }
-
-        return result
+    class func index() async throws -> Void {
+        try await request()
     }
 
-    private class func request(url: URL) async throws -> Data {
+    /// Make a request to the join endpoint.
+    ///
+    /// The join endpoint will create both the room and the attendee.
+    ///
+    /// - Returns: A MeetingSessionConfiguration with the new meeting and attendee already configured in it.
+    /// - Throws:
+    ///
+    class func join() async throws -> JoinResponse {
+        let data = try await request(
+                "POST",
+                "/join?title=\(Settings.usernamePreference)&name=\(Settings.usernamePreference)")
+        return try JSONDecoder.shared.decode(JoinResponse.self, from: data)
+    }
+
+    /// Make a request to the end endpoint.
+    ///
+    /// The end endpoint will remove the meeting, causing all attendee connections to hang up.
+    ///
+    /// - Throws:
+    ///
+    class func end() async throws -> Void {
+        try await request("POST", "/end?title=\(Settings.usernamePreference)")
+    }
+
+    @discardableResult
+    private class func request(_ method: String = "GET", _ path: String = "/") async throws -> Data {
         let user = Settings.usernamePreference
         let pass = Settings.passwordPreference
         guard user != "" && pass != "" else { throw TowerError.missingCredentials }
@@ -50,8 +67,12 @@ class TowerApi {
         let auth = (user + ":" + pass).data(using: .utf8)?.base64EncodedString()
         guard let auth else { throw TowerError.badCredentials }
 
+        let url = URL(string: path, relativeTo: URL(string: Settings.endpointPreference))
+        guard let url else { throw TowerError.invalidEndpoint }
+
         var request = URLRequest(url: url)
         request.setValue("Basic " + auth, forHTTPHeaderField: "Authorization")
+        request.httpMethod = method
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let response = response as? HTTPURLResponse else { throw TowerError.invalidEndpoint }

@@ -14,6 +14,7 @@
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
 		E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E97449F17B1C6ABD985920 /* Strings.stencil */; };
+		E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */; };
 		E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */; };
 		E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9700F363770A1847466DE /* TowerEnvironment.swift */; };
 		E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */; };
@@ -34,6 +35,7 @@
 		E9E97AD55211643704B83C6C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */; };
 		E9E97B8E8042313538C7361C /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = E9E9742C24106EEB45A99FFB /* swiftgen.yml */; };
 		E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFA3591C2A194430BD3 /* CallSheet.swift */; };
+		E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */; };
 		E9E97D676B5FC0654D0AE376 /* TrailingIconLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */; };
 		E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */; };
 		E9E97DC5146A1DC309049ABA /* Assets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E978CCD179D7A92701559C /* Assets.stencil */; };
@@ -81,12 +83,14 @@
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E1D03DAB29DDFDC20061E831 /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Tower-iOS-Info.plist"; sourceTree = SOURCE_ROOT; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
+		E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinResponse.swift; sourceTree = "<group>"; };
 		E9E97082EE84DC39CD0A5259 /* Settings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Settings.stencil; sourceTree = "<group>"; };
 		E9E970A06C0834C19E99DE33 /* Tower_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITests.swift; sourceTree = "<group>"; };
 		E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MissingFeatureView.swift; sourceTree = "<group>"; };
 		E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSTests.swift; sourceTree = "<group>"; };
 		E9E9739962E5C94DE982482A /* swiftgenInputFiles.xcfilelist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcfilelist; path = swiftgenInputFiles.xcfilelist; sourceTree = "<group>"; };
+		E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+shared.swift"; sourceTree = "<group>"; };
 		E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		E9E973F83FB2243F93C24577 /* Assets+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Assets+Generated.swift"; sourceTree = "<group>"; };
 		E9E9742C24106EEB45A99FFB /* swiftgen.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 				E9E973F83FB2243F93C24577 /* Assets+Generated.swift */,
 				E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */,
 				E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */,
+				E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,6 +265,7 @@
 		E9E977DCDBBAEFA016EA4DD1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -461,6 +467,8 @@
 				E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */,
 				E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */,
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
+				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,
+				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

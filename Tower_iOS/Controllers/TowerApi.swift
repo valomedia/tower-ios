@@ -43,9 +43,7 @@ class TowerApi {
     /// - Throws:
     ///
     class func join() async throws -> MeetingSessionConfiguration {
-        let data = try await request(
-                "POST",
-                "/join?title=\(Settings.usernamePreference)&name=\(Settings.usernamePreference)&createMeeting=true")
+        let data = try await request("POST", "/join");
         let joinResponse = try JSONDecoder.shared.decode(JoinResponse.self, from: data)
         let meeting = joinResponse.joinInfo.meetingResponse.meeting
         let attendee = joinResponse.joinInfo.attendeeResponse.attendee
@@ -80,7 +78,7 @@ class TowerApi {
     /// - Throws:
     ///
     class func end() async throws -> Void {
-        try await request("POST", "/end?title=\(Settings.usernamePreference)")
+        try await request("POST", "/end");
     }
 
     @discardableResult

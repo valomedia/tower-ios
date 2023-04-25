@@ -16,17 +16,73 @@ import Foundation
 struct JoinResponse: Codable {
 
     enum CodingKeys: String, CodingKey {
+        case joinInfo = "joinInfo"
+    }
+
+    // MARK: - Properties
+
+    /// The information needed to join the meeting.
+    ///
+    var joinInfo: JoinInfo
+
+}
+
+
+// MARK: JoinInfo
+
+/// The information needed to join the meeting.
+///
+struct JoinInfo: Codable {
+
+    enum CodingKeys: String, CodingKey {
+        case meetingResponse = "meetingResponse"
+        case attendeeResponse = "attendeeResponse"
+    }
+
+    // MARK: - Properties
+
+    /// The response from the createMeeting API action.
+    ///
+    var meetingResponse: MeetingResponse
+
+    /// The response from the createAttendee API action.
+    ///
+    var attendeeResponse: AttendeeResponse
+
+}
+
+
+// MARK: MeetingResponse
+
+/// The response from the createMeeting API action.
+///
+struct MeetingResponse: Codable {
+
+    enum CodingKeys: String, CodingKey {
         case meeting = "Meeting"
+    }
+
+    // MARK: - Properties
+
+    /// The information needed to construct the Meeting.
+    ///
+    var meeting: MeetingInfo
+
+}
+
+// MARK: AttendeeResponse
+
+/// The response from the createAttendee API action.
+///
+struct AttendeeResponse: Codable {
+
+    enum CodingKeys: String, CodingKey {
         case attendee = "Attendee"
     }
 
     // MARK: - Properties
 
-    /// The information needed to construct a Meeting.
-    ///
-    var meeting: MeetingInfo
-
-    /// The information needed to construct an Attendee.
+    /// The information needed to construct the Attendee.
     ///
     var attendee: AttendeeInfo
 

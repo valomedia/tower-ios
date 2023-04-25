@@ -45,28 +45,30 @@ class TowerApi {
     class func join() async throws -> MeetingSessionConfiguration {
         let data = try await request(
                 "POST",
-                "/join?title=\(Settings.usernamePreference)&name=\(Settings.usernamePreference)")
+                "/join?title=\(Settings.usernamePreference)&name=\(Settings.usernamePreference)&createMeeting=true")
         let joinResponse = try JSONDecoder.shared.decode(JoinResponse.self, from: data)
+        let meeting = joinResponse.joinInfo.meetingResponse.meeting
+        let attendee = joinResponse.joinInfo.attendeeResponse.attendee
 
         return MeetingSessionConfiguration(
                 createMeetingResponse: CreateMeetingResponse(
                         meeting: Meeting(
-                                externalMeetingId: joinResponse.meeting.externalMeetingId,
+                                externalMeetingId: meeting.externalMeetingId,
                                 mediaPlacement: MediaPlacement(
-                                        audioFallbackUrl: joinResponse.meeting.mediaPlacement.audioFallbackUrl ?? "",
-                                        audioHostUrl: joinResponse.meeting.mediaPlacement.audioHostUrl,
-                                        signalingUrl: joinResponse.meeting.mediaPlacement.signalingUrl,
-                                        turnControlUrl: joinResponse.meeting.mediaPlacement.turnControlUrl ?? "",
-                                        eventIngestionUrl: joinResponse.meeting.mediaPlacement.eventIngestionUrl),
-                                mediaRegion: joinResponse.meeting.mediaRegion,
-                                meetingId: joinResponse.meeting.meetingId
+                                        audioFallbackUrl: meeting.mediaPlacement.audioFallbackUrl ?? "",
+                                        audioHostUrl: meeting.mediaPlacement.audioHostUrl,
+                                        signalingUrl: meeting.mediaPlacement.signalingUrl,
+                                        turnControlUrl: meeting.mediaPlacement.turnControlUrl ?? "",
+                                        eventIngestionUrl: meeting.mediaPlacement.eventIngestionUrl),
+                                mediaRegion: meeting.mediaRegion,
+                                meetingId: meeting.meetingId
                         )
                 ),
                 createAttendeeResponse: CreateAttendeeResponse(
                         attendee: Attendee(
-                                attendeeId: joinResponse.attendee.attendeeId,
-                                externalUserId: joinResponse.attendee.externalUserId,
-                                joinToken: joinResponse.attendee.joinToken)
+                                attendeeId: attendee.attendeeId,
+                                externalUserId: attendee.externalUserId,
+                                joinToken: attendee.joinToken)
                 )
         )
     }

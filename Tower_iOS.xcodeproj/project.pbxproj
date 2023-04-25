@@ -19,6 +19,7 @@
 		E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9700F363770A1847466DE /* TowerEnvironment.swift */; };
 		E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */; };
 		E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973F83FB2243F93C24577 /* Assets+Generated.swift */; };
+		E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9787B1722DC8C49605991 /* CallController.swift */; };
 		E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */; };
 		E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */; };
 		E9E975E90CDBECC6A22C2BE3 /* Tower_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */; };
@@ -98,6 +99,7 @@
 		E9E976112608FD8C951A230A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Settings+Generated.swift"; sourceTree = "<group>"; };
+		E9E9787B1722DC8C49605991 /* CallController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallController.swift; sourceTree = "<group>"; };
 		E9E978CCD179D7A92701559C /* Assets.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Assets.stencil; sourceTree = "<group>"; };
 		E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapper.swift; sourceTree = "<group>"; };
 		E9E97A368C0877C4B4E7B387 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
 				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 				E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */,
+				E9E9787B1722DC8C49605991 /* CallController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
 				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
+				E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -116,7 +116,6 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
     func audioSessionDidStart(reconnecting: Bool) {
         logger.info(msg: "audioSessionDidStart")
-        state = state == .connecting ? .waiting : .connected
     }
 
     func audioSessionDidDrop() {
@@ -184,7 +183,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
     func attendeesDidJoin(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
         logger.info(msg: "attendeesDidJoin")
-        state = .connected
+        state = state == .connecting ? .waiting : .connected
     }
 
     func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {

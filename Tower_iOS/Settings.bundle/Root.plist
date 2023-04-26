@@ -29,6 +29,8 @@
 			<string>Benutzername</string>
 			<key>Key</key>
 			<string>username_preference</string>
+			<key>DefaultValue</key>
+			<string></string>
 			<key>AutocapitalizationType</key>
 			<string>None</string>
 			<key>AutocorrectionType</key>

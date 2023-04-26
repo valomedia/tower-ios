@@ -90,7 +90,7 @@ class TowerApi {
         let auth = (user + ":" + pass).data(using: .utf8)?.base64EncodedString()
         guard let auth else { throw TowerError.badCredentials }
 
-        let url = URL(string: path, relativeTo: URL(string: Settings.endpointPreference))
+        let url = URL(string: Settings.endpointPreference + path)
         guard let url else { throw TowerError.invalidEndpoint }
 
         var request = URLRequest(url: url)

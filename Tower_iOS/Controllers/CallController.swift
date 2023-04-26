@@ -37,7 +37,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
             case .none:
                 return "Nicht verbunden"
             case .notConnected:
-                return "Nicht verbunden"
+                return "Verbinden…"
             case .connecting:
                 return "Verbinden…"
             case .reconnecting:

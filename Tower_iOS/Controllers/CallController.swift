@@ -35,11 +35,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
         var description: String {
             switch self {
             case .none:
-                return "Nicht verbunden"
+                return "Tower anfunken…"
             case .notConnected:
-                return "Verbinden…"
+                return "Verbindung herstellen…"
             case .connecting:
-                return "Verbinden…"
+                return "Anrufaufbau…"
             case .reconnecting:
                 return "Neu verbinden…"
             case .waiting:

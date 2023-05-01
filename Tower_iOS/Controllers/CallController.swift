@@ -184,6 +184,13 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
     func attendeesDidJoin(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
         logger.info(msg: "attendeesDidJoin")
         state = state == .connecting ? .waiting : .connected
+
+        if (state == .connected) {
+            // Switch to the back camera after two seconds.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                self?.session?.audioVideo.switchCamera()
+            }
+        }
     }
 
     func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {

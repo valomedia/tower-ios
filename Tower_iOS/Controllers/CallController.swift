@@ -89,22 +89,27 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
     /// - Throws:
     ///
     func join(configuration: MeetingSessionConfiguration) throws {
-        session = DefaultMeetingSession(configuration: configuration, logger: logger)
+        let session = DefaultMeetingSession(configuration: configuration, logger: logger)
+        self.session = session
         state = .notConnected
-        session?.audioVideo.addAudioVideoObserver(observer: self)
-        session?.audioVideo.addRealtimeObserver(observer: self)
-        try session?.audioVideo.start()
-        try session?.audioVideo.startLocalVideo()
-    }
+        session.audioVideo.addAudioVideoObserver(observer: self)
+        session.audioVideo.addRealtimeObserver(observer: self)
 
-    /// End the meeting.
-    ///
-    /// This disconnects from the meeting. The meeting will not automatically be ended on the server. Use the
-    /// corresponding function in TowerApi to make the call to the server to end the meeting there.
-    ///
-    func end() {
-        session?.audioVideo.stop()
-        state = .disconnected
+        let audioDevices = session.audioVideo.listAudioDevices()
+        for device in audioDevices {
+            logger.info(msg: "Device type: \(device.type), label: \(device.label)");
+        }
+
+        // Default to whatever is the first device for now.
+        let device = audioDevices
+                .filter {
+                    $0.type == .audioBuiltInSpeaker
+                }
+                .first
+        device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+
+        try session.audioVideo.start()
+        try session.audioVideo.startLocalVideo()
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
@@ -125,9 +130,6 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
     func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
         logger.info(msg: "audioSessionDidStopWithStatus")
-        state = .none
-        session = nil
-        onCallEnd?(sessionStatus)
     }
 
     func audioSessionDidCancelReconnect() {
@@ -159,6 +161,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
     func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
         logger.info(msg: "videoSessionDidStopWithStatus")
+        state = .disconnected
+        onCallEnd?(sessionStatus)
+        end()
     }
 
     func remoteVideoSourcesDidBecomeAvailable(sources: [AmazonChimeSDK.RemoteVideoSource]) {
@@ -209,4 +214,15 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
         logger.info(msg: "attendeesDidUnmute")
     }
 
+    /// End the meeting.
+    ///
+    /// This disconnects from the meeting. This is called after onCallEnd() to end the connection as far as the Chime
+    /// SDK is concerned. This does not affect the meeting on the server, which should have already ended when this is
+    /// called.
+    ///
+    private func end() {
+        session?.audioVideo.stop()
+        state = .none
+        session = nil
+    }
 }

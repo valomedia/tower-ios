@@ -27,24 +27,22 @@ struct CallSheet: View {
                     .padding()
             Text(controller.state.description)
                     .font(.largeTitle)
-            Button(role: .destructive, action: controller.end) {
+            Button(role: .destructive) {
+                Task {
+                    do {
+                        // An error here just means something went wrong when ending the call, which we'll
+                        // just ignore for now.
+                        try await TowerApi.end()
+                    }
+                }
+            } label: {
                 Label("Auflegen", systemImage: "phone.down.fill")
             }
                     .buttonStyle(.borderedProminent)
         }
                 .onAppear {
                     Task { @MainActor in
-                        controller.onCallEnd = { [self] (_: MeetingSessionStatus) in
-                            dismiss()
-
-                            Task {
-                                do {
-                                    // An error here just means something went wrong when ending the call, which we'll
-                                    // just ignore for now.
-                                    try await TowerApi.end()
-                                }
-                            }
-                        }
+                        controller.onCallEnd = { [self] (_: MeetingSessionStatus) in dismiss() }
                         do {
                             try await controller.join(configuration: TowerApi.join())
                         } catch {

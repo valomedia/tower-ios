@@ -25,6 +25,7 @@ struct CallSheet: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding()
+                    .accessibility(hidden: true)
             Text(controller.state.description)
                     .font(.largeTitle)
             Button(role: .destructive) {

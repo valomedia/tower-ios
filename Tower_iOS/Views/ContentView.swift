@@ -23,6 +23,7 @@ struct ContentView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding()
+                    .accessibility(hidden: true)
             Text(isConnected ? "Willkommen bei Tower!" : "Verbinden…")
                     .font(.largeTitle)
             Button {

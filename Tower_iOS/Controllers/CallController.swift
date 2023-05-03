@@ -100,16 +100,16 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
             logger.info(msg: "Device type: \(device.type), label: \(device.label)");
         }
 
-        // Default to whatever is the first device for now.
+        try session.audioVideo.start()
+        try session.audioVideo.startLocalVideo()
+
+        // Default to loudspeaker for now.
         let device = audioDevices
                 .filter {
                     $0.type == .audioBuiltInSpeaker
                 }
                 .first
         device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
-
-        try session.audioVideo.start()
-        try session.audioVideo.startLocalVideo()
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {

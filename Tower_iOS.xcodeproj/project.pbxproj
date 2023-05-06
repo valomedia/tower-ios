@@ -99,6 +99,7 @@
 		E9E976112608FD8C951A230A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Settings+Generated.swift"; sourceTree = "<group>"; };
+		E9E977DE6191E6A0257F3DC1 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E9E9787B1722DC8C49605991 /* CallController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallController.swift; sourceTree = "<group>"; };
 		E9E978CCD179D7A92701559C /* Assets.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Assets.stencil; sourceTree = "<group>"; };
 		E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapper.swift; sourceTree = "<group>"; };
@@ -244,6 +245,7 @@
 				E9E97E86ECD27CC8CE71A6CF /* Tower_iOSUITests */,
 				E9E97A368C0877C4B4E7B387 /* .gitignore */,
 				E11F4EA929EF99A300D39816 /* Frameworks */,
+				E9E977DE6191E6A0257F3DC1 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};

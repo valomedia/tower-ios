@@ -191,10 +191,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
         state = state == .connecting ? .waiting : .connected
 
         if (state == .connected) {
-            // Switch to the back camera after two seconds.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-                self?.session?.audioVideo.switchCamera()
-            }
+            // Switch to the back camera
+            session?.audioVideo.switchCamera()
         }
     }
 

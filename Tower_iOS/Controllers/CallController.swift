@@ -82,6 +82,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     private static let dataMessageLifetimeMs: Int32 = 10_000;
 
+    // MARK: - Life cycle methods
+
+    /// Constructor.
+    ///
+    init() {
+        self.cameraCaptureSource = DefaultCameraCaptureSource(logger: logger)
+    }
+
     // MARK: - Properties
 
     /// The life-cycle state of the current session.
@@ -91,6 +99,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private var session: MeetingSession? = nil
 
     private let logger = ConsoleLogger(name: "CallController")
+    private let cameraCaptureSource: CameraCaptureSource
 
     // MARK: - Methods
 
@@ -114,6 +123,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         session.audioVideo.addRealtimeDataMessageObserver(
                 topic: DataMessageTopic.switchCameraRequest.rawValue,
                 observer: self)
+        session.audioVideo.addRealtimeDataMessageObserver(
+                topic: DataMessageTopic.toggleTorchRequest.rawValue,
+                observer: self)
 
         let audioDevices = session.audioVideo.listAudioDevices()
         for device in audioDevices {
@@ -121,10 +133,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         }
 
         try session.audioVideo.start()
-        try session.audioVideo.startLocalVideo()
+
+        // Start the capture
+        cameraCaptureSource.start()
 
         // Switch to the back camera.
-        session.audioVideo.switchCamera()
+        cameraCaptureSource.switchCamera()
+
+        session.audioVideo.startLocalVideo(source: cameraCaptureSource)
 
         // Default to loudspeaker for now.
         let device = audioDevices
@@ -235,7 +251,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         switch dataMessage.topic {
         case DataMessageTopic.switchCameraRequest.rawValue:
-            session?.audioVideo.switchCamera()
+            cameraCaptureSource.switchCamera()
             do {
                 try session?.audioVideo.realtimeSendDataMessage(
                         topic: DataMessageTopic.switchCameraResponse.rawValue,
@@ -260,7 +276,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     private func end() {
         session?.audioVideo.stop()
+        cameraCaptureSource.stop()
         state = .none
         session = nil
     }
+
 }

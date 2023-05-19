@@ -209,7 +209,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func attendeesDidJoin(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
         logger.info(msg: "attendeesDidJoin")
-        state = state == .connecting ? .waiting : .connected
+        if (state != .connected) {
+            state = state == .connecting ? .waiting : .connected
+        }
     }
 
     func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {

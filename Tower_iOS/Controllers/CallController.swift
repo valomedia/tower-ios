@@ -252,16 +252,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         switch dataMessage.topic {
         case DataMessageTopic.switchCameraRequest.rawValue:
             cameraCaptureSource.switchCamera()
-            do {
-                try session?.audioVideo.realtimeSendDataMessage(
-                        topic: DataMessageTopic.switchCameraResponse.rawValue,
-                        data: [:] as [String: Any],
-                        lifetimeMs: CallController.dataMessageLifetimeMs)
-            } catch let err as SendDataMessageError {
-                logger.error(msg: "Failed to send message! \(err)")
-            } catch {
-                logger.error(msg: "Unknown error \(error.localizedDescription)")
-            }
+            sendDataMessage(.switchCameraResponse)
+            break;
+        case DataMessageTopic.toggleTorchRequest.rawValue:
+            cameraCaptureSource.torchEnabled.toggle();
+            sendDataMessage(.toggleTorchResponse)
             break;
         default:
             break;
@@ -277,8 +272,22 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private func end() {
         session?.audioVideo.stop()
         cameraCaptureSource.stop()
+        cameraCaptureSource.torchEnabled = false
         state = .none
         session = nil
+    }
+
+    private func sendDataMessage(_ topic: DataMessageTopic, data: [String: Any]? = nil) {
+        do {
+            try session?.audioVideo.realtimeSendDataMessage(
+                    topic: topic.rawValue,
+                    data: data ?? [:],
+                    lifetimeMs: CallController.dataMessageLifetimeMs)
+        } catch let err as SendDataMessageError {
+            logger.error(msg: "Failed to send message! \(err)")
+        } catch {
+            logger.error(msg: "Unknown error \(error.localizedDescription)")
+        }
     }
 
 }

@@ -16,4 +16,6 @@ import Foundation
 enum DataMessageTopic: String {
     case switchCameraRequest = "switch-camera-request"
     case switchCameraResponse = "switch-camera-response"
+    case toggleTorchRequest = "toggle-torch-request"
+    case toggleTorchResponse = "toggle-torch-response"
 }

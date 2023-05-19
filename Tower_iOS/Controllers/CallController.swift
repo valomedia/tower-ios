@@ -123,6 +123,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         try session.audioVideo.start()
         try session.audioVideo.startLocalVideo()
 
+        // Switch to the back camera.
+        session.audioVideo.switchCamera()
+
         // Default to loudspeaker for now.
         let device = audioDevices
                 .filter {
@@ -207,13 +210,6 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     func attendeesDidJoin(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
         logger.info(msg: "attendeesDidJoin")
         state = state == .connecting ? .waiting : .connected
-
-        if (state == .connected) {
-            // Switch to the back camera
-            if session?.audioVideo.getActiveCamera()?.type == .videoFrontCamera {
-                session?.audioVideo.switchCamera()
-            }
-        }
     }
 
     func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {

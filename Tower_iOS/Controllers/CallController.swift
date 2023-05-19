@@ -16,7 +16,7 @@ import AmazonChimeSDK
 ///
 /// This contains for the application logic for the actual chime SDK itself.
 ///
-class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
+class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, DataMessageObserver {
 
     /// The life cycle of the call.
     ///
@@ -65,6 +65,23 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
     }
 
+    // MARK: - Static properties
+
+
+    /// How long the data messages are valid.
+    ///
+    /// Since the messages are always transmitted to the user in real time (there is no situation where messages are
+    /// sent for an assistant that isn't on the call yet), the messages are usually delivered immediately.  The
+    /// messages still have a lifetime of ten seconds however, in order to account for users who may be experiencing
+    /// brief intermittent interruptions in their connection, due to a spotty network.
+    ///
+    /// If the message does not reach the assistant within ten seconds, the message will be quietly discarded.  This
+    /// will currently result in actions in the ui becoming disabled for the duration of the call.  The inherent
+    /// assumption being, that if the call hangs completely for more than ten seconds at a time, assistance will
+    /// become impossible anyway, and there is no reasonable way to gracefully recover.
+    ///
+    private static let dataMessageLifetimeMs: Int32 = 10_000;
+
     // MARK: - Properties
 
     /// The life-cycle state of the current session.
@@ -94,6 +111,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
         state = .notConnected
         session.audioVideo.addAudioVideoObserver(observer: self)
         session.audioVideo.addRealtimeObserver(observer: self)
+        session.audioVideo.addRealtimeDataMessageObserver(
+                topic: DataMessageTopic.switchCameraRequest.rawValue,
+                observer: self)
 
         let audioDevices = session.audioVideo.listAudioDevices()
         for device in audioDevices {
@@ -178,9 +198,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
         logger.info(msg: "cameraSendAvailabilityDidChange")
     }
 
-    func volumeDidChange(volumeUpdates: [AmazonChimeSDK.VolumeUpdate]) {
-        logger.info(msg: "volumeDidChange")
-    }
+    func volumeDidChange(volumeUpdates: [AmazonChimeSDK.VolumeUpdate]) {}
 
     func signalStrengthDidChange(signalUpdates: [AmazonChimeSDK.SignalUpdate]) {
         logger.info(msg: "signalStrengthDidChange")
@@ -192,7 +210,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
         if (state == .connected) {
             // Switch to the back camera
-            session?.audioVideo.switchCamera()
+            if session?.audioVideo.getActiveCamera()?.type == .videoFrontCamera {
+                session?.audioVideo.switchCamera()
+            }
         }
     }
 
@@ -210,6 +230,28 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver {
 
     func attendeesDidUnmute(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
         logger.info(msg: "attendeesDidUnmute")
+    }
+
+    func dataMessageDidReceived(dataMessage: AmazonChimeSDK.DataMessage) {
+        logger.info(msg: "dataMessageDidReceived \(dataMessage.timestampMs) \(dataMessage.topic) \(dataMessage.senderAttendeeId)");
+
+        switch dataMessage.topic {
+        case DataMessageTopic.switchCameraRequest.rawValue:
+            session?.audioVideo.switchCamera()
+            do {
+                try session?.audioVideo.realtimeSendDataMessage(
+                        topic: DataMessageTopic.switchCameraResponse.rawValue,
+                        data: [:] as [String: Any],
+                        lifetimeMs: CallController.dataMessageLifetimeMs)
+            } catch let err as SendDataMessageError {
+                logger.error(msg: "Failed to send message! \(err)")
+            } catch {
+                logger.error(msg: "Unknown error \(error.localizedDescription)")
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     /// End the meeting.

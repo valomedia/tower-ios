@@ -33,6 +33,7 @@
 		E9E9785836011CE532198B31 /* OnboardingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */; };
 		E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */; };
 		E9E979589AE0CB1D1ECD8E98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E976112608FD8C951A230A /* Assets.xcassets */; };
+		E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */; };
 		E9E97AD55211643704B83C6C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */; };
 		E9E97B8E8042313538C7361C /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = E9E9742C24106EEB45A99FFB /* swiftgen.yml */; };
 		E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFA3591C2A194430BD3 /* CallSheet.swift */; };
@@ -42,6 +43,7 @@
 		E9E97DC5146A1DC309049ABA /* Assets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E978CCD179D7A92701559C /* Assets.stencil */; };
 		E9E97E935578B91E74C5F7B9 /* Tower_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */; };
 		E9E97F39E2ED8B908232E0A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */; };
+		E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */; };
 		E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */; };
 		E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */; };
 /* End PBXBuildFile section */
@@ -97,6 +99,7 @@
 		E9E9742C24106EEB45A99FFB /* swiftgen.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		E9E97449F17B1C6ABD985920 /* Strings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Strings.stencil; sourceTree = "<group>"; };
 		E9E976112608FD8C951A230A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+throwingUnwrapOperator.swift"; sourceTree = "<group>"; };
 		E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Settings+Generated.swift"; sourceTree = "<group>"; };
 		E9E977DE6191E6A0257F3DC1 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -107,6 +110,7 @@
 		E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSApp.swift; sourceTree = "<group>"; };
 		E9E97B2EB631D23B7381BB19 /* Tower_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tower_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E97B8B66372C78A442F83F /* swiftgen.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = swiftgen.sh; sourceTree = "<group>"; };
+		E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataMessageTopic.swift; sourceTree = "<group>"; };
 		E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadingIconLabelStyle.swift; sourceTree = "<group>"; };
 		E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerError.swift; sourceTree = "<group>"; };
 		E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrailingIconLabelStyle.swift; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 				E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */,
 				E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */,
 				E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */,
+				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -271,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
+				E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -475,6 +481,8 @@
 				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
 				E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */,
+				E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */,
+				E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

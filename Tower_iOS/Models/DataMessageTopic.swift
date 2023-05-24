@@ -18,4 +18,6 @@ enum DataMessageTopic: String {
     case switchCameraResponse = "switch-camera-response"
     case toggleTorchRequest = "toggle-torch-request"
     case toggleTorchResponse = "toggle-torch-response"
+    case locationRequest = "location-request"
+    case locationResponse = "location-response"
 }

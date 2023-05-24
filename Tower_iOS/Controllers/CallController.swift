@@ -67,7 +67,6 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     // MARK: - Static properties
 
-
     /// How long the data messages are valid.
     ///
     /// Since the messages are always transmitted to the user in real time (there is no situation where messages are
@@ -100,6 +99,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     private let logger = ConsoleLogger(name: "CallController")
     private let cameraCaptureSource: CameraCaptureSource
+    private let locationController: LocationController = LocationController()
 
     // MARK: - Methods
 
@@ -125,6 +125,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 observer: self)
         session.audioVideo.addRealtimeDataMessageObserver(
                 topic: DataMessageTopic.toggleTorchRequest.rawValue,
+                observer: self)
+        session.audioVideo.addRealtimeDataMessageObserver(
+                topic: DataMessageTopic.locationRequest.rawValue,
                 observer: self)
 
         let audioDevices = session.audioVideo.listAudioDevices()
@@ -253,13 +256,24 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         case DataMessageTopic.switchCameraRequest.rawValue:
             cameraCaptureSource.switchCamera()
             sendDataMessage(.switchCameraResponse)
-            break;
+            break
         case DataMessageTopic.toggleTorchRequest.rawValue:
             cameraCaptureSource.torchEnabled.toggle();
             sendDataMessage(.toggleTorchResponse)
-            break;
+            break
+        case DataMessageTopic.locationRequest.rawValue:
+            Task {
+                sendDataMessage(
+                        .locationResponse,
+                        data: try? JSONEncoder.shared.encode(
+                                LocationInfo(await locationController.requestLocation())
+                                        .map(LocationResponseData.init(locationInfo:))
+                        )
+                )
+            }
+            break
         default:
-            break;
+            break
         }
     }
 
@@ -277,11 +291,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         session = nil
     }
 
-    private func sendDataMessage(_ topic: DataMessageTopic, data: [String: Any]? = nil) {
+    private func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
         do {
             try session?.audioVideo.realtimeSendDataMessage(
                     topic: topic.rawValue,
-                    data: data ?? [:],
+                    data: data ?? "{}".data(using: .utf8) as Any,
                     lifetimeMs: CallController.dataMessageLifetimeMs)
         } catch let err as SendDataMessageError {
             logger.error(msg: "Failed to send message! \(err)")

@@ -696,9 +696,9 @@
 				INFOPLIST_FILE = "Tower_iOS/Tower-iOS-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tower;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um dem Lotsen die Umgebung zu zeigen.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um dem Lotsen den aktuellen Standort mitzuteilen.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit dem Lotsen zu ermöglichen.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit den Assistent:innen zu ermöglichen.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -751,9 +751,9 @@
 				INFOPLIST_FILE = "Tower_iOS/Tower-iOS-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Tower;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um dem Lotsen die Umgebung zu zeigen.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um dem Lotsen den aktuellen Standort mitzuteilen.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit dem Lotsen zu ermöglichen.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit den Assistent:innen zu ermöglichen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

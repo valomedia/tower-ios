@@ -29,9 +29,9 @@ struct OnboardingSheet: View {
                     headline: "Wir brauchen Zugriff auf Deine Kamera und Dein Mikrofon",
                     caption: """
                              Schön, Dich kennen zu lernen! Wie es aussieht, benutzt du unsere app gerade zum ersten
-                             Mal. Um Dich mit unseren Lotsen verbinden zu können, benötigen wir Deine Erlaubnis,
-                             die Kamera und das Mikrofon an Deinem Handy einzuschalten. Drücke auf „Fortfahren“,
-                             wenn du damit einverstanden bist.
+                             Mal. Um Dich mit unseren Assistent:innen verbinden zu können, benötigen wir Deine
+                             Erlaubnis, die Kamera und das Mikrofon an Deinem Handy einzuschalten. Drücke auf
+                             „Fortfahren“, wenn du damit einverstanden bist.
                              """) {
                 Button {
                     AVAudioSession.sharedInstance().requestRecordPermission { granted in
@@ -57,7 +57,7 @@ struct OnboardingSheet: View {
                     title: "Fehlende Berechtigungen",
                     headline: "Wir können nicht auf Deine Kamera und Dein Mikrofon zugreifen",
                     caption: """
-                             Um dich mit einem Lotsen verbinden zu können, müssen wir Deine Kamera und Dein
+                             Um dich mit einer Assistent:in verbinden zu können, müssen wir Deine Kamera und Dein
                              Mikrofon aktivieren können. Leider fehlt und dafür Deine Erlaubnis. Wenn du uns Deine
                              Erlaubnis doch geben möchtest, kannst du das in der Einstellungen-App jederzeit tun.
                              Du kannst auf den Knopf klicken, um jetzt sofort zu den Einstellungen zu gelangen.

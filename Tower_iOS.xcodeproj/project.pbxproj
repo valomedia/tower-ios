@@ -37,7 +37,7 @@
 		E9E9785836011CE532198B31 /* OnboardingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */; };
 		E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */; };
 		E9E979589AE0CB1D1ECD8E98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E976112608FD8C951A230A /* Assets.xcassets */; };
-		E9E97985109BA7C9049A6A0E /* LocationResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9737E107A7605C81485F7 /* LocationResponseData.swift */; };
+		E9E97985109BA7C9049A6A0E /* LocationEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9737E107A7605C81485F7 /* LocationEventData.swift */; };
 		E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */; };
 		E9E97ACB93E9A4DBEC1906D6 /* CLLocation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EC736E76FA9F24A1789 /* CLLocation+init.swift */; };
 		E9E97AD55211643704B83C6C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */; };
@@ -103,7 +103,7 @@
 		E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MissingFeatureView.swift; sourceTree = "<group>"; };
 		E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSTests.swift; sourceTree = "<group>"; };
 		E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bool+then.swift"; sourceTree = "<group>"; };
-		E9E9737E107A7605C81485F7 /* LocationResponseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationResponseData.swift; sourceTree = "<group>"; };
+		E9E9737E107A7605C81485F7 /* LocationEventData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationEventData.swift; sourceTree = "<group>"; };
 		E9E9739962E5C94DE982482A /* swiftgenInputFiles.xcfilelist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcfilelist; path = swiftgenInputFiles.xcfilelist; sourceTree = "<group>"; };
 		E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+shared.swift"; sourceTree = "<group>"; };
 		E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -233,7 +233,7 @@
 				E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */,
 				E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */,
 				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
-				E9E9737E107A7605C81485F7 /* LocationResponseData.swift */,
+				E9E9737E107A7605C81485F7 /* LocationEventData.swift */,
 				E9E9780CA784F10F6DA82E56 /* Location.swift */,
 			);
 			path = Models;
@@ -508,7 +508,7 @@
 				E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */,
 				E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */,
 				E9E970154CE4DA57BDFDBB82 /* CLLocationCoordinate2D+Codable.swift in Sources */,
-				E9E97985109BA7C9049A6A0E /* LocationResponseData.swift in Sources */,
+				E9E97985109BA7C9049A6A0E /* LocationEventData.swift in Sources */,
 				E9E970595F70053E9C579045 /* Location.swift in Sources */,
 				E9E97D9435E71A5FB03C32C2 /* Bool+then.swift in Sources */,
 				E9E972ED7746A4DADA73309F /* Bool+else.swift in Sources */,

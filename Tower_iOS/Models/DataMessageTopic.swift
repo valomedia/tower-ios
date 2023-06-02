@@ -20,4 +20,5 @@ enum DataMessageTopic: String {
     case toggleTorchResponse = "toggle-torch-response"
     case locationRequest = "location-request"
     case locationResponse = "location-response"
+    case locationEvent = "location-event"
 }

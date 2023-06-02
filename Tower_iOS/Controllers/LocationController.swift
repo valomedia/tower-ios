@@ -37,26 +37,25 @@ class LocationController: NSObject, CLLocationManagerDelegate {
 
     // MARK: - Properties
 
-    /// All tasks waiting for location data to continue.
-    ///
-    var continuations: [CheckedContinuation<Location, Error>] = []
-
     var locationManager = CLLocationManager()
+
+    /// The call controller to use to send location messages.
+    ///
+    weak var callController: CallController?
 
     private let logger = ConsoleLogger(name: "LocationController")
 
     // MARK: - Methods
 
-    /// Get the location from the location manager.
+    /// Start updating the location.
     ///
-    /// - Returns: The Location
     /// - Throws: CLError
     ///
-    func requestLocation() async throws -> Location {
+    func requestLocation() throws {
         switch locationManager.authorizationStatus {
         case .authorizedWhenInUse:
             logger.info(msg: "Requesting location data")
-            locationManager.requestLocation()
+            locationManager.startUpdatingLocation()
             break
         case .restricted, .denied:
             throw CLError(.denied)
@@ -67,24 +66,19 @@ class LocationController: NSObject, CLLocationManagerDelegate {
         default:
             break
         }
-        return try await withCheckedThrowingContinuation { continuation in
-            continuations.append(continuation)
-        }
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         logger.info(msg: "locationManagerDidChangeAuthorization")
-        guard !continuations.isEmpty else { return }
         switch manager.authorizationStatus {
         case .authorizedWhenInUse:
             logger.info(msg: "Requesting location data")
-            locationManager.requestLocation()
+            locationManager.startUpdatingLocation()
             break
         case .restricted, .denied:
-            continuations.forEach { continuation in
-                continuation.resume(throwing: CLError(.denied))
-            }
-            continuations = []
+            callController?.sendDataMessage(
+                    .locationEvent,
+                    data: try! JSONEncoder.shared.encode(LocationEventData(message: "\(CLError(.denied))")))
             break
         default:
             break
@@ -93,18 +87,20 @@ class LocationController: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         logger.info(msg: "locationManager(_:didUpdateLocations:)")
-        continuations.forEach { continuation in
-            continuation.resume(returning: Location(locations.last!))
+        locations.last.map { location in
+            callController?.sendDataMessage(
+                    .locationEvent,
+                    data: try! JSONEncoder.shared.encode(
+                            LocationEventData(locationInfo: LocationInfo(Location(location))))
+            )
         }
-        continuations = []
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         logger.info(msg: "locationManager(_:didFailWithError:)")
-        continuations.forEach { continuation in
-            continuation.resume(throwing: error)
-        }
-        continuations = []
+        callController?.sendDataMessage(
+                .locationEvent,
+                data: try! JSONEncoder.shared.encode(LocationEventData(message: "\(error)")))
     }
 
 }

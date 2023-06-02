@@ -8,6 +8,7 @@
 
 import Foundation
 import AmazonChimeSDK
+import CoreLocation
 
 
 // MARK: CallController
@@ -96,10 +97,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     @Published var state: CallState = .none
 
     private var session: MeetingSession? = nil
+    private var locationController: LocationController? = nil
 
     private let logger = ConsoleLogger(name: "CallController")
     private let cameraCaptureSource: CameraCaptureSource
-    private let locationController: LocationController = LocationController()
 
     // MARK: - Methods
 
@@ -152,6 +153,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 }
                 .first
         device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+
+        locationController = LocationController()
+        locationController?.callController = self
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
@@ -262,14 +266,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             sendDataMessage(.toggleTorchResponse)
             break
         case DataMessageTopic.locationRequest.rawValue:
-            Task {
-                sendDataMessage(
-                        .locationResponse,
-                        data: try? JSONEncoder.shared.encode(
-                                LocationInfo(await locationController.requestLocation())
-                                        .map(LocationResponseData.init(locationInfo:))
-                        )
-                )
+            do {
+                try locationController?.requestLocation()
+                sendDataMessage(.locationResponse)
+            } catch {
+                sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
             }
             break
         default:
@@ -289,9 +290,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         cameraCaptureSource.torchEnabled = false
         state = .none
         session = nil
+        locationController = nil
     }
 
-    private func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
+    func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
         do {
             try session?.audioVideo.realtimeSendDataMessage(
                     topic: topic.rawValue,

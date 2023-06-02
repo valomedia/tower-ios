@@ -1,5 +1,5 @@
 //
-//  LocationResponseData.swift
+//  LocationEventData.swift
 //  Tower_iOS
 //
 //  Created by Jean-Pierre Höhmann on 2023-05-23.
@@ -12,23 +12,24 @@ import CoreLocation
 
 // MARK: LocationResponseData
 
-/// The data sent in a location-response realtime data message.
+/// The data sent in a location-event realtime data message.
 ///
-/// This is currently a wrapper containing nothing except optional LocationInfo (an empty object is sent if the
-/// location could not be determined), the LocationInfo is just wrapped in another object to make room for future
-/// fields, for example to detail the error condition, if no location can be obtained.
-///
-struct LocationResponseData: Codable {
+struct LocationEventData: Codable {
 
     enum CodingKeys: String, CodingKey {
         case locationInfo = "locationInfo"
+        case message = "message"
     }
 
     // MARK: - Properties
 
     /// The location information
     ///
-    var locationInfo: LocationInfo
+    var locationInfo: LocationInfo?
+
+    /// The error message if location failed.
+    ///
+    var message: String?
 
 }
 

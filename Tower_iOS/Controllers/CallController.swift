@@ -87,7 +87,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// Constructor.
     ///
     init() {
-        self.cameraCaptureSource = DefaultCameraCaptureSource(logger: logger)
+        cameraCaptureSource = DefaultCameraCaptureSource(logger: logger)
     }
 
     // MARK: - Properties
@@ -101,6 +101,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     private let logger = ConsoleLogger(name: "CallController")
     private let cameraCaptureSource: CameraCaptureSource
+    private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: 2500)
 
     // MARK: - Methods
 
@@ -144,7 +145,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         // Switch to the back camera.
         cameraCaptureSource.switchCamera()
 
-        session.audioVideo.startLocalVideo(source: cameraCaptureSource)
+        session.audioVideo.startLocalVideo(source: cameraCaptureSource, config: localVideoConfig)
 
         // Default to loudspeaker for now.
         let device = audioDevices

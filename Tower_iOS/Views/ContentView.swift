@@ -24,8 +24,16 @@ struct ContentView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .accessibility(hidden: true)
-            Text(isConnected ? "Willkommen bei Tower!" : "Verbinden…")
-                    .font(.largeTitle)
+            VStack {
+                Text("Willkommen bei")
+                        .font(.largeTitle)
+                Text("TOWER")
+                        .font(.tower)
+            }
+                    .accessibilityElement(children: .combine)
+            Text("Verbindung wird hergestellt…")
+                    .opacity(isConnected ? 0 : 1)
+                    .accessibilityHidden(isConnected)
             Button {
                 isPresentingCallSheet = true
             } label: {

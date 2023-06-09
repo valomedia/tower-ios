@@ -25,12 +25,14 @@
 		E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9787B1722DC8C49605991 /* CallController.swift */; };
 		E9E972ED7746A4DADA73309F /* Bool+else.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97E5A9111D126202C0CB4 /* Bool+else.swift */; };
 		E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */; };
+		E9E974C61651AD8E3238FA72 /* DolceVitaHeavyBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9E979C2B3EBCB06EBACBDA4 /* DolceVitaHeavyBold.ttf */; };
 		E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */; };
 		E9E975E90CDBECC6A22C2BE3 /* Tower_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */; };
 		E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */; };
 		E9E976D5D9A332B0540EA16C /* swiftgen.sh in Resources */ = {isa = PBXBuildFile; fileRef = E9E97B8B66372C78A442F83F /* swiftgen.sh */; };
 		E9E976F42D1E4BAA7BAAF7BE /* Settings.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E97082EE84DC39CD0A5259 /* Settings.stencil */; };
 		E9E9773EFE2B1DCFC3F67310 /* swiftgenInputFiles.xcfilelist in Resources */ = {isa = PBXBuildFile; fileRef = E9E9739962E5C94DE982482A /* swiftgenInputFiles.xcfilelist */; };
+		E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9739414376D953A5C2437 /* Font+tower.swift */; };
 		E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D9BDC1AF314FB168996 /* ErrorView.swift */; };
 		E9E977C6623BEF99AF35CC84 /* swiftgenOutputFiles.xcfilelist in Resources */ = {isa = PBXBuildFile; fileRef = E9E97ED05425606EE0CF25B0 /* swiftgenOutputFiles.xcfilelist */; };
 		E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */; };
@@ -104,6 +106,7 @@
 		E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSTests.swift; sourceTree = "<group>"; };
 		E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bool+then.swift"; sourceTree = "<group>"; };
 		E9E9737E107A7605C81485F7 /* LocationEventData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationEventData.swift; sourceTree = "<group>"; };
+		E9E9739414376D953A5C2437 /* Font+tower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Font+tower.swift"; sourceTree = "<group>"; };
 		E9E9739962E5C94DE982482A /* swiftgenInputFiles.xcfilelist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcfilelist; path = swiftgenInputFiles.xcfilelist; sourceTree = "<group>"; };
 		E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+shared.swift"; sourceTree = "<group>"; };
 		E9E973E2575686E9297841D8 /* Tower_iOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -118,6 +121,7 @@
 		E9E9780CA784F10F6DA82E56 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		E9E9787B1722DC8C49605991 /* CallController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallController.swift; sourceTree = "<group>"; };
 		E9E978CCD179D7A92701559C /* Assets.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Assets.stencil; sourceTree = "<group>"; };
+		E9E979C2B3EBCB06EBACBDA4 /* DolceVitaHeavyBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file.ttf; path = DolceVitaHeavyBold.ttf; sourceTree = "<group>"; };
 		E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapper.swift; sourceTree = "<group>"; };
 		E9E979DC20654943442D3251 /* LocationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
 		E9E97A368C0877C4B4E7B387 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
@@ -178,6 +182,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E1AFBBF82A333D77004E8A3C /* project_fonts */ = {
+			isa = PBXGroup;
+			children = (
+				E9E979C2B3EBCB06EBACBDA4 /* DolceVitaHeavyBold.ttf */,
+			);
+			path = project_fonts;
+			sourceTree = "<group>";
+		};
 		E9E973C71B69A29E23AB9B0D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +222,7 @@
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
 				E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */,
 				E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */,
+				E9E9739414376D953A5C2437 /* Font+tower.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -242,6 +255,7 @@
 		E9E975ED4B2377D212EEC753 /* Tower_iOS */ = {
 			isa = PBXGroup;
 			children = (
+				E1AFBBF82A333D77004E8A3C /* project_fonts */,
 				E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */,
 				E9E976112608FD8C951A230A /* Assets.xcassets */,
 				E9E97626E2D685C8268AAD5C /* Preview Content */,
@@ -435,6 +449,7 @@
 				E9E977C6623BEF99AF35CC84 /* swiftgenOutputFiles.xcfilelist in Resources */,
 				E9E97B8E8042313538C7361C /* swiftgen.yml in Resources */,
 				E9E976D5D9A332B0540EA16C /* swiftgen.sh in Resources */,
+				E9E974C61651AD8E3238FA72 /* DolceVitaHeavyBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,6 +530,7 @@
 				E9E97ACB93E9A4DBEC1906D6 /* CLLocation+init.swift in Sources */,
 				E9E97D987307335B79C9339E /* LocationController.swift in Sources */,
 				E9E97293EE5E7BBDD50F4281 /* JSONEncoder+shared.swift in Sources */,
+				E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,6 +715,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit den Assistent:innen zu ermöglichen.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

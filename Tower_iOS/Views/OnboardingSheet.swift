@@ -28,10 +28,8 @@ struct OnboardingSheet: View {
                     title: "Willkommen bei Tower!",
                     headline: "Wir brauchen Zugriff auf Deine Kamera und Dein Mikrofon",
                     caption: """
-                             Schön, Dich kennen zu lernen! Wie es aussieht, benutzt du unsere app gerade zum ersten
-                             Mal. Um Dich mit unseren Assistent:innen verbinden zu können, benötigen wir Deine
-                             Erlaubnis, die Kamera und das Mikrofon an Deinem Handy einzuschalten. Drücke auf
-                             „Fortfahren“, wenn du damit einverstanden bist.
+                             Schön, Dich kennen zu lernen! Um Dich mit unseren Assistent:innen verbinden zu können,
+                             benötigen wir Deine Erlaubnis, die Kamera und das Mikrofon an Deinem Handy einzuschalten.
                              """) {
                 Button {
                     AVAudioSession.sharedInstance().requestRecordPermission { granted in

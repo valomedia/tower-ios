@@ -83,7 +83,7 @@ struct NoContentView<Content: View>: View {
     let caption: String
 
     var body: some View {
-        Wrapper {
+        ScrollView {
             VStack {
                 if let image {
                     image
@@ -100,7 +100,8 @@ struct NoContentView<Content: View>: View {
                 Text(caption)
                         .font(.caption)
                         .padding(.top)
-                content().padding()
+                content()
+                        .padding()
                 Spacer()
             }
                     .padding()

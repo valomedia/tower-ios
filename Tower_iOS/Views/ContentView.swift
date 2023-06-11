@@ -27,10 +27,10 @@ struct ContentView: View {
             VStack {
                 Text("Willkommen bei")
                         .font(.largeTitle)
+                        .hidden(UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory)
                 Text("TOWER")
                         .font(.tower)
             }
-                    .accessibilityElement(children: .combine)
             Text("Verbindung wird hergestellt…")
                     .opacity(isConnected ? 0 : 1)
                     .accessibilityHidden(isConnected)
@@ -47,15 +47,11 @@ struct ContentView: View {
                     ErrorView(errorWrapper: errorWrapper)
                 }
                 .sheet(isPresented: $isPresentingCallSheet) {
-                    NavigationView {
-                        CallSheet()
-                    }
+                    CallSheet()
                             .interactiveDismissDisabled()
                 }
                 .sheet(isPresented: $isPresentingOnboardingSheet) {
-                    NavigationView {
-                        OnboardingSheet()
-                    }
+                    OnboardingSheet()
                             .interactiveDismissDisabled()
                 }
                 .onChange(of: phase) { phase in

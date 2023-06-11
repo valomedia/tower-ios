@@ -26,10 +26,10 @@ struct OnboardingSheet: View {
             NoContentView(
                     image: Image(uiImage: Asset.Assets.mascot.image),
                     title: "Willkommen bei Tower!",
-                    headline: "Wir brauchen Zugriff auf Deine Kamera und Dein Mikrofon",
+                    headline: "Schön, dass Du da bist",
                     caption: """
-                             Schön, Dich kennen zu lernen! Um Dich mit unseren Assistent:innen verbinden zu können,
-                             benötigen wir Deine Erlaubnis, die Kamera und das Mikrofon an Deinem Handy einzuschalten.
+                             Um Dir helfen zu können, benötigen wir Deine Erlaubnis, Kamera und Mikrofon an Deinem
+                             Handy einzuschalten.
                              """) {
                 Button {
                     AVAudioSession.sharedInstance().requestRecordPermission { granted in

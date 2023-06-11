@@ -41,6 +41,7 @@ struct CallSheet: View {
             }
                     .buttonStyle(.borderedProminent)
         }
+                .dynamicTypeSize(...DynamicTypeSize.accessibility4)
                 .onAppear {
                     Task { @MainActor in
                         controller.onCallEnd = { [self] (_: MeetingSessionStatus) in dismiss() }

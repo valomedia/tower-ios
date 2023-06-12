@@ -44,7 +44,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             case .reconnecting:
                 return "Neu verbinden…"
             case .waiting:
-                return "Warten of Assistenz…"
+                return "Warten auf Assistenz…"
             case .connected:
                 return "Verbunden"
             case .poorConnection:

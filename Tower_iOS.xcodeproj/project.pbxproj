@@ -279,6 +279,7 @@
 				E9E9742C24106EEB45A99FFB /* swiftgen.yml */,
 				E9E97B8B66372C78A442F83F /* swiftgen.sh */,
 				E1D03DA929DDE2510061E831 /* Settings.bundle */,
+				E9E978DE77FD2723E26B3CDE /* Resources */,
 			);
 			path = Tower_iOS;
 			sourceTree = "<group>";
@@ -326,6 +327,13 @@
 				E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E9E978DE77FD2723E26B3CDE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		E9E97E86ECD27CC8CE71A6CF /* Tower_iOSUITests */ = {

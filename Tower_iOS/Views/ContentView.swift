@@ -31,6 +31,7 @@ struct ContentView: View {
                 Text("TOWER")
                         .font(.tower)
             }
+                    .accessibilityElement(children: .combine)
             Text("Verbindung wird hergestellt…")
                     .opacity(isConnected ? 0 : 1)
                     .accessibilityHidden(isConnected)

@@ -84,32 +84,34 @@ struct NoContentView<Content: View>: View {
 
     var body: some View {
         ScrollView {
-            VStack {
-                if let image {
-                    image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
+            Wrapper {
+                VStack {
+                    if let image {
+                        image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding()
+                                .accessibility(hidden: true)
+                    }
+                    Text(title)
+                            .font(.title)
+                            .padding(.bottom)
+                    Text(headline)
+                            .font(.headline)
+                    Text(caption)
+                            .font(.caption)
+                            .padding(.top)
+                    content()
                             .padding()
-                            .accessibility(hidden: true)
+                    Spacer()
                 }
-                Text(title)
-                        .font(.title)
-                        .padding(.bottom)
-                Text(headline)
-                        .font(.headline)
-                Text(caption)
-                        .font(.caption)
-                        .padding(.top)
-                content()
                         .padding()
-                Spacer()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(16)
+                        .multilineTextAlignment(.center)
             }
                     .padding()
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(16)
-                    .multilineTextAlignment(.center)
         }
-                .padding()
     }
 
     // MARK: - Methods

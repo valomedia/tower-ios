@@ -46,7 +46,7 @@ struct OnboardingSheet: View {
                         }
                     }
                 } label: {
-                    Label("Fortfahren", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                    Label("Weiter", systemImage: "arrow.right").labelStyle(.trailingIcon)
                 }
                         .buttonStyle(.borderedProminent)
             }

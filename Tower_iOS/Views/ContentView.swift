@@ -32,7 +32,10 @@ struct ContentView: View {
                         .font(.tower)
             }
                     .accessibilityElement(children: .combine)
-            Text("Verbindung wird hergestellt…")
+            Text(
+                    UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
+                            ? "Verbinden…"
+                            : "Verbindung wird hergestellt…")
                     .opacity(isConnected ? 0 : 1)
                     .accessibilityHidden(isConnected)
             Button {

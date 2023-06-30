@@ -730,7 +730,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tower_iOS/Tower-iOS-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Tower;
+				INFOPLIST_KEY_CFBundleDisplayName = "Tower Fernassistenz";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";
@@ -786,7 +786,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tower_iOS/Tower-iOS-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Tower;
+				INFOPLIST_KEY_CFBundleDisplayName = "Tower Fernassistenz";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";

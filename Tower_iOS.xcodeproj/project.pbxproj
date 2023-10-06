@@ -99,6 +99,7 @@
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
+		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinResponse.swift; sourceTree = "<group>"; };
 		E9E97082EE84DC39CD0A5259 /* Settings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Settings.stencil; sourceTree = "<group>"; };
 		E9E970A06C0834C19E99DE33 /* Tower_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -294,6 +295,7 @@
 				E9E97A368C0877C4B4E7B387 /* .gitignore */,
 				E11F4EA929EF99A300D39816 /* Frameworks */,
 				E9E977DE6191E6A0257F3DC1 /* README.md */,
+				E9E9701FB102ED2BA117951D /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};

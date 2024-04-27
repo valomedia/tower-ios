@@ -7,7 +7,7 @@ iOS app for Tower.
 In order to build this App, you will need to do the following:
 
 1. Install [swiftgen](https://github.com/swiftgen/swiftgen) into your PATH
-2. Download [amazon-chime-sdk-ios](https://github.com/aws/amazon-chime-sdk-ios/releases) (latest, with bitcode support)
+2. Download [amazon-chime-sdk-ios](https://github.com/aws/amazon-chime-sdk-ios/releases/releases/tag/v0.25.0) (v0.25.0)
 3. Copy AmazonChimeSDK.xcframework and AmazonChimeSDKMedia.xcframework into PROJECT_DIR
 4. Set up code signing in XCode
 

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -94,8 +94,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E11F4EB629EFA54600D39816 /* AmazonChimeSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AmazonChimeSDK.xcframework; sourceTree = "<group>"; };
-		E11F4EB729EFA54700D39816 /* AmazonChimeSDKMedia.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = AmazonChimeSDKMedia.xcframework; sourceTree = "<group>"; };
+		E11F4EB629EFA54600D39816 /* AmazonChimeSDK.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:AZVF44667G:Amazon.com, Inc"; lastKnownFileType = wrapper.xcframework; path = AmazonChimeSDK.xcframework; sourceTree = "<group>"; };
+		E11F4EB729EFA54700D39816 /* AmazonChimeSDKMedia.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:AZVF44667G:Amazon.com, Inc"; lastKnownFileType = wrapper.xcframework; path = AmazonChimeSDKMedia.xcframework; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };

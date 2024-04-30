@@ -81,6 +81,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                .environmentObject(env)
     }
 
     @StateObject private var env = TowerEnvironment()

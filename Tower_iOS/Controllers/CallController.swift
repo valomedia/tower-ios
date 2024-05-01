@@ -96,7 +96,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     @Published var state: CallState = .none
 
-    private var session: MeetingSession? = nil
+    /// The MeetingSession this CallController is attached to.
+    ///
+    @Published var session: MeetingSession? = nil
+
     private var locationController: LocationController? = nil
 
     private let logger = ConsoleLogger(name: "CallController")
@@ -111,7 +114,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     /// Join a meeting with a given configuration.
     ///
-    /// This takes the configuration returned by the join endpoint and connects to the meeting with audio and video.
+    /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.
     ///
     /// - Parameter configuration: The MeetingSessionConfiguration
     /// - Throws:

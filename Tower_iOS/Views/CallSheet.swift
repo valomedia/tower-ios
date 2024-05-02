@@ -34,9 +34,11 @@ struct CallSheet: View {
             Button(role: .destructive) {
                 Task {
                     do {
-                        // An error here just means something went wrong when ending the call, which we'll
-                        // just ignore for now.
-                        try await TowerApi.end()
+                        try await TowerApi.end(session: controller.session!)
+                    } catch {
+                        // Something went wrong ending the call on the server. We'll just have to pretend the call
+                        // ended and hope the other side will notice we are gone at some point.
+                        controller.videoSessionDidStopWithStatus(sessionStatus: MeetingSessionStatus(statusCode: .audioCallEnded))
                     }
                 }
             } label: {
@@ -49,8 +51,9 @@ struct CallSheet: View {
                     Task { @MainActor in
                         controller.onCallEnd = { [self] (_: MeetingSessionStatus) in dismiss() }
                         do {
-                            try await controller.join(configuration: TowerApi.join())
+                            try await controller.join(configuration: TowerApi.start())
                         } catch {
+                            dismiss();
                             env.errorWrapper = ErrorWrapper(error: error, guidance: "Bitte versuche es später erneut")
                         }
                     }

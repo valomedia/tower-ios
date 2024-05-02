@@ -35,15 +35,15 @@ class TowerApi {
         try await request()
     }
 
-    /// Make a request to the join endpoint.
+    /// Make a request to the start endpoint.
     ///
-    /// The join endpoint will create both the room and the attendee.
+    /// The start endpoint will create both the room and the attendee.
     ///
     /// - Returns: A MeetingSessionConfiguration with the new meeting and attendee already configured in it.
     /// - Throws:
     ///
-    class func join() async throws -> MeetingSessionConfiguration {
-        let data = try await request("POST", "/join");
+    class func start() async throws -> MeetingSessionConfiguration {
+        let data = try await request("POST", "/start");
         let joinResponse = try JSONDecoder.shared.decode(JoinResponse.self, from: data)
         let meeting = joinResponse.joinInfo.meetingResponse.meeting
         let attendee = joinResponse.joinInfo.attendeeResponse.attendee
@@ -77,8 +77,8 @@ class TowerApi {
     ///
     /// - Throws:
     ///
-    class func end() async throws -> Void {
-        try await request("POST", "/end");
+    class func end(session: MeetingSession) async throws -> Void {
+        try await request("POST", "/end?meetingId=" + session.configuration.meetingId);
     }
 
     @discardableResult

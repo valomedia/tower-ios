@@ -413,6 +413,8 @@
 		E9E970CF23B28B42EF6060D8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					E9E9788D0F6AB5A2D5ECD54C = {
 						DevelopmentTeam = PKW2VF887G;

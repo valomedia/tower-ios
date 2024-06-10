@@ -14,7 +14,7 @@
 			<key>Key</key>
 			<string>endpoint_preference</string>
 			<key>DefaultValue</key>
-			<string>https://tower-backend.valo-dev.de/api</string>
+			<string>https://api.tower-assist.de</string>
 			<key>AutocapitalizationType</key>
 			<string>None</string>
 			<key>AutocorrectionType</key>

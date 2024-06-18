@@ -9,8 +9,7 @@ PATH.
 
 ## Installing
 
-In order for the app to function, it needs credentials. The credentials should be the same ones supplied to the session
-of tower-assist, you want to connect with.
+In order for the app to function, it needs credentials.
 
 You can supply credentials by choosing one of these two methods:
 

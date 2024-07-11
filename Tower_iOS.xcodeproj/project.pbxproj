@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
@@ -91,6 +92,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 			children = (
 				E1AFBBF82A333D77004E8A3C /* project_fonts */,
 				E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */,
+				E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */,
 				E9E976112608FD8C951A230A /* Assets.xcassets */,
 				E9E97626E2D685C8268AAD5C /* Preview Content */,
 				E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */,
@@ -470,6 +473,7 @@
 				E9E97DC5146A1DC309049ABA /* Assets.stencil in Resources */,
 				E9E976F42D1E4BAA7BAAF7BE /* Settings.stencil in Resources */,
 				E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */,
+				E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */,
 				E9E9773EFE2B1DCFC3F67310 /* swiftgenInputFiles.xcfilelist in Resources */,
 				E9E977C6623BEF99AF35CC84 /* swiftgenOutputFiles.xcfilelist in Resources */,
 				E9E97B8E8042313538C7361C /* swiftgen.yml in Resources */,

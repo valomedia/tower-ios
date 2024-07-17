@@ -14,6 +14,8 @@ import Foundation
 /// The various messages that can be sent.
 ///
 enum DataMessageTopic: String {
+    case capturePhotoRequest = "capture-photo-request"
+    case capturePhotoResponse = "capture-photo-response"
     case switchCameraRequest = "switch-camera-request"
     case switchCameraResponse = "switch-camera-response"
     case toggleTorchRequest = "toggle-torch-request"

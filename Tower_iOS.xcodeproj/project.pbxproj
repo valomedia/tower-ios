@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
+		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
@@ -93,6 +94,7 @@
 
 /* Begin PBXFileReference section */
 		E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 		E9E973C71B69A29E23AB9B0D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E1638CB72C48FC5A003A8A1B /* CameraController.swift */,
 				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
 				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 				E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */,
@@ -538,6 +541,7 @@
 				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,
 				E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */,
 				E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */,
+				E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */,
 				E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */,
 				E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */,
 				E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */,

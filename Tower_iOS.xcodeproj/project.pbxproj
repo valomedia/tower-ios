@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
+		E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */; };
+		E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
@@ -97,6 +99,8 @@
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
+		E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+image.swift"; sourceTree = "<group>"; };
+		E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image_Orientation+init.swift"; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -328,6 +332,8 @@
 				E9E97E5A9111D126202C0CB4 /* Bool+else.swift */,
 				E9E97EC736E76FA9F24A1789 /* CLLocation+init.swift */,
 				E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */,
+				E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */,
+				E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -538,6 +544,7 @@
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
+				E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */,
 				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,
 				E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */,
 				E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */,
@@ -548,6 +555,7 @@
 				E9E9785836011CE532198B31 /* OnboardingSheet.swift in Sources */,
 				E9E97D676B5FC0654D0AE376 /* TrailingIconLabelStyle.swift in Sources */,
 				E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */,
+				E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */,
 				E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */,
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
 				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,

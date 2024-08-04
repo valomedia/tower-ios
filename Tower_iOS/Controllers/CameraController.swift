@@ -19,9 +19,7 @@ import UIKit
 ///
 /// This contains the application logic for capturing photos from the device camera.
 ///
-class CameraController: NSObject {
-
-    // MARK: - Static properties
+class CameraController: NSObject, AVCapturePhotoCaptureDelegate {
 
     // MARK: - Life cycle methods
 
@@ -47,12 +45,6 @@ class CameraController: NSObject {
         guard let captureDevice = captureDevice else { return false }
         return backCaptureDevices.contains(captureDevice)
     }
-
-    lazy var photoStream: AsyncStream<AVCapturePhoto> = {
-        AsyncStream { continuation in
-            addToPhotoStream = { photo in continuation.yield(photo) }
-        }
-    }()
 
     private let logger = ConsoleLogger(name: "CameraController")
 
@@ -111,10 +103,12 @@ class CameraController: NSObject {
         return UIDevice.current.orientation
     }
 
+    private var continuations: [CheckedContinuation<AVCapturePhoto, Error>] = []
+
     // MARK: - Methods
 
-    func start() async {
-        let authorized = await checkAuthorization()
+    func start() {
+        let authorized = checkAuthorization()
         guard authorized else {
             logger.error(msg: "Camera access was not authorized.")
             return
@@ -152,15 +146,37 @@ class CameraController: NSObject {
         }
     }
 
-    func takePhoto() {
-        guard let photoOutput = self.photoOutput else { return }
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let error {
+            logger.error(msg: "Error capturing photo: \(error.localizedDescription)")
+        }
+
+        for continuation in continuations {
+            if let error {
+                continuation.resume(throwing: error)
+            } else {
+                continuation.resume(returning: photo)
+            }
+        }
+        continuations = []
+    }
+
+    func takePhoto() async throws -> AVCapturePhoto {
+        guard let photoOutput = self.photoOutput else {
+            throw CameraError.unexpectedError
+        }
+        guard photoOutput.availablePhotoCodecTypes.contains(.jpeg) else {
+            throw CameraError.codecUnavailable
+        }
 
         sessionQueue.async {
-            var photoSettings = AVCapturePhotoSettings()
-
-            if photoOutput.availablePhotoCodecTypes.contains(.hevc) {
-                photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
-            }
+            let photoSettings = AVCapturePhotoSettings(
+                format: [
+                    AVVideoCodecKey: AVVideoCodecType.jpeg, 
+                    AVVideoCompressionPropertiesKey: [
+                        AVVideoQualityKey: "0.1"
+                    ]
+                ])
 
             let isFlashAvailable = self.deviceInput?.device.isFlashAvailable ?? false
             photoSettings.flashMode = isFlashAvailable ? .auto : .off
@@ -176,6 +192,8 @@ class CameraController: NSObject {
 
             photoOutput.capturePhoto(with: photoSettings, delegate: self)
         }
+
+        return try await withCheckedThrowingContinuation { continuation in continuations.append(continuation) }
     }
 
     private func configureCaptureSession(completionHandler: (_ success: Bool) -> Void) {
@@ -222,17 +240,14 @@ class CameraController: NSObject {
         success = true
     }
 
-    private func checkAuthorization() async -> Bool {
+    private func checkAuthorization() -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             logger.info(msg: "Camera access authorized.")
             return true
         case .notDetermined:
             logger.info(msg: "Camera access not determined.")
-            sessionQueue.suspend()
-            let status = await AVCaptureDevice.requestAccess(for: .video)
-            sessionQueue.resume()
-            return status
+            return false
         case .denied:
             logger.info(msg: "Camera access denied.")
             return false
@@ -284,20 +299,4 @@ class CameraController: NSObject {
         }
     }
 
-    private var addToPhotoStream: ((AVCapturePhoto) -> Void)?
-
-}
-
-// MARK: + AVCapturePhotoCaptureDelegate
-
-extension CameraController: AVCapturePhotoCaptureDelegate {
-
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        if let error = error {
-            logger.error(msg: "Error capturing photo: \(error.localizedDescription)")
-            return
-        }
-
-        addToPhotoStream?(photo)
-    }
 }

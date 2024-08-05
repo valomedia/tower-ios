@@ -9,6 +9,8 @@
 import Foundation
 import AmazonChimeSDK
 import CoreLocation
+import AVFoundation
+import SwiftUI
 
 
 // MARK: CallController
@@ -86,9 +88,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     /// Constructor.
     ///
-    init() {
-        cameraCaptureSource = DefaultCameraCaptureSource(logger: logger)
-    }
+    init() { }
 
     // MARK: - Properties
 
@@ -103,8 +103,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private var locationController: LocationController? = nil
 
     private let logger = ConsoleLogger(name: "CallController")
-    private let cameraCaptureSource: CameraCaptureSource
     private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: 2500)
+    private let cameraController = CameraController()
 
     // MARK: - Methods
 
@@ -143,12 +143,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         try session.audioVideo.start()
 
         // Start the capture
-        cameraCaptureSource.start()
+        cameraController.start()
 
-        // Switch to the back camera.
-        cameraCaptureSource.switchCamera()
-
-        session.audioVideo.startLocalVideo(source: cameraCaptureSource, config: localVideoConfig)
+        session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
 
         // Default to loudspeaker for now.
         let device = audioDevices
@@ -262,11 +259,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         switch dataMessage.topic {
         case DataMessageTopic.switchCameraRequest.rawValue:
-            cameraCaptureSource.switchCamera()
+            cameraController.switchCamera()
             sendDataMessage(.switchCameraResponse)
             break
         case DataMessageTopic.toggleTorchRequest.rawValue:
-            cameraCaptureSource.torchEnabled.toggle();
+            cameraController.torchEnabled.toggle();
             sendDataMessage(.toggleTorchResponse)
             break
         case DataMessageTopic.locationRequest.rawValue:
@@ -290,8 +287,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     private func end() {
         session?.audioVideo.stop()
-        cameraCaptureSource.stop()
-        cameraCaptureSource.torchEnabled = false
+        cameraController.stop()
+        cameraController.torchEnabled = false
         state = .none
         session = nil
         locationController = nil

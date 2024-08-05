@@ -15,12 +15,15 @@ import Foundation
 ///
 enum CameraError: Error, LocalizedError, CustomStringConvertible {
     case codecUnavailable
+    case exportFailed
     case unexpectedError
 
     public var description: String {
         switch self {
         case .codecUnavailable:
             return "Codec unavailable"
+        case .exportFailed:
+            return "Export failed"
         case .unexpectedError:
             return "Unexpected error"
         }
@@ -30,6 +33,8 @@ enum CameraError: Error, LocalizedError, CustomStringConvertible {
         switch self {
         case .codecUnavailable:
             return "Codec nicht verfügbar"
+        case .exportFailed:
+            return "Export fehlgeschlagen"
         case .unexpectedError:
             return "Unerwarteter Fehler"
         }

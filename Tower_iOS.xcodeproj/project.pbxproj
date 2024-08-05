@@ -14,6 +14,7 @@
 		E1CB1BD72C5B87860078AF3A /* CameraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD62C5B87860078AF3A /* CameraError.swift */; };
 		E1CB1BD92C5B93680078AF3A /* CapturePhotoResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD82C5B93680078AF3A /* CapturePhotoResponseData.swift */; };
 		E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */; };
+		E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
@@ -107,6 +108,7 @@
 		E1CB1BD62C5B87860078AF3A /* CameraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraError.swift; sourceTree = "<group>"; };
 		E1CB1BD82C5B93680078AF3A /* CapturePhotoResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturePhotoResponseData.swift; sourceTree = "<group>"; };
 		E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+compacted.swift"; sourceTree = "<group>"; };
+		E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentMutableSet.swift; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				E9E9780CA784F10F6DA82E56 /* Location.swift */,
 				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
 				E1CB1BD82C5B93680078AF3A /* CapturePhotoResponseData.swift */,
+				E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -581,6 +584,7 @@
 				E9E97D9435E71A5FB03C32C2 /* Bool+then.swift in Sources */,
 				E9E972ED7746A4DADA73309F /* Bool+else.swift in Sources */,
 				E9E97ACB93E9A4DBEC1906D6 /* CLLocation+init.swift in Sources */,
+				E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */,
 				E9E97D987307335B79C9339E /* LocationController.swift in Sources */,
 				E9E97293EE5E7BBDD50F4281 /* JSONEncoder+shared.swift in Sources */,
 				E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */,

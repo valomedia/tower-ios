@@ -13,6 +13,7 @@
 		E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */; };
 		E1CB1BD72C5B87860078AF3A /* CameraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD62C5B87860078AF3A /* CameraError.swift */; };
 		E1CB1BD92C5B93680078AF3A /* CapturePhotoResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD82C5B93680078AF3A /* CapturePhotoResponseData.swift */; };
+		E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */; };
 		E1CB1BDD2C5FEEEA0078AF3A /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */; };
 		E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */; };
 		E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */; };
@@ -108,6 +109,7 @@
 		E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image_Orientation+init.swift"; sourceTree = "<group>"; };
 		E1CB1BD62C5B87860078AF3A /* CameraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraError.swift; sourceTree = "<group>"; };
 		E1CB1BD82C5B93680078AF3A /* CapturePhotoResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturePhotoResponseData.swift; sourceTree = "<group>"; };
+		E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoData.swift; sourceTree = "<group>"; };
 		E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSize.swift; sourceTree = "<group>"; };
 		E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+compacted.swift"; sourceTree = "<group>"; };
 		E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentMutableSet.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				E9E9780CA784F10F6DA82E56 /* Location.swift */,
 				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
 				E1CB1BD82C5B93680078AF3A /* CapturePhotoResponseData.swift */,
+				E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */,
 				E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */,
 				E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */,
 			);
@@ -560,6 +563,7 @@
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
+				E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */,
 				E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */,
 				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,
 				E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */,

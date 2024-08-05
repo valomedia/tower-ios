@@ -24,7 +24,7 @@ struct CapturePhotoResponseData: Codable {
     
     /// The data for the photo.
     ///
-    var photoData: PhotoData?
+    var photoData: PhotoDataChunk?
     
     /// The error message if photo capture failed.
     ///
@@ -33,14 +33,14 @@ struct CapturePhotoResponseData: Codable {
 }
 
 
-// MARK: PhotoData
+// MARK: PhotoDataChunk
 
 /// The data for the photo.
 ///
 /// This contains a base64-encoded chunk of the actual image file, along with the metadata that is needed to
 /// reassemble the chunks and display the image.
 ///
-struct PhotoData: Codable {
+struct PhotoDataChunk: Codable {
     
     enum CodingKeys: String, CodingKey {
         case imageData = "imageData"

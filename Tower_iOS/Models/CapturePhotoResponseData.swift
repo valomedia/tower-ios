@@ -65,30 +65,6 @@ struct PhotoData: Codable {
 }
 
 
-// MARK: ImageSize
-
-/// The width and height for an image.
-///
-struct ImageSize: Codable {
-    
-    enum CodingKeys: String, CodingKey {
-        case width = "width"
-        case height = "height"
-    }
-    
-    // MARK: - Properties
-    
-    /// The image width.
-    ///
-    var width: Int
-    
-    /// The image height.
-    ///
-    var height: Int
-    
-}
-
-
 // MARK: ChunkingInfo
 
 /// The total number of chunks of a chunked image, along with an index into the set of chunks.

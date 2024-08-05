@@ -270,64 +270,16 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         switch dataMessage.topic {
         case DataMessageTopic.switchCameraRequest.rawValue:
-            cameraController.switchCamera()
-            sendDataMessage(.switchCameraResponse)
+            handleSwitchCameraRequest()
             break
         case DataMessageTopic.toggleTorchRequest.rawValue:
-            cameraController.torchEnabled.toggle();
-            sendDataMessage(.toggleTorchResponse)
+            handleToggleTorchRequest()
             break
         case DataMessageTopic.locationRequest.rawValue:
-            do {
-                try locationController?.requestLocation()
-                sendDataMessage(.locationResponse)
-            } catch {
-                sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
-            }
+            handleLocationRequest()
             break
         case DataMessageTopic.capturePhotoRequest.rawValue:
-            Task {
-                do {
-                    let photoData = try await cameraController.takePhoto()
-                    logger.info(msg: "Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
-                    
-                    let encodedData = photoData.imageData.base64EncodedString()
-                    let chunkSize = try CallController.dataMessageMaxSize
-                        - JSONEncoder
-                            .shared
-                            .encode(
-                                CapturePhotoResponseData(
-                                    photoData: PhotoDataChunk(
-                                        imageData: "",
-                                        imageSize: photoData.imageSize,
-                                        chunkingInfo: ChunkingInfo(
-                                            index: CallController.dataMessageMaxBurstCount,
-                                            count: CallController.dataMessageMaxBurstCount))))
-                            .count
-                    let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
-                        let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
-                        let end = encodedData.index(start, offsetBy: chunkSize, limitedBy: encodedData.endIndex)
-                            ?? encodedData.endIndex
-                        return String(encodedData[start..<end])
-                    }
-                    for (index, imageData) in chunks.enumerated() {
-                        sendDataMessage(
-                            .capturePhotoResponse,
-                            data: try! JSONEncoder.shared.encode(
-                                    CapturePhotoResponseData(
-                                    photoData: PhotoDataChunk(
-                                        imageData: imageData,
-                                        imageSize: photoData.imageSize,
-                                        chunkingInfo: ChunkingInfo(
-                                            index: index,
-                                            count: chunks.count)))))
-                    }
-                } catch {
-                    sendDataMessage(
-                        .capturePhotoResponse,
-                        data: try! JSONEncoder.shared.encode(CapturePhotoResponseData(message: "\(error)")))
-                }
-            }
+            handleCapturePhotoRequest()
             break
         default:
             break
@@ -368,5 +320,68 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         session = nil
         locationController = nil
     }
+    
+    private func handleSwitchCameraRequest() {
+        cameraController.switchCamera()
+        sendDataMessage(.switchCameraResponse)
+    }
+    
+    private func handleToggleTorchRequest() {
+        cameraController.torchEnabled.toggle();
+        sendDataMessage(.toggleTorchResponse)
+    }
+    
+    private func handleLocationRequest() {
+        do {
+            try locationController?.requestLocation()
+            sendDataMessage(.locationResponse)
+        } catch {
+            sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
+        }
+    }
 
+    private func handleCapturePhotoRequest() {
+        Task {
+            do {
+                let photoData = try await cameraController.takePhoto()
+                logger.info(msg: "Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
+                
+                let encodedData = photoData.imageData.base64EncodedString()
+                let chunkSize = try CallController.dataMessageMaxSize
+                    - JSONEncoder
+                        .shared
+                        .encode(
+                            CapturePhotoResponseData(
+                                photoData: PhotoDataChunk(
+                                    imageData: "",
+                                    imageSize: photoData.imageSize,
+                                    chunkingInfo: ChunkingInfo(
+                                        index: CallController.dataMessageMaxBurstCount,
+                                        count: CallController.dataMessageMaxBurstCount))))
+                        .count
+                let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
+                    let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
+                    let end = encodedData.index(start, offsetBy: chunkSize, limitedBy: encodedData.endIndex)
+                        ?? encodedData.endIndex
+                    return String(encodedData[start..<end])
+                }
+                for (index, imageData) in chunks.enumerated() {
+                    sendDataMessage(
+                        .capturePhotoResponse,
+                        data: try! JSONEncoder.shared.encode(
+                                CapturePhotoResponseData(
+                                photoData: PhotoDataChunk(
+                                    imageData: imageData,
+                                    imageSize: photoData.imageSize,
+                                    chunkingInfo: ChunkingInfo(
+                                        index: index,
+                                        count: chunks.count)))))
+                }
+            } catch {
+                sendDataMessage(
+                    .capturePhotoResponse,
+                    data: try! JSONEncoder.shared.encode(CapturePhotoResponseData(message: "\(error)")))
+            }
+        }
+    }
 }

@@ -83,6 +83,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// become impossible anyway, and there is no reasonable way to gracefully recover.
     ///
     private static let dataMessageLifetimeMs: Int32 = 10_000;
+    
+    /// The maximum allowable size for the data in the realtime data messages.
+    ///
+    private static let dataMessageMaxSize = 2048;
+    
+    /// The maximum number of realtime data messages to send in one burst.
+    ///
+    private static let dataMessageMaxBurstCount = 500;
 
     // MARK: - Life cycle methods
 
@@ -125,6 +133,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         state = .notConnected
         session.audioVideo.addAudioVideoObserver(observer: self)
         session.audioVideo.addRealtimeObserver(observer: self)
+        session.audioVideo.addRealtimeDataMessageObserver(
+                topic: DataMessageTopic.capturePhotoRequest.rawValue,
+                observer: self)
         session.audioVideo.addRealtimeDataMessageObserver(
                 topic: DataMessageTopic.switchCameraRequest.rawValue,
                 observer: self)
@@ -274,8 +285,72 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
             }
             break
+        case DataMessageTopic.capturePhotoRequest.rawValue:
+            Task {
+                do {
+                    let photoData = try await cameraController.takePhoto()
+                    logger.info(msg: "Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
+                    
+                    let encodedData = photoData.imageData.base64EncodedString()
+                    let chunkSize = try CallController.dataMessageMaxSize
+                        - JSONEncoder
+                            .shared
+                            .encode(
+                                CapturePhotoResponseData(
+                                    photoData: PhotoDataChunk(
+                                        imageData: "",
+                                        imageSize: photoData.imageSize,
+                                        chunkingInfo: ChunkingInfo(
+                                            index: CallController.dataMessageMaxBurstCount,
+                                            count: CallController.dataMessageMaxBurstCount))))
+                            .count
+                    let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
+                        let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
+                        let end = encodedData.index(start, offsetBy: chunkSize, limitedBy: encodedData.endIndex)
+                            ?? encodedData.endIndex
+                        return String(encodedData[start..<end])
+                    }
+                    for (index, imageData) in chunks.enumerated() {
+                        sendDataMessage(
+                            .capturePhotoResponse,
+                            data: try! JSONEncoder.shared.encode(
+                                    CapturePhotoResponseData(
+                                    photoData: PhotoDataChunk(
+                                        imageData: imageData,
+                                        imageSize: photoData.imageSize,
+                                        chunkingInfo: ChunkingInfo(
+                                            index: index,
+                                            count: chunks.count)))))
+                    }
+                } catch {
+                    sendDataMessage(
+                        .capturePhotoResponse,
+                        data: try! JSONEncoder.shared.encode(CapturePhotoResponseData(message: "\(error)")))
+                }
+            }
+            break
         default:
             break
+        }
+    }
+
+    func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
+        do {
+            try session?.audioVideo.realtimeSendDataMessage(
+                    topic: topic.rawValue,
+                    data: data ?? "{}".data(using: .utf8) as Any,
+                    lifetimeMs: CallController.dataMessageLifetimeMs)
+        } catch let err as SendDataMessageError {
+            switch err {
+            case SendDataMessageError.invalidDataLength:
+                logger.error(msg: "Message too long, was \(data?.count ?? 0) bytes!")
+                break
+            default:
+                logger.error(msg: "Failed to send message! \(err)")
+                break
+            }
+        } catch {
+            logger.error(msg: "Unknown error \(error.localizedDescription)")
         }
     }
 
@@ -292,19 +367,6 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         state = .none
         session = nil
         locationController = nil
-    }
-
-    func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
-        do {
-            try session?.audioVideo.realtimeSendDataMessage(
-                    topic: topic.rawValue,
-                    data: data ?? "{}".data(using: .utf8) as Any,
-                    lifetimeMs: CallController.dataMessageLifetimeMs)
-        } catch let err as SendDataMessageError {
-            logger.error(msg: "Failed to send message! \(err)")
-        } catch {
-            logger.error(msg: "Unknown error \(error.localizedDescription)")
-        }
     }
 
 }

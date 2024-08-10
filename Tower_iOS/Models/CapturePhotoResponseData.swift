@@ -67,13 +67,17 @@ struct PhotoDataChunk: Codable {
 
 // MARK: ChunkingInfo
 
-/// The total number of chunks of a chunked image, along with an index into the set of chunks.
+/// Information needed to reassemble chunks into a complete image.
+///
+/// The total number of chunks of a chunked image, along with an index into the set of chunks, and a UUID to help
+/// identifying chunks belonging to the same set.
 ///
 struct ChunkingInfo: Codable {
     
     enum CodingKeys: String, CodingKey {
         case index = "index"
         case count = "count"
+        case uuid = "uuid"
     }
     
     // MARK: - Properties
@@ -85,5 +89,9 @@ struct ChunkingInfo: Codable {
     /// The total number of chunks in the set this chunk belongs to.
     ///
     var count: Int
+    
+    /// A uuid that is the same for all PhotoDataChunks belonging to the same photo.
+    ///
+    var uuid: UUID
     
 }

@@ -346,6 +346,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 let photoData = try await cameraController.takePhoto()
                 logger.info(msg: "Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
                 
+                let uuid = UUID()
                 let encodedData = photoData.imageData.base64EncodedString()
                 let chunkSize = try CallController.dataMessageMaxSize
                     - JSONEncoder
@@ -357,7 +358,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                                     imageSize: photoData.imageSize,
                                     chunkingInfo: ChunkingInfo(
                                         index: CallController.dataMessageMaxBurstCount,
-                                        count: CallController.dataMessageMaxBurstCount))))
+                                        count: CallController.dataMessageMaxBurstCount,
+                                        uuid: uuid))))
                         .count
                 let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
                     let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
@@ -375,7 +377,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                                     imageSize: photoData.imageSize,
                                     chunkingInfo: ChunkingInfo(
                                         index: index,
-                                        count: chunks.count)))))
+                                        count: chunks.count,
+                                        uuid: uuid)))))
                 }
             } catch {
                 sendDataMessage(

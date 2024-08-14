@@ -1,0 +1,4 @@
+Code from the Amazon Chime SDK for iOS is covered under the Apache License 2.0
+http://www.apache.org/licenses/
+
+/Tower_iOS/Models/ConcurrentMutableSet.swift

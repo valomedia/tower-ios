@@ -2,8 +2,9 @@
 //  ConcurrentMutableSet.swift
 //  Tower_iOS
 //
-//  Created by Jean-Pierre Höhmann on 2024-08-05.
-//
+//  Added by Jean-Pierre Höhmann on 2024-08-05.
+//  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+//  SPDX-License-Identifier: Apache-2.0
 //
 
 import Foundation

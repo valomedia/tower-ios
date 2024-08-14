@@ -781,6 +781,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tower Fernassistenz";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Hiermit kannst du dich mit drahtlosen Kopfhörern oder Freisprecheinrichtungen verbinden.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit den Assistent:innen zu ermöglichen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -838,6 +839,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Tower Fernassistenz";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Hiermit kannst du dich mit drahtlosen Kopfhörern oder Freisprecheinrichtungen verbinden.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Diese App benutzt Ortungsdienste, um den Assistent:innen den aktuellen Standort mitzuteilen.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Diese App benutzt das Mikrofon, um die Kommunikation mit den Assistent:innen zu ermöglichen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

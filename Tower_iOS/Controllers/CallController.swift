@@ -9,6 +9,8 @@
 import Foundation
 import AmazonChimeSDK
 import CoreLocation
+import AVFoundation
+import SwiftUI
 
 
 // MARK: CallController
@@ -81,14 +83,20 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// become impossible anyway, and there is no reasonable way to gracefully recover.
     ///
     private static let dataMessageLifetimeMs: Int32 = 10_000;
+    
+    /// The maximum allowable size for the data in the realtime data messages.
+    ///
+    private static let dataMessageMaxSize = 2048;
+    
+    /// The maximum number of realtime data messages to send in one burst.
+    ///
+    private static let dataMessageMaxBurstCount = 500;
 
     // MARK: - Life cycle methods
 
     /// Constructor.
     ///
-    init() {
-        cameraCaptureSource = DefaultCameraCaptureSource(logger: logger)
-    }
+    init() { }
 
     // MARK: - Properties
 
@@ -103,8 +111,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private var locationController: LocationController? = nil
 
     private let logger = ConsoleLogger(name: "CallController")
-    private let cameraCaptureSource: CameraCaptureSource
     private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: 2500)
+    private let cameraController = CameraController()
 
     // MARK: - Methods
 
@@ -126,6 +134,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         session.audioVideo.addAudioVideoObserver(observer: self)
         session.audioVideo.addRealtimeObserver(observer: self)
         session.audioVideo.addRealtimeDataMessageObserver(
+                topic: DataMessageTopic.capturePhotoRequest.rawValue,
+                observer: self)
+        session.audioVideo.addRealtimeDataMessageObserver(
                 topic: DataMessageTopic.switchCameraRequest.rawValue,
                 observer: self)
         session.audioVideo.addRealtimeDataMessageObserver(
@@ -143,12 +154,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         try session.audioVideo.start()
 
         // Start the capture
-        cameraCaptureSource.start()
+        cameraController.start()
 
-        // Switch to the back camera.
-        cameraCaptureSource.switchCamera()
-
-        session.audioVideo.startLocalVideo(source: cameraCaptureSource, config: localVideoConfig)
+        session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
 
         // Default to loudspeaker for now.
         let device = audioDevices
@@ -262,23 +270,39 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         switch dataMessage.topic {
         case DataMessageTopic.switchCameraRequest.rawValue:
-            cameraCaptureSource.switchCamera()
-            sendDataMessage(.switchCameraResponse)
+            handleSwitchCameraRequest()
             break
         case DataMessageTopic.toggleTorchRequest.rawValue:
-            cameraCaptureSource.torchEnabled.toggle();
-            sendDataMessage(.toggleTorchResponse)
+            handleToggleTorchRequest()
             break
         case DataMessageTopic.locationRequest.rawValue:
-            do {
-                try locationController?.requestLocation()
-                sendDataMessage(.locationResponse)
-            } catch {
-                sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
-            }
+            handleLocationRequest()
+            break
+        case DataMessageTopic.capturePhotoRequest.rawValue:
+            handleCapturePhotoRequest()
             break
         default:
             break
+        }
+    }
+
+    func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
+        do {
+            try session?.audioVideo.realtimeSendDataMessage(
+                    topic: topic.rawValue,
+                    data: data ?? "{}".data(using: .utf8) as Any,
+                    lifetimeMs: CallController.dataMessageLifetimeMs)
+        } catch let err as SendDataMessageError {
+            switch err {
+            case SendDataMessageError.invalidDataLength:
+                logger.error(msg: "Message too long, was \(data?.count ?? 0) bytes!")
+                break
+            default:
+                logger.error(msg: "Failed to send message! \(err)")
+                break
+            }
+        } catch {
+            logger.error(msg: "Unknown error \(error.localizedDescription)")
         }
     }
 
@@ -290,24 +314,77 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     private func end() {
         session?.audioVideo.stop()
-        cameraCaptureSource.stop()
-        cameraCaptureSource.torchEnabled = false
+        cameraController.stop()
+        cameraController.torchEnabled = false
         state = .none
         session = nil
         locationController = nil
     }
-
-    func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
+    
+    private func handleSwitchCameraRequest() {
+        cameraController.switchCamera()
+        sendDataMessage(.switchCameraResponse)
+    }
+    
+    private func handleToggleTorchRequest() {
+        cameraController.torchEnabled.toggle();
+        sendDataMessage(.toggleTorchResponse)
+    }
+    
+    private func handleLocationRequest() {
         do {
-            try session?.audioVideo.realtimeSendDataMessage(
-                    topic: topic.rawValue,
-                    data: data ?? "{}".data(using: .utf8) as Any,
-                    lifetimeMs: CallController.dataMessageLifetimeMs)
-        } catch let err as SendDataMessageError {
-            logger.error(msg: "Failed to send message! \(err)")
+            try locationController?.requestLocation()
+            sendDataMessage(.locationResponse)
         } catch {
-            logger.error(msg: "Unknown error \(error.localizedDescription)")
+            sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
         }
     }
 
+    private func handleCapturePhotoRequest() {
+        Task {
+            do {
+                let photoData = try await cameraController.takePhoto()
+                logger.info(msg: "Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
+                
+                let uuid = UUID()
+                let encodedData = photoData.imageData.base64EncodedString()
+                let chunkSize = try CallController.dataMessageMaxSize
+                    - JSONEncoder
+                        .shared
+                        .encode(
+                            CapturePhotoResponseData(
+                                photoData: PhotoDataChunk(
+                                    imageData: "",
+                                    imageSize: photoData.imageSize,
+                                    chunkingInfo: ChunkingInfo(
+                                        index: CallController.dataMessageMaxBurstCount,
+                                        count: CallController.dataMessageMaxBurstCount,
+                                        uuid: uuid))))
+                        .count
+                let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
+                    let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
+                    let end = encodedData.index(start, offsetBy: chunkSize, limitedBy: encodedData.endIndex)
+                        ?? encodedData.endIndex
+                    return String(encodedData[start..<end])
+                }
+                for (index, imageData) in chunks.enumerated() {
+                    sendDataMessage(
+                        .capturePhotoResponse,
+                        data: try! JSONEncoder.shared.encode(
+                                CapturePhotoResponseData(
+                                photoData: PhotoDataChunk(
+                                    imageData: imageData,
+                                    imageSize: photoData.imageSize,
+                                    chunkingInfo: ChunkingInfo(
+                                        index: index,
+                                        count: chunks.count,
+                                        uuid: uuid)))))
+                }
+            } catch {
+                sendDataMessage(
+                    .capturePhotoResponse,
+                    data: try! JSONEncoder.shared.encode(CapturePhotoResponseData(message: "\(error)")))
+            }
+        }
+    }
 }

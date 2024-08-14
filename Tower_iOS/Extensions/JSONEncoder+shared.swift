@@ -17,6 +17,10 @@ extension JSONEncoder {
 
     /// A shared JSONEncoder for use throughout the application.
     ///
-    static let shared: JSONEncoder = JSONEncoder()
+    static let shared: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .withoutEscapingSlashes
+        return encoder
+    }()
 
 }

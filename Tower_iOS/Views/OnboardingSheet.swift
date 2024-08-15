@@ -55,10 +55,9 @@ struct OnboardingSheet: View {
                     title: "Fehlende Berechtigungen",
                     headline: "Wir können nicht auf Deine Kamera und Dein Mikrofon zugreifen",
                     caption: """
-                             Um dich mit einer Assistent:in verbinden zu können, müssen wir Deine Kamera und Dein
-                             Mikrofon aktivieren können. Leider fehlt und dafür Deine Erlaubnis. Wenn du uns Deine
-                             Erlaubnis doch geben möchtest, kannst du das in der Einstellungen-App jederzeit tun.
-                             Du kannst auf den Knopf klicken, um jetzt sofort zu den Einstellungen zu gelangen.
+                             Um dich mit einer Assistenz zu verbinden, möchten wir auf Deine Kamera und Dein Mikrofon zugreifen.
+                             Ansonsten ist eine Verbindung nicht möglich. 
+                             Du kannst uns jetzt die Erlaubnis dafür geben. Klicke dazu auf den Knopf, um zu den Einstellungen zu gelangen.
                              """) {
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) {

@@ -26,7 +26,7 @@ jobs:
           curl -L https://github.com/SwiftGen/SwiftGen/releases/download/6.6.3/swiftgen-6.6.3.zip > swiftgen.zip
           unzip swiftgen.zip
           mkdir -p ~/.local/{bin,lib/swiftgen}
-          cp bin/* ~/.local/lib/swiftgen
+          cp -r bin/* ~/.local/lib/swiftgen
           ln -s ../lib/swiftgen/swiftgen ~/.local/bin/swiftgen
       - name: Build
         env:

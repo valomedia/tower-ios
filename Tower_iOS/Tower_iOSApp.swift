@@ -19,13 +19,15 @@ import SwiftUI
     /// Constructor.
     ///
     /// This is the first thing that runs when the app starts up.  Currently the only thing it does is setting a few
-    /// title items in the Settings.bundle to reflect the parameters this app was built with.
+    /// title items in the Settings.bundle to reflect the parameters this app was built with,
+    /// in addition, the automatic screen lock is deactivated when the app is used.
     ///
     init() {
         Settings.namePreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
         Settings.identifierPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
         Settings.versionPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         Settings.buildPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+        
         UIApplication.shared.isIdleTimerDisabled = true
     }
 

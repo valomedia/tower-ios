@@ -23,7 +23,7 @@ jobs:
       - name: Install swiftgen
         run: |
           cd "$(mktemp -d)"
-          curl https://github.com/SwiftGen/SwiftGen/releases/download/6.6.3/swiftgen-6.6.3.zip > swiftgen.zip
+          curl -L https://github.com/SwiftGen/SwiftGen/releases/download/6.6.3/swiftgen-6.6.3.zip > swiftgen.zip
           unzip swiftgen.zip
           mkdir -p /usr/local/{bin,lib/swiftgen}
           cp bin/* /usr/local/lib/swiftgen

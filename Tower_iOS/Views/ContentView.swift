@@ -41,7 +41,7 @@ struct ContentView: View {
             Button {
                 isPresentingCallSheet = true
             } label: {
-                Label("Hilfe erhalten", systemImage: "phone.fill")
+                Label("Jetzt anrufen", systemImage: "phone.fill")
             }
                     .buttonStyle(.borderedProminent)
                     .disabled(!isConnected)

@@ -24,14 +24,7 @@ struct ContentView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .accessibility(hidden: true)
-            VStack {
-                Text("Willkommen bei")
-                        .font(.largeTitle)
-                        .hidden(UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory)
-                Text("TOWER")
-                        .font(.tower)
-            }
-                    .accessibilityElement(children: .combine)
+           
             Text(
                     UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
                             ? "Verbinden…"

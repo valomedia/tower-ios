@@ -25,13 +25,14 @@ jobs:
           cd "$(mktemp -d)"
           curl -L https://github.com/SwiftGen/SwiftGen/releases/download/6.6.3/swiftgen-6.6.3.zip > swiftgen.zip
           unzip swiftgen.zip
-          mkdir -p /usr/local/{bin,lib/swiftgen}
-          cp bin/* /usr/local/lib/swiftgen
-          ln -s ../lib/swiftgen/swiftgen /usr/local/bin/swiftgen
+          mkdir -p ~/.local/{bin,lib/swiftgen}
+          cp bin/* ~/.local/lib/swiftgen
+          ln -s ../lib/swiftgen/swiftgen ~/.local/bin/swiftgen
       - name: Build
         env:
           scheme: ${{ 'default' }}
         run: |
+          PATH="${HOME}/.local/bin:${PATH}"
           if [ $scheme = default ]; then scheme=$(cat default); fi
           if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`

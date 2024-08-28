@@ -41,7 +41,6 @@ struct LoginSheet: View {
                             ? "Zugangsdaten eingeben"
                             : "Bitte geben Sie Ihre Zugangsdaten ein.")
                 .dynamicTypeSize(...DynamicTypeSize.accessibility4)
-            
         }
         
         Form {
@@ -76,6 +75,7 @@ struct LoginSheet: View {
         }
 
     }
+    
     @State private var username = ""
     @State private var password = ""
     
@@ -83,11 +83,8 @@ struct LoginSheet: View {
     private var dismiss
 }
 
-
-
 // MARK: #Preview
 
 #Preview {
     LoginSheet()
 }
-

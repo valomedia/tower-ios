@@ -32,48 +32,39 @@ struct LoginSheet: View {
                 .padding()
             
             Text("Bitte geben Sie Ihre Anmeldeinformationen ein.")
-                .padding()
+                .padding(.horizontal)
         }
-        HStack {
-            Text("Benutzername")
-            TextField ("", text: $username)
-        }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color(.systemGray4), lineWidth: 1))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 10)
         
-        
-        
-        HStack {
-            Text("Passwort")
-            SecureField("", text: $password)
-        }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color(.systemGray4), lineWidth: 1))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 10)
-  
-        Button {
-            Settings.usernamePreference = username
-            Settings.passwordPreference = password
-            dismiss()
+        Form {
+            Section {
+                HStack {
+                    Text("Benutzername")
+                    TextField ("", text: $username)
+                }
+                HStack {
+                    Text("Passwort")
+                    SecureField("", text: $password)
+                }
+            }
             
+            Section {
+                Button {
+                    Settings.usernamePreference = username
+                    Settings.passwordPreference = password
+                    dismiss()
+                }
+                label: {
+                    HStack {
+                        Spacer()
+                        Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                        Spacer()
+                    }
+                }
+                .listRowBackground(Color(Asset.Assets.accentColor.color))
+                .foregroundColor(.white)
+            }
             
-        } label: {
-            Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
         }
-            .buttonStyle(.borderedProminent)
-        
-        Spacer()
 
     }
     @State private var username = ""

@@ -51,35 +51,50 @@ struct ContentView: View {
                     OnboardingSheet()
                             .interactiveDismissDisabled()
                 }
+        
+                .sheet(isPresented: $isPresentingLoginSheet) {
+                    LoginSheet()
+                        .interactiveDismissDisabled()
+                }
+                .onChange(of: isPresentingLoginSheet) { isPresentingLoginSheet in
+                    if !isPresentingLoginSheet {
+                        login()
+                    }
+                }
                 .onChange(of: phase) { phase in
                     isConnected = false
-                    env.errorWrapper = nil
+                    
 
-                    if (phase == .active) {
-                        Task {
-                            do {
-                                try await TowerApi.index()
-                                isConnected = true
-                            }
-                            catch {
-                                Task { @MainActor in
-                                    env.errorWrapper = ErrorWrapper(
-                                            error: error,
-                                            guidance: """
-                                                      Bitte überprüfe die Einstellungen „Server“, „Benutzername“ und \
-                                                      „Passwort” in der Einstellungen-App im Bereich „Tower”.
-                                                      """)
-                                }
-                            }
-                        }
+                    if (phase == .active && !isPresentingOnboardingSheet) {
+                        login()
                     }
                 }
                 .environmentObject(env)
     }
 
+    func login() {
+        Task {
+            do {
+                try await TowerApi.index()
+                isConnected = true
+            }
+            catch {
+                Task { @MainActor in
+                    isPresentingLoginSheet = true
+                }
+            }
+        }
+    }
+        
+        
+    
+    
+    
     @StateObject private var env = TowerEnvironment()
 
     @State private var isPresentingCallSheet = false
+    
+    @State private var isPresentingLoginSheet = false
 
     @State private var isPresentingOnboardingSheet
             = AVAudioSession.sharedInstance().recordPermission != .granted

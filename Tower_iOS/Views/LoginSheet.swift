@@ -24,7 +24,9 @@ struct LoginSheet: View {
                 .padding()
             
             Text("Bitte geben Sie erneut Ihre Anmeldeinformationen ein")
+                .foregroundColor(Color(UIColor.systemRed))
         }
+        
    
         if Settings.usernamePreference == "" && Settings.passwordPreference == "" {
             Text("Anmeldung")

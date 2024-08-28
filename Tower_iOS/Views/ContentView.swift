@@ -51,7 +51,6 @@ struct ContentView: View {
                     OnboardingSheet()
                             .interactiveDismissDisabled()
                 }
-        
                 .sheet(isPresented: $isPresentingLoginSheet) {
                     LoginSheet()
                         .interactiveDismissDisabled()
@@ -63,8 +62,6 @@ struct ContentView: View {
                 }
                 .onChange(of: phase) { phase in
                     isConnected = false
-                    
-
                     if (phase == .active && !isPresentingOnboardingSheet) {
                         login()
                     }
@@ -72,24 +69,6 @@ struct ContentView: View {
                 .environmentObject(env)
     }
 
-    func login() {
-        Task {
-            do {
-                try await TowerApi.index()
-                isConnected = true
-            }
-            catch {
-                Task { @MainActor in
-                    isPresentingLoginSheet = true
-                }
-            }
-        }
-    }
-        
-        
-    
-    
-    
     @StateObject private var env = TowerEnvironment()
 
     @State private var isPresentingCallSheet = false
@@ -104,9 +83,24 @@ struct ContentView: View {
 
     @Environment(\.scenePhase)
     private var phase
+    
+    // MARK: - Methods
+    
+    private func login() {
+        Task {
+            do {
+                try await TowerApi.index()
+                isConnected = true
+            }
+            catch {
+                Task { @MainActor in
+                    isPresentingLoginSheet = true
+                }
+            }
+        }
+    }
 
 }
-
 
 // MARK: ContentView_Previews
 

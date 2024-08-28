@@ -23,18 +23,25 @@ struct LoginSheet: View {
                 .font(.title)
                 .padding()
             
-            Text("Bitte geben Sie erneut Ihre Anmeldeinformationen ein")
+            Text(
+                    UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
+                            ? "Erneut versuchen"
+                            : "Bitte versuchen Sie es erneut")
                 .foregroundColor(Color(UIColor.systemRed))
+                .dynamicTypeSize(...DynamicTypeSize.accessibility4)
         }
         
-   
         if Settings.usernamePreference == "" && Settings.passwordPreference == "" {
             Text("Anmeldung")
                 .font(.title)
                 .padding()
             
-            Text("Bitte geben Sie Ihre Anmeldeinformationen ein.")
-                .padding(.horizontal)
+            Text(
+                    UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
+                            ? "Zugangsdaten eingeben"
+                            : "Bitte geben Sie Ihre Zugangsdaten ein.")
+                .dynamicTypeSize(...DynamicTypeSize.accessibility4)
+            
         }
         
         Form {

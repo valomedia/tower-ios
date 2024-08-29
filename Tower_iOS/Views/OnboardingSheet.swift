@@ -28,9 +28,10 @@ struct OnboardingSheet: View {
                     title: "Willkommen bei Tower!",
                     headline: "Schön, dass Du da bist",
                     caption: """
-                             Um Dir helfen zu können, benötigen wir Deine Erlaubnis, Kamera und Mikrofon an Deinem
-                             Handy einzuschalten.
-                             """) {
+                             Um Dir helfen zu können, benötigen wir Deine Erlaubnis, \
+                             Kamera und Mikrofon an Deinem Handy \
+                             einzuschalten. 
+                            """) {
                 Button {
                     AVAudioSession.sharedInstance().requestRecordPermission { granted in
                         if granted {
@@ -55,9 +56,11 @@ struct OnboardingSheet: View {
                     title: "Fehlende Berechtigungen",
                     headline: "Wir können nicht auf Deine Kamera und Dein Mikrofon zugreifen",
                     caption: """
-                             Um dich mit einer Assistenz zu verbinden, möchten wir auf Deine Kamera und Dein Mikrofon zugreifen.
-                             Ansonsten ist eine Verbindung nicht möglich. 
-                             Du kannst uns jetzt die Erlaubnis dafür geben. Klicke dazu auf den Knopf, um zu den Einstellungen zu gelangen.
+                             Um dich mit einer Assistenz zu verbinden, \
+                             möchten wir auf Deine Kamera und Dein Mikrofon zugreifen. \
+                             Ansonsten ist eine Verbindung nicht möglich. \
+                             Du kannst uns jetzt die Erlaubnis dafür geben. \
+                             Klicke dazu auf den Knopf, um zu den Einstellungen zu gelangen.
                              """) {
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) {

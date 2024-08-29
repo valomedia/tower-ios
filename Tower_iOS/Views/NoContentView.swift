@@ -136,7 +136,8 @@ class NoContentView_Previews: PreviewProvider {
                 title: "Lorem Ipsum",
                 headline: "Lorem Ipsum Dolor Sit Amet",
                 caption: """
-                         Lorem impsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut \
+                         Lorem impsum dolor sit amet, \ 
+                         consectetur adipiscing elit, sed do eiusmod tempor incididunt ut \
                          labore et dolore magna aliqua.
                          """)
     }

@@ -38,7 +38,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         var description: String {
             switch self {
             case .none:
-                return "Tower anfunken…"
+                return "Anruf startet…"
             case .notConnected:
                 return "Verbindung herstellen…"
             case .connecting:

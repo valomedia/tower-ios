@@ -38,11 +38,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         var description: String {
             switch self {
             case .none:
-                return "Anruf startet..."
+                return "Anruf startet…"
             case .notConnected:
-                return "Verbindung herstellen..."
+                return "Verbindung herstellen…"
             case .connecting:
-                return "Anrufaufbau..."
+                return "Anrufaufbau…"
             case .reconnecting:
                 return "Neu verbinden…"
             case .waiting:

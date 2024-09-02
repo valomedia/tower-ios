@@ -21,6 +21,7 @@ struct CallSheet: View {
 
     var body: some View {
         VStack {
+            Spacer()
             Image(uiImage: Asset.Assets.logo.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -45,6 +46,21 @@ struct CallSheet: View {
                 Label("Auflegen", systemImage: "phone.down.fill")
             }
                     .buttonStyle(.borderedProminent)
+                    .padding()
+            // Start Settings buttons
+            Button {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            } label: {
+                Label("Einstellungen", systemImage: "gear").labelStyle(.trailingIcon)
+            }
+                .buttonStyle(.borderedProminent)
+                .font(.system(size: 14))
+            // End settings buttons
+            Spacer()
         }
                 .dynamicTypeSize(...DynamicTypeSize.accessibility4)
                 .onAppear {

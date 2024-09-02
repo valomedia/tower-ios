@@ -19,6 +19,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
+            Spacer()
             Image(uiImage: Asset.Assets.logo.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -38,6 +39,21 @@ struct ContentView: View {
             }
                     .buttonStyle(.borderedProminent)
                     .disabled(!isConnected)
+                    .padding()
+            // Start Settings buttons
+            Button {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            } label: {
+                Label("Einstellungen", systemImage: "gear").labelStyle(.trailingIcon)
+            }
+                .buttonStyle(.borderedProminent)
+                .font(.system(size: 14))
+            // End settings buttons
+            Spacer()
         }
                 .padding()
                 .sheet(item: $env.errorWrapper, onDismiss: { env.errorWrapper = nil }) { errorWrapper in

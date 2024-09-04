@@ -19,7 +19,6 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            Spacer()
             Image(uiImage: Asset.Assets.logo.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -48,12 +47,11 @@ struct ContentView: View {
                     }
                 }
             } label: {
-                Label("Einstellungen", systemImage: "gear").labelStyle(.trailingIcon)
+                Label("Einstellungen", systemImage: "gear")
             }
                 .buttonStyle(.borderedProminent)
-                .font(.system(size: 14))
+                
             // End settings buttons
-            Spacer()
         }
                 .padding()
                 .sheet(item: $env.errorWrapper, onDismiss: { env.errorWrapper = nil }) { errorWrapper in

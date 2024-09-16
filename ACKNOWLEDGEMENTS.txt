@@ -2,3 +2,13 @@ Code from the Amazon Chime SDK for iOS is covered under the Apache License 2.0
 http://www.apache.org/licenses/
 
 /Tower_iOS/Models/ConcurrentMutableSet.swift
+
+---
+
+Sound Effects by UNIVERSFIELD from Pixabay are covered under the Pixabay Content License
+https://pixabay.com/service/terms/
+
+/Tower_iOS/Resources/call-end-tone.mp3
+/Tower_iOS/Resources/call-error-tone.mp3
+/Tower_iOS/Resources/call-ringback-tone.mp3
+/Tower_iOS/Resources/call-start-tone.mp3

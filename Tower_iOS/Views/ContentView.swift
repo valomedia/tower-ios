@@ -39,6 +39,7 @@ struct ContentView: View {
             }
                     .buttonStyle(.borderedProminent)
                     .disabled(!isConnected)
+                    .accessibilityHidden(!isConnected)
                     .padding()
             Spacer()
             Button {

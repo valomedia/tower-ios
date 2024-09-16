@@ -165,6 +165,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 }
                 .first
         device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+        try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
 
         locationController = LocationController()
         locationController?.callController = self
@@ -175,6 +176,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         // When reestablishing the connection, move to reconnecting state only if the assistant was already in the call.
         state = state.isConnected && reconnecting ? .reconnecting : .connecting
+        
+        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
+        AVPlayer.callRingbackTone.play()
     }
 
     func audioSessionDidStart(reconnecting: Bool) {
@@ -184,6 +188,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     func audioSessionDidDrop() {
         logger.info(msg: "audioSessionDidDrop")
         state = .connectionLost
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callErrorTone.seek(to: CMTime.zero)
+        AVPlayer.callErrorTone.play()
     }
 
     func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
@@ -193,6 +200,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     func audioSessionDidCancelReconnect() {
         logger.info(msg: "audioSessionDidCancelReconnect")
         state = .failed
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callErrorTone.seek(to: CMTime.zero)
+        AVPlayer.callErrorTone.play()
     }
 
     func connectionDidRecover() {
@@ -220,6 +230,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
         logger.info(msg: "videoSessionDidStopWithStatus")
         state = .disconnected
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callEndTone.seek(to: CMTime.zero)
+        AVPlayer.callEndTone.play()
         onCallEnd?(sessionStatus)
         end()
     }
@@ -246,6 +259,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         logger.info(msg: "attendeesDidJoin")
         if (state != .connected) {
             state = state == .connecting ? .waiting : .connected
+        }
+        if (state == .connected) {
+            AVPlayer.callRingbackTone.pause()
+            AVPlayer.callStartTone.seek(to: CMTime.zero)
+            AVPlayer.callStartTone.play()
         }
     }
 

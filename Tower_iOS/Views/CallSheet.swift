@@ -28,9 +28,7 @@ struct CallSheet: View {
                     .accessibility(hidden: true)
             Text(controller.state.description)
                     .font(.largeTitle)
-                    .if(controller.state != .connected) {
-                        $0.accessibility(addTraits: .updatesFrequently)
-                    }
+                    .accessibility(hidden: true)
             Button(role: .destructive) {
                 Task {
                     do {

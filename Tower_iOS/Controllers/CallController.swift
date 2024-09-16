@@ -102,7 +102,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     /// The life-cycle state of the current session.
     ///
-    @Published var state: CallState = .none
+    @Published var state: CallState = .none {
+        didSet {
+            UIAccessibility.post(notification: .announcement, argument: state.description)
+        }
+    }
 
     /// The MeetingSession this CallController is attached to.
     ///
@@ -119,7 +123,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// Callback to invoke when the call ends.
     ///
     var onCallEnd: ((MeetingSessionStatus) -> Void)? = nil
-
+    
     /// Join a meeting with a given configuration.
     ///
     /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.

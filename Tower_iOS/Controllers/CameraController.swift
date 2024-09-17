@@ -467,7 +467,17 @@ class CameraController:
             let connection = videoOutput.connection(with: AVMediaType.video),
             let videoOrientation = videoOrientationFor(deviceOrientation)
         else { return }
-        DispatchQueue.main.async { connection.videoOrientation = videoOrientation }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            
+            connection.videoOrientation = videoOrientation
+            
+            // Need to reenable the torch if it was on before the rotation change caused the camera to restart.
+            if self.torchEnabled {
+                self.torchEnabled.toggle()
+                self.torchEnabled.toggle()
+            }
+        }
     }
     
     @objc private func deviceOrientationDidChange(notification: NSNotification) {

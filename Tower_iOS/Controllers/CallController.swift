@@ -158,13 +158,19 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
 
-        // Default to loudspeaker for now.
-        let device = audioDevices
+        // If no external devices are attached, switch to the loudspeaker.
+        if (
+            audioDevices
+                .filter { $0.type != .audioBuiltInSpeaker && $0.type != .audioHandset }
+                .isEmpty
+        ) {
+            let device = audioDevices
                 .filter {
                     $0.type == .audioBuiltInSpeaker
                 }
                 .first
-        device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+            device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+        }
 
         locationController = LocationController()
         locationController?.callController = self

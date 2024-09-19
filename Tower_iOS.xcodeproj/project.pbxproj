@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
+		E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D25F2C9844B1004751CF /* call-start-tone.mp3 */; };
+		E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2602C9844B1004751CF /* call-end-tone.mp3 */; };
+		E154D2652C9844B1004751CF /* call-error-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2612C9844B1004751CF /* call-error-tone.mp3 */; };
+		E154D2662C9844B1004751CF /* call-ringback-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */; };
+		E154D2682C9844CA004751CF /* AVPlayer+callEndTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D2672C9844CA004751CF /* AVPlayer+callEndTone.swift */; };
+		E154D26A2C9845C2004751CF /* AVPlayer+callErrorTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D2692C9845C2004751CF /* AVPlayer+callErrorTone.swift */; };
+		E154D26C2C984942004751CF /* AVPlayer+callRingbackTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */; };
+		E154D26E2C984A22004751CF /* AVPlayer+callStartTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */; };
 		E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */; };
@@ -103,6 +111,14 @@
 
 /* Begin PBXFileReference section */
 		E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E154D25F2C9844B1004751CF /* call-start-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-start-tone.mp3"; sourceTree = "<group>"; };
+		E154D2602C9844B1004751CF /* call-end-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-end-tone.mp3"; sourceTree = "<group>"; };
+		E154D2612C9844B1004751CF /* call-error-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-error-tone.mp3"; sourceTree = "<group>"; };
+		E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-ringback-tone.mp3"; sourceTree = "<group>"; };
+		E154D2672C9844CA004751CF /* AVPlayer+callEndTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callEndTone.swift"; sourceTree = "<group>"; };
+		E154D2692C9845C2004751CF /* AVPlayer+callErrorTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callErrorTone.swift"; sourceTree = "<group>"; };
+		E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callRingbackTone.swift"; sourceTree = "<group>"; };
+		E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callStartTone.swift"; sourceTree = "<group>"; };
 		E15E8B962C6D497E00BC8B90 /* ACKNOWLEDGEMENTS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ACKNOWLEDGEMENTS.txt; sourceTree = "<group>"; };
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -357,6 +373,10 @@
 				E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */,
 				E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */,
 				E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */,
+				E154D2672C9844CA004751CF /* AVPlayer+callEndTone.swift */,
+				E154D2692C9845C2004751CF /* AVPlayer+callErrorTone.swift */,
+				E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */,
+				E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -364,6 +384,10 @@
 		E9E978DE77FD2723E26B3CDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E154D2602C9844B1004751CF /* call-end-tone.mp3 */,
+				E154D2612C9844B1004751CF /* call-error-tone.mp3 */,
+				E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */,
+				E154D25F2C9844B1004751CF /* call-start-tone.mp3 */,
 				E181F16C2BF11AE00081A83D /* .gitkeep */,
 			);
 			path = Resources;
@@ -499,6 +523,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E154D2652C9844B1004751CF /* call-error-tone.mp3 in Resources */,
+				E154D2662C9844B1004751CF /* call-ringback-tone.mp3 in Resources */,
 				E9E979589AE0CB1D1ECD8E98 /* Assets.xcassets in Resources */,
 				E9E97F39E2ED8B908232E0A3 /* Preview Assets.xcassets in Resources */,
 				E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */,
@@ -506,6 +532,8 @@
 				E9E976F42D1E4BAA7BAAF7BE /* Settings.stencil in Resources */,
 				E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */,
 				E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */,
+				E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */,
+				E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */,
 				E9E9773EFE2B1DCFC3F67310 /* swiftgenInputFiles.xcfilelist in Resources */,
 				E9E977C6623BEF99AF35CC84 /* swiftgenOutputFiles.xcfilelist in Resources */,
 				E9E97B8E8042313538C7361C /* swiftgen.yml in Resources */,
@@ -587,15 +615,18 @@
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
 				E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */,
 				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,
+				E154D2682C9844CA004751CF /* AVPlayer+callEndTone.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
 				E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */,
 				E1CB1BD92C5B93680078AF3A /* CapturePhotoResponseData.swift in Sources */,
 				E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */,
 				E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */,
+				E154D26A2C9845C2004751CF /* AVPlayer+callErrorTone.swift in Sources */,
 				E9E970154CE4DA57BDFDBB82 /* CLLocationCoordinate2D+Codable.swift in Sources */,
 				E9E97985109BA7C9049A6A0E /* LocationEventData.swift in Sources */,
 				E9E970595F70053E9C579045 /* Location.swift in Sources */,
 				E9E97D9435E71A5FB03C32C2 /* Bool+then.swift in Sources */,
+				E154D26E2C984A22004751CF /* AVPlayer+callStartTone.swift in Sources */,
 				E9E972ED7746A4DADA73309F /* Bool+else.swift in Sources */,
 				E9E97ACB93E9A4DBEC1906D6 /* CLLocation+init.swift in Sources */,
 				E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */,
@@ -604,6 +635,7 @@
 				E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */,
 				E9E977BE52440D6C568D87BA /* View+if.swift in Sources */,
 				E9E979C728D84904A56D8864 /* View+ifNotNil.swift in Sources */,
+				E154D26C2C984942004751CF /* AVPlayer+callRingbackTone.swift in Sources */,
 				E9E97F16E513CFDC104779A8 /* View+hidden.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -179,6 +179,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         locationController = LocationController()
         locationController?.callController = self
+        
+        UIApplication.shared.isIdleTimerDisabled = true
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
@@ -347,6 +349,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         state = .none
         session = nil
         locationController = nil
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     private func handleSwitchCameraRequest() {

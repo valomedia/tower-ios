@@ -174,7 +174,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 }
                 .first
             device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speak
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
         }
 
         locationController = LocationController()

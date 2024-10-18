@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 
 
 // MARK: Tower_iOSApp
@@ -26,6 +27,17 @@ import SwiftUI
         Settings.identifierPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
         Settings.versionPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         Settings.buildPreference = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+        
+        try? AVAudioSession
+            .sharedInstance()
+            .setCategory(
+                .playAndRecord,
+                mode: .videoChat,
+                options: [
+                    .interruptSpokenAudioAndMixWithOthers,
+                    .allowBluetooth,
+                    .allowBluetoothA2DP
+                ])
     }
 
     // MARK: - Properties

@@ -309,6 +309,13 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                     logger: logger)
                 self.session = session
                 
+                if (state == .disconnected) {
+                    // The user killed the call while we were still waiting for a config from the backend. Just bail
+                    // at this point.
+                    Task { try? await TowerApi.end(sessionConfiguration: session.configuration) }
+                    return
+                }
+                
                 state = .notConnected
                 session.audioVideo.addAudioVideoObserver(observer: self)
                 session.audioVideo.addRealtimeObserver(observer: self)

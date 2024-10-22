@@ -206,7 +206,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "audioSessionDidStopWithStatus")
+        logger.info(msg: "audioSessionDidStopWithStatus \(sessionStatus.statusCode)")
     }
 
     func audioSessionDidCancelReconnect() {
@@ -236,11 +236,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     func videoSessionDidStartWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "videoSessionDidStartWithStatus")
+        logger.info(msg: "videoSessionDidStartWithStatus \(sessionStatus.statusCode)")
     }
 
     func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "videoSessionDidStopWithStatus")
+        logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
         state = .disconnected
         AVPlayer.callRingbackTone.pause()
         AVPlayer.callEndTone.seek(to: CMTime.zero)

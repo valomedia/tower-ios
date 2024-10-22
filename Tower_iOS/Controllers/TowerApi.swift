@@ -77,8 +77,8 @@ class TowerApi {
     ///
     /// - Throws:
     ///
-    class func end(session: MeetingSession) async throws -> Void {
-        try await request("POST", "/end?meetingId=" + session.configuration.meetingId);
+    class func end(sessionConfiguration: MeetingSessionConfiguration) async throws -> Void {
+        try await request("POST", "/end?meetingId=" + sessionConfiguration.meetingId);
     }
 
     @discardableResult

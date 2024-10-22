@@ -122,65 +122,28 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     /// Callback to invoke when the call ends.
     ///
-    var onCallEnd: ((MeetingSessionStatus) -> Void)? = nil
+    var onCallEnd: (() -> Void)? = nil
     
-    /// Join a meeting with a given configuration.
-    ///
-    /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.
-    ///
-    /// - Parameter configuration: The MeetingSessionConfiguration
-    /// - Throws:
-    ///
-    func join(configuration: MeetingSessionConfiguration) throws {
-        let session = DefaultMeetingSession(configuration: configuration, logger: logger)
-        self.session = session
-        state = .notConnected
-        session.audioVideo.addAudioVideoObserver(observer: self)
-        session.audioVideo.addRealtimeObserver(observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.capturePhotoRequest.rawValue,
-                observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.switchCameraRequest.rawValue,
-                observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.toggleTorchRequest.rawValue,
-                observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.locationRequest.rawValue,
-                observer: self)
-
-        let audioDevices = session.audioVideo.listAudioDevices()
-        for device in audioDevices {
-            logger.info(msg: "Device type: \(device.type), label: \(device.label)");
+    var onCallError: ((Error) -> Void)? = nil
+    
+    func startCall(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
+        self.onCallEnd = onCallEnd
+        self.onCallError = onCallError
+        join()
+    }
+    
+    func endCall() {
+        if let configuration = session?.configuration {
+            Task { try? await TowerApi.end(sessionConfiguration: configuration) }
         }
-
-        try session.audioVideo.start()
-
-        // Start the capture
-        cameraController.start()
-
-        session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
-
-        // If no external devices are attached, switch to the loudspeaker.
-        if (
-            audioDevices
-                .filter { $0.type != .audioBuiltInSpeaker && $0.type != .audioHandset }
-                .isEmpty
-        ) {
-            let device = audioDevices
-                .filter {
-                    $0.type == .audioBuiltInSpeaker
-                }
-                .first
-            device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-        }
-
-        locationController = LocationController()
-        locationController?.callController = self
         
-        UIApplication.shared.isIdleTimerDisabled = true
+        state = .disconnected
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callEndTone.seek(to: CMTime.zero)
+        AVPlayer.callEndTone.play()
+        
+        onCallEnd?()
+        leave()
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
@@ -241,12 +204,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
         logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
-        state = .disconnected
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callEndTone.seek(to: CMTime.zero)
-        AVPlayer.callEndTone.play()
-        onCallEnd?(sessionStatus)
-        end()
+        endCall()
     }
 
     func remoteVideoSourcesDidBecomeAvailable(sources: [AmazonChimeSDK.RemoteVideoSource]) {
@@ -335,23 +293,89 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             logger.error(msg: "Unknown error \(error.localizedDescription)")
         }
     }
+    
+    /// Join a meeting with a given configuration.
+    ///
+    /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.
+    ///
+    /// - Parameter configuration: The MeetingSessionConfiguration
+    /// - Throws:
+    ///
+    private func join(configuration: MeetingSessionConfiguration? = nil) {
+        Task { @MainActor in
+            do {
+                let session = try DefaultMeetingSession(
+                    configuration: configuration != nil ? configuration! : await TowerApi.start(),
+                    logger: logger)
+                self.session = session
+                
+                state = .notConnected
+                session.audioVideo.addAudioVideoObserver(observer: self)
+                session.audioVideo.addRealtimeObserver(observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.capturePhotoRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.switchCameraRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.toggleTorchRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.locationRequest.rawValue,
+                        observer: self)
 
+                let audioDevices = session.audioVideo.listAudioDevices()
+                for device in audioDevices {
+                    logger.info(msg: "Device type: \(device.type), label: \(device.label)");
+                }
+
+                try session.audioVideo.start()
+
+                // Start the capture
+                cameraController.start()
+
+                session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
+
+                // If no external devices are attached, switch to the loudspeaker.
+                if (
+                    audioDevices
+                        .filter { $0.type != .audioBuiltInSpeaker && $0.type != .audioHandset }
+                        .isEmpty
+                ) {
+                    let device = audioDevices
+                        .filter {
+                            $0.type == .audioBuiltInSpeaker
+                        }
+                        .first
+                    device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                }
+
+                locationController = LocationController()
+                locationController?.callController = self
+            } catch {
+                endCall()
+                onCallError?(error)
+            }
+        }
+    }
+    
     /// End the meeting.
     ///
     /// This disconnects from the meeting. This is called after onCallEnd() to end the connection as far as the Chime
     /// SDK is concerned. This does not affect the meeting on the server, which should have already ended when this is
     /// called.
     ///
-    private func end() {
+    private func leave() {
         session?.audioVideo.stop()
         cameraController.stop()
         cameraController.torchEnabled = false
         state = .none
         session = nil
         locationController = nil
-        UIApplication.shared.isIdleTimerDisabled = false
     }
-    
+
     private func handleSwitchCameraRequest() {
         cameraController.switchCamera()
         sendDataMessage(.switchCameraResponse)

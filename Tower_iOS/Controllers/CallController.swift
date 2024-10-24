@@ -122,16 +122,38 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     /// Callback to invoke when the call ends.
     ///
+    /// This will be called whenever the call ends, no matter the reason.
+    ///
     var onCallEnd: (() -> Void)? = nil
     
+    /// Callback to invoke when the call ends because of a fata Error during the initial connection.
+    ///
+    /// This will be called when the call fails because of an Error received while establishing the call, that the
+    /// call cannot automatically recover from. This is only called if the call fails, before it has even begun.
+    /// Something like the caller losing the connection while talking to an assistant will not cause this callback to
+    /// run, since this doesn't require specific handling outside of the call itself (such as showing an error message
+    /// to the user).
+    ///
     var onCallError: ((Error) -> Void)? = nil
     
+    /// Start a new call.
+    ///
+    /// This will register a new call with the backend, then join the call.
+    ///
+    /// - Parameters:
+    ///     - onCallEnd: A closure to call when the call ends, no matter why.
+    ///     - onCallError: A closure to call when the call ends because of a fatal Error during the initial connection.
+    ///
     func startCall(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
         self.onCallEnd = onCallEnd
         self.onCallError = onCallError
         join()
     }
     
+    /// End the call.
+    ///
+    /// This will hang up the call and unregister it from the backend.
+    ///
     func endCall() {
         if let configuration = session?.configuration {
             Task { try? await TowerApi.end(sessionConfiguration: configuration) }

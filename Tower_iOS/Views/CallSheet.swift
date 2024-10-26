@@ -29,32 +29,29 @@ struct CallSheet: View {
             Text(controller.state.description)
                     .font(.largeTitle)
                     .accessibility(hidden: true)
-            Button(role: .destructive) {
-                Task {
-                    do {
-                        try await TowerApi.end(session: controller.session!)
-                    } catch {
-                        // Something went wrong ending the call on the server. We'll just have to pretend the call
-                        // ended and hope the other side will notice we are gone at some point.
-                        controller.videoSessionDidStopWithStatus(sessionStatus: MeetingSessionStatus(statusCode: .audioCallEnded))
-                    }
-                }
-            } label: {
+            Button(role: .destructive, action: controller.endCall, label: {
                 Label("Auflegen", systemImage: "phone.down.fill")
-            }
+            })
                     .buttonStyle(.borderedProminent)
         }
                 .dynamicTypeSize(...DynamicTypeSize.accessibility4)
                 .onAppear {
-                    Task { @MainActor in
-                        controller.onCallEnd = { [self] (_: MeetingSessionStatus) in dismiss() }
-                        do {
-                            try await controller.join(configuration: TowerApi.start())
-                        } catch {
-                            dismiss();
-                            env.errorWrapper = ErrorWrapper(error: error, guidance: "Bitte versuche es später erneut")
+                    UIApplication.shared.isIdleTimerDisabled = true
+                    controller.startCall(
+                        onCallEnd: { [self] in
+                            Task { @MainActor in
+                                UIApplication.shared.isIdleTimerDisabled = false
+                                dismiss()
+                            }
+                        },
+                        onCallError: { [self] (error: Error) in
+                            Task { @MainActor in
+                                env.errorWrapper = ErrorWrapper(
+                                    error: error,
+                                    guidance: "Bitte versuche es später erneut")
+                            }
                         }
-                    }
+                    )
                 }
     }
 

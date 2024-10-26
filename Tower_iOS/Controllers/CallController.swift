@@ -38,7 +38,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         var description: String {
             switch self {
             case .none:
-                return "Anruf startet…"
+                return "Verbindung herstellen…"
             case .notConnected:
                 return "Verbindung herstellen…"
             case .connecting:
@@ -91,6 +91,18 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// The maximum number of realtime data messages to send in one burst.
     ///
     private static let dataMessageMaxBurstCount = 500;
+    
+    /// How often to retry a connection that fails before an assistant picks up.
+    ///
+    /// Sometimes the call will immediately fail, before an assistant even joins the call. In this case, the call can
+    /// be retried without the user even noticing, since the user is still waiting for the call to connect anyways.
+    /// This parameter controls the number of retries that will be made in this particular case.
+    ///
+    private static let maxRetriesOnEarlyFailure = 3;
+    
+    /// How many seconds to wait before retrying the connection, when it fails before an assistant picks up.
+    ///
+    private static let earlyRetryWaitTimeSeconds: Double = 2;
 
     // MARK: - Life cycle methods
 
@@ -111,8 +123,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// The MeetingSession this CallController is attached to.
     ///
     @Published var session: MeetingSession? = nil
+    
+    private var earlyFailureRetryCount = 0;
 
     private var locationController: LocationController? = nil
+    
+    private var shouldRetryConnection: Bool {
+        !state.isConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
+    }
 
     private let logger = ConsoleLogger(name: "CallController")
     private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: 2500)
@@ -122,65 +140,52 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     /// Callback to invoke when the call ends.
     ///
-    var onCallEnd: ((MeetingSessionStatus) -> Void)? = nil
+    /// This will be called whenever the call ends, no matter the reason.
+    ///
+    var onCallEnd: (() -> Void)? = nil
     
-    /// Join a meeting with a given configuration.
+    /// Callback to invoke when the call ends because of a fata Error during the initial connection.
     ///
-    /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.
+    /// This will be called when the call fails because of an Error received while establishing the call, that the
+    /// call cannot automatically recover from. This is only called if the call fails, before it has even begun.
+    /// Something like the caller losing the connection while talking to an assistant will not cause this callback to
+    /// run, since this doesn't require specific handling outside of the call itself (such as showing an error message
+    /// to the user).
     ///
-    /// - Parameter configuration: The MeetingSessionConfiguration
-    /// - Throws:
+    var onCallError: ((Error) -> Void)? = nil
+    
+    /// Start a new call.
     ///
-    func join(configuration: MeetingSessionConfiguration) throws {
-        let session = DefaultMeetingSession(configuration: configuration, logger: logger)
-        self.session = session
-        state = .notConnected
-        session.audioVideo.addAudioVideoObserver(observer: self)
-        session.audioVideo.addRealtimeObserver(observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.capturePhotoRequest.rawValue,
-                observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.switchCameraRequest.rawValue,
-                observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.toggleTorchRequest.rawValue,
-                observer: self)
-        session.audioVideo.addRealtimeDataMessageObserver(
-                topic: DataMessageTopic.locationRequest.rawValue,
-                observer: self)
-
-        let audioDevices = session.audioVideo.listAudioDevices()
-        for device in audioDevices {
-            logger.info(msg: "Device type: \(device.type), label: \(device.label)");
+    /// This will register a new call with the backend, then join the call.
+    ///
+    /// - Parameters:
+    ///     - onCallEnd: A closure to call when the call ends, no matter why.
+    ///     - onCallError: A closure to call when the call ends because of a fatal Error during the initial connection.
+    ///
+    func startCall(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
+        self.onCallEnd = onCallEnd
+        self.onCallError = onCallError
+        join()
+    }
+    
+    /// End the call.
+    ///
+    /// This will hang up the call and unregister it from the backend.
+    ///
+    func endCall() {
+        if let configuration = session?.configuration {
+            Task { try? await TowerApi.end(sessionConfiguration: configuration) }
         }
-
-        try session.audioVideo.start()
-
-        // Start the capture
-        cameraController.start()
-
-        session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
-
-        // If no external devices are attached, switch to the loudspeaker.
-        if (
-            audioDevices
-                .filter { $0.type != .audioBuiltInSpeaker && $0.type != .audioHandset }
-                .isEmpty
-        ) {
-            let device = audioDevices
-                .filter {
-                    $0.type == .audioBuiltInSpeaker
-                }
-                .first
-            device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-        }
-
-        locationController = LocationController()
-        locationController?.callController = self
         
-        UIApplication.shared.isIdleTimerDisabled = true
+        state = .disconnected
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callEndTone.seek(to: CMTime.zero)
+        AVPlayer.callEndTone.play()
+        
+        onCallEnd?()
+        leave()
+        
+        earlyFailureRetryCount = 0
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
@@ -206,7 +211,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "audioSessionDidStopWithStatus")
+        logger.info(msg: "audioSessionDidStopWithStatus \(sessionStatus.statusCode)")
     }
 
     func audioSessionDidCancelReconnect() {
@@ -236,17 +241,19 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     func videoSessionDidStartWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "videoSessionDidStartWithStatus")
+        logger.info(msg: "videoSessionDidStartWithStatus \(sessionStatus.statusCode)")
     }
 
     func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "videoSessionDidStopWithStatus")
-        state = .disconnected
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callEndTone.seek(to: CMTime.zero)
-        AVPlayer.callEndTone.play()
-        onCallEnd?(sessionStatus)
-        end()
+        logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
+        
+        if state != .none && state != .disconnected {
+            if shouldRetryConnection, let configuration = session?.configuration {
+                retryConnection(sessionConfiguration: configuration)
+            } else {
+                endCall()
+            }
+        }
     }
 
     func remoteVideoSourcesDidBecomeAvailable(sources: [AmazonChimeSDK.RemoteVideoSource]) {
@@ -335,23 +342,109 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             logger.error(msg: "Unknown error \(error.localizedDescription)")
         }
     }
+    
+    /// Join a meeting with a given configuration.
+    ///
+    /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.
+    ///
+    /// - Parameter configuration: The MeetingSessionConfiguration
+    /// - Throws:
+    ///
+    private func join(configuration: MeetingSessionConfiguration? = nil) {
+        Task { @MainActor in
+            do {
+                let session = try DefaultMeetingSession(
+                    configuration: configuration != nil ? configuration! : await TowerApi.start(),
+                    logger: logger)
+                self.session = session
+                
+                if (state == .disconnected) {
+                    // The user killed the call while we were still waiting for a config from the backend. Just bail
+                    // at this point.
+                    Task { try? await TowerApi.end(sessionConfiguration: session.configuration) }
+                    return
+                }
+                
+                state = .notConnected
+                session.audioVideo.addAudioVideoObserver(observer: self)
+                session.audioVideo.addRealtimeObserver(observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.capturePhotoRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.switchCameraRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.toggleTorchRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.locationRequest.rawValue,
+                        observer: self)
 
+                let audioDevices = session.audioVideo.listAudioDevices()
+                for device in audioDevices {
+                    logger.info(msg: "Device type: \(device.type), label: \(device.label)");
+                }
+
+                try session.audioVideo.start()
+
+                // Start the capture
+                cameraController.start()
+
+                session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
+
+                // If no external devices are attached, switch to the loudspeaker.
+                if (
+                    audioDevices
+                        .filter { $0.type != .audioBuiltInSpeaker && $0.type != .audioHandset }
+                        .isEmpty
+                ) {
+                    let device = audioDevices
+                        .filter {
+                            $0.type == .audioBuiltInSpeaker
+                        }
+                        .first
+                    device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                }
+
+                locationController = LocationController()
+                locationController?.callController = self
+            } catch {
+                if shouldRetryConnection, let configuration = session?.configuration {
+                    retryConnection(sessionConfiguration: configuration)
+                } else {
+                    endCall()
+                    onCallError?(error)
+                }
+            }
+        }
+    }
+    
     /// End the meeting.
     ///
     /// This disconnects from the meeting. This is called after onCallEnd() to end the connection as far as the Chime
     /// SDK is concerned. This does not affect the meeting on the server, which should have already ended when this is
     /// called.
     ///
-    private func end() {
+    private func leave() {
         session?.audioVideo.stop()
         cameraController.stop()
         cameraController.torchEnabled = false
         state = .none
         session = nil
         locationController = nil
-        UIApplication.shared.isIdleTimerDisabled = false
     }
     
+    private func retryConnection(sessionConfiguration: MeetingSessionConfiguration) {
+        state = .none
+        earlyFailureRetryCount += 1
+        leave()
+        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.earlyRetryWaitTimeSeconds) { [weak self] in
+            self?.join(configuration: sessionConfiguration)
+        }
+    }
+
     private func handleSwitchCameraRequest() {
         cameraController.switchCamera()
         sendDataMessage(.switchCameraResponse)

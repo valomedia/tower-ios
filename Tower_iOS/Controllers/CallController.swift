@@ -38,7 +38,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         var description: String {
             switch self {
             case .none:
-                return "Anruf startet…"
+                return "Verbindung herstellen…"
             case .notConnected:
                 return "Verbindung herstellen…"
             case .connecting:
@@ -91,6 +91,18 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// The maximum number of realtime data messages to send in one burst.
     ///
     private static let dataMessageMaxBurstCount = 500;
+    
+    /// How often to retry a connection that fails before an assistant picks up.
+    ///
+    /// Sometimes the call will immediately fail, before an assistant even joins the call. In this case, the call can
+    /// be retried without the user even noticing, since the user is still waiting for the call to connect anyways.
+    /// This parameter controls the number of retries that will be made in this particular case.
+    ///
+    private static let maxRetriesOnEarlyFailure = 3;
+    
+    /// How many seconds to wait before retrying the connection, when it fails before an assistant picks up.
+    ///
+    private static let earlyRetryWaitTimeSeconds: Double = 2;
 
     // MARK: - Life cycle methods
 
@@ -111,8 +123,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// The MeetingSession this CallController is attached to.
     ///
     @Published var session: MeetingSession? = nil
+    
+    private var earlyFailureRetryCount = 0;
 
     private var locationController: LocationController? = nil
+    
+    private var shouldRetryConnection: Bool {
+        !state.isConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
+    }
 
     private let logger = ConsoleLogger(name: "CallController")
     private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: 2500)
@@ -166,6 +184,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         
         onCallEnd?()
         leave()
+        
+        earlyFailureRetryCount = 0
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
@@ -226,7 +246,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
         logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
-        endCall()
+        
+        if state != .none && state != .disconnected {
+            if shouldRetryConnection, let configuration = session?.configuration {
+                retryConnection(sessionConfiguration: configuration)
+            } else {
+                endCall()
+            }
+        }
     }
 
     func remoteVideoSourcesDidBecomeAvailable(sources: [AmazonChimeSDK.RemoteVideoSource]) {
@@ -384,8 +411,12 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 locationController = LocationController()
                 locationController?.callController = self
             } catch {
-                endCall()
-                onCallError?(error)
+                if shouldRetryConnection, let configuration = session?.configuration {
+                    retryConnection(sessionConfiguration: configuration)
+                } else {
+                    endCall()
+                    onCallError?(error)
+                }
             }
         }
     }
@@ -403,6 +434,15 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         state = .none
         session = nil
         locationController = nil
+    }
+    
+    private func retryConnection(sessionConfiguration: MeetingSessionConfiguration) {
+        state = .none
+        earlyFailureRetryCount += 1
+        leave()
+        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.earlyRetryWaitTimeSeconds) { [weak self] in
+            self?.join(configuration: sessionConfiguration)
+        }
     }
 
     private func handleSwitchCameraRequest() {

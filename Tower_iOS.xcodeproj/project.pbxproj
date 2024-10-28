@@ -967,7 +967,7 @@
 			repositoryURL = "https://github.com/aws/amazon-chime-sdk-ios-spm";
 			requirement = {
 				kind = exactVersion;
-				version = 0.25.1;
+				version = 0.26.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

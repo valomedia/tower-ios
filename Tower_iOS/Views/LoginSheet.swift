@@ -76,8 +76,8 @@ struct LoginSheet: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility4)
     }
     
-    @State private var username = ""
-    @State private var password = ""
+    @State private var username = Settings.usernamePreference
+    @State private var password = Settings.passwordPreference
     
     @Environment(\.dismiss)
     private var dismiss

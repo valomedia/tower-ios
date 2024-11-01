@@ -53,6 +53,13 @@ struct CallSheet: View {
                         }
                     )
                 }
+                .onChange(of: phase) { phase in
+                    if (phase == .background) {
+                        controller.pauseVideo()
+                    } else {
+                        controller.resumeVideo()
+                    }
+                }
     }
 
     @StateObject private var controller = CallController()
@@ -60,6 +67,9 @@ struct CallSheet: View {
     @Environment(\.dismiss)
     private var dismiss
 
+    @Environment(\.scenePhase)
+    private var phase
+    
     @EnvironmentObject private var env: TowerEnvironment
 
 }

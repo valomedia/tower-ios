@@ -124,6 +124,13 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     @Published var session: MeetingSession? = nil
     
+    /// Whether the video is currently paused.
+    ///
+    /// This indicates whether the video is stopped because the user has stopped the video through an action taken on
+    /// their device. Currenlty this means that the user has sent the app to the background (or locked their device).
+    ///
+    @Published private(set) var isVideoPaused: Bool = false
+    
     private var earlyFailureRetryCount = 0;
 
     private var locationController: LocationController? = nil
@@ -186,6 +193,32 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         leave()
         
         earlyFailureRetryCount = 0
+    }
+    
+    /// Pause the video feed.
+    ///
+    /// This will pause the video feed, if it is not paused already. This means, that the video will be stopped and
+    /// `isVideoPaused` will be set to `true`, indicating that the video has been manually stopped.
+    ///
+    func pauseVideo() {
+        guard !isVideoPaused else { return }
+        stopVideo()
+        isVideoPaused = true
+    }
+    
+    /// Resume the video feed.
+    ///
+    /// This will resume the video feed, if it is currenlty paused. If the video feed has been previously paused using
+    /// `pauseVideo()`, this will restart the video and set `isVideoPaused` back to `false`.
+    ///
+    /// If the video isn't paused when this is called, this will be a no-op. This function will only resume the video
+    /// if it is paused. If the video is stopped, but there hasn't been a call to `pauseVideo()`, this will not
+    /// attempt to restart the video.
+    ///
+    func resumeVideo() {
+        guard isVideoPaused else { return }
+        restartVideo()
+        isVideoPaused = false
     }
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {

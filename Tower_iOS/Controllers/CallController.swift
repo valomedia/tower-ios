@@ -391,8 +391,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 // Start the capture
                 cameraController.start()
 
-                session.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
-
+                startVideo()
+                
                 // If no external devices are attached, switch to the loudspeaker.
                 if (
                     audioDevices
@@ -434,6 +434,18 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         state = .none
         session = nil
         locationController = nil
+    }
+    
+    private func startVideo() {
+        session?.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
+    }
+    
+    private func stopVideo() {
+        session?.audioVideo.stopLocalVideo()
+    }
+    
+    private func restartVideo() {
+        session?.audioVideo.startLocalVideo(source: cameraController)
     }
     
     private func retryConnection(sessionConfiguration: MeetingSessionConfiguration) {

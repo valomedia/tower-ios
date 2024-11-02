@@ -60,10 +60,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             }
         }
 
-        /// Whether the user is currently able to talk to the assistant.
+        /// Whether there is an assistant in the call.
         ///
-        var isConnected: Bool {
-            self == .connected || self == .poorConnection
+        var isAssistantConnected: Bool {
+            self == .connected || self == .poorConnection || self == .connectionLost || self == .reconnecting
         }
 
     }
@@ -136,7 +136,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private var locationController: LocationController? = nil
     
     private var shouldRetryConnection: Bool {
-        !state.isConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
+        !state.isAssistantConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
     }
 
     private let logger = ConsoleLogger(name: "CallController")
@@ -223,9 +223,12 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
         logger.info(msg: "audioSessionDidStartConnecting")
+        
+        // We don't have a good implementiation for reconnecting yet. When the call drops, we just end it. Ignore all
+        // reconnecting events.
+        guard (!reconnecting) else { return }
 
-        // When reestablishing the connection, move to reconnecting state only if the assistant was already in the call.
-        state = state.isConnected && reconnecting ? .reconnecting : .connecting
+        state = .connecting
         
         AVPlayer.callRingbackTone.seek(to: CMTime.zero)
         AVPlayer.callRingbackTone.play()
@@ -237,10 +240,20 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func audioSessionDidDrop() {
         logger.info(msg: "audioSessionDidDrop")
+        
+        guard state.isAssistantConnected else {
+            retryConnectionOrEndCall()
+            return
+        }
+        
         state = .connectionLost
         AVPlayer.callRingbackTone.pause()
         AVPlayer.callErrorTone.seek(to: CMTime.zero)
         AVPlayer.callErrorTone.play()
+        
+        // For now, if the connection becomes so poor that the audio disconnects completely, just drop the call like
+        // a hot potato.
+        endCall()
     }
 
     func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
@@ -257,14 +270,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func connectionDidRecover() {
         logger.info(msg: "connectionDidRecover")
-        if (state.isConnected) {
+        if (state.isAssistantConnected) {
             state = .connected
         }
     }
 
     func connectionDidBecomePoor() {
         logger.info(msg: "connectionDidBecomePoor")
-        if (state.isConnected) {
+        if (state.isAssistantConnected) {
             state = .poorConnection
         }
     }
@@ -281,11 +294,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
         
         if state != .none && state != .disconnected {
-            if shouldRetryConnection, let configuration = session?.configuration {
-                retryConnection(sessionConfiguration: configuration)
-            } else {
-                endCall()
-            }
+            retryConnectionOrEndCall()
         }
     }
 
@@ -487,6 +496,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         leave()
         DispatchQueue.main.asyncAfter(deadline: .now() + CallController.earlyRetryWaitTimeSeconds) { [weak self] in
             self?.join(configuration: sessionConfiguration)
+        }
+    }
+    
+    private func retryConnectionOrEndCall() {
+        if shouldRetryConnection, let configuration = session?.configuration {
+            retryConnection(sessionConfiguration: configuration)
+        } else {
+            endCall()
         }
     }
 

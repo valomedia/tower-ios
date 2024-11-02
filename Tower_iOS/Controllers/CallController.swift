@@ -223,9 +223,12 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func audioSessionDidStartConnecting(reconnecting: Bool) {
         logger.info(msg: "audioSessionDidStartConnecting")
+        
+        // We don't have a good implementiation for reconnecting yet. When the call drops, we just end it. Ignore all
+        // reconnecting events.
+        guard (!reconnecting) else { return }
 
-        // When reestablishing the connection, move to reconnecting state only if the assistant was already in the call.
-        state = state.isAssistantConnected && reconnecting ? .reconnecting : .connecting
+        state = .connecting
         
         AVPlayer.callRingbackTone.seek(to: CMTime.zero)
         AVPlayer.callRingbackTone.play()
@@ -237,10 +240,20 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func audioSessionDidDrop() {
         logger.info(msg: "audioSessionDidDrop")
+        
+        guard state.isAssistantConnected else {
+            retryConnectionOrEndCall()
+            return
+        }
+        
         state = .connectionLost
         AVPlayer.callRingbackTone.pause()
         AVPlayer.callErrorTone.seek(to: CMTime.zero)
         AVPlayer.callErrorTone.play()
+        
+        // For now, if the connection becomes so poor that the audio disconnects completely, just drop the call like
+        // a hot potato.
+        endCall()
     }
 
     func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {

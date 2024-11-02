@@ -60,10 +60,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             }
         }
 
-        /// Whether the user is currently able to talk to the assistant.
+        /// Whether there is an assistant in the call.
         ///
         var isAssistantConnected: Bool {
-            self == .connected || self == .poorConnection
+            self == .connected || self == .poorConnection || self == .connectionLost || self == .reconnecting
         }
 
     }

@@ -281,11 +281,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
         
         if state != .none && state != .disconnected {
-            if shouldRetryConnection, let configuration = session?.configuration {
-                retryConnection(sessionConfiguration: configuration)
-            } else {
-                endCall()
-            }
+            retryConnectionOrEndCall()
         }
     }
 
@@ -487,6 +483,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         leave()
         DispatchQueue.main.asyncAfter(deadline: .now() + CallController.earlyRetryWaitTimeSeconds) { [weak self] in
             self?.join(configuration: sessionConfiguration)
+        }
+    }
+    
+    private func retryConnectionOrEndCall() {
+        if shouldRetryConnection, let configuration = session?.configuration {
+            retryConnection(sessionConfiguration: configuration)
+        } else {
+            endCall()
         }
     }
 

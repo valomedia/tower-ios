@@ -62,7 +62,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
         /// Whether the user is currently able to talk to the assistant.
         ///
-        var isConnected: Bool {
+        var isAssistantConnected: Bool {
             self == .connected || self == .poorConnection
         }
 
@@ -136,7 +136,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private var locationController: LocationController? = nil
     
     private var shouldRetryConnection: Bool {
-        !state.isConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
+        !state.isAssistantConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
     }
 
     private let logger = ConsoleLogger(name: "CallController")
@@ -225,7 +225,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         logger.info(msg: "audioSessionDidStartConnecting")
 
         // When reestablishing the connection, move to reconnecting state only if the assistant was already in the call.
-        state = state.isConnected && reconnecting ? .reconnecting : .connecting
+        state = state.isAssistantConnected && reconnecting ? .reconnecting : .connecting
         
         AVPlayer.callRingbackTone.seek(to: CMTime.zero)
         AVPlayer.callRingbackTone.play()
@@ -257,14 +257,14 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func connectionDidRecover() {
         logger.info(msg: "connectionDidRecover")
-        if (state.isConnected) {
+        if (state.isAssistantConnected) {
             state = .connected
         }
     }
 
     func connectionDidBecomePoor() {
         logger.info(msg: "connectionDidBecomePoor")
-        if (state.isConnected) {
+        if (state.isAssistantConnected) {
             state = .poorConnection
         }
     }

@@ -22,16 +22,6 @@ import UIKit
 class CameraController:
     NSObject, CameraCaptureSource, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate
 {
-    
-    // MARK: - Static properties
-    
-    private static let maxSupportedVideoWidth = 1280
-    private static let maxSupportedVideoHeight = 720
-    private static let maxSupportedVideoFramerate = 30
-    private static let defaultCaptureFormat = VideoCaptureFormat(
-        width: CameraController.maxSupportedVideoWidth,
-        height: CameraController.maxSupportedVideoHeight,
-        maxFrameRate: CameraController.maxSupportedVideoFramerate)
 
     // MARK: - Life cycle methods
 
@@ -97,7 +87,7 @@ class CameraController:
         return captureDevice.position == .back
     }
     
-    var format: VideoCaptureFormat = defaultCaptureFormat {
+    var format: VideoCaptureFormat = Settings.callQualityLevel.videoFormat {
         didSet {
             if captureDevice != nil, isRunning {
                 captureQueue.async { [weak self] in self?.updateDeviceCaptureFormat() }

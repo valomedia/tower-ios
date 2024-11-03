@@ -140,7 +140,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     private let logger = ConsoleLogger(name: "CallController")
-    private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: 2500)
+    private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: Settings.callQualityLevel.maximumBandwidth)
     private let cameraController = CameraController()
 
     // MARK: - Methods

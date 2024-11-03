@@ -16,6 +16,8 @@
 		E154D26A2C9845C2004751CF /* AVPlayer+callErrorTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D2692C9845C2004751CF /* AVPlayer+callErrorTone.swift */; };
 		E154D26C2C984942004751CF /* AVPlayer+callRingbackTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */; };
 		E154D26E2C984A22004751CF /* AVPlayer+callStartTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */; };
+		E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */; };
+		E15F9B332CD6531F005FBB8C /* Settings+callQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B322CD65313005FBB8C /* Settings+callQualityLevel.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */; };
 		E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */; };
@@ -120,6 +122,8 @@
 		E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callRingbackTone.swift"; sourceTree = "<group>"; };
 		E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callStartTone.swift"; sourceTree = "<group>"; };
 		E15E8B962C6D497E00BC8B90 /* ACKNOWLEDGEMENTS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ACKNOWLEDGEMENTS.txt; sourceTree = "<group>"; };
+		E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityLevel.swift; sourceTree = "<group>"; };
+		E15F9B322CD65313005FBB8C /* Settings+callQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+callQualityLevel.swift"; sourceTree = "<group>"; };
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 		E9E975997A8FE85D76C63200 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
 				E9E973F83FB2243F93C24577 /* Assets+Generated.swift */,
 				E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */,
@@ -363,6 +368,7 @@
 		E9E977DCDBBAEFA016EA4DD1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E15F9B322CD65313005FBB8C /* Settings+callQualityLevel.swift */,
 				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
 				E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */,
 				E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */,
@@ -596,6 +602,7 @@
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
+				E15F9B332CD6531F005FBB8C /* Settings+callQualityLevel.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
 				E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */,
 				E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */,
@@ -615,6 +622,7 @@
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
 				E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */,
 				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,
+				E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */,
 				E154D2682C9844CA004751CF /* AVPlayer+callEndTone.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
 				E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */,

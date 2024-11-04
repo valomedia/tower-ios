@@ -217,7 +217,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     func resumeVideo() {
         guard isVideoPaused else { return }
-        restartVideo()
+        startVideo(restarting: true)
         isVideoPaused = false
     }
 
@@ -478,16 +478,16 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         locationController = nil
     }
     
-    private func startVideo() {
-        session?.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
+    private func startVideo(restarting: Bool = false) {
+        if (restarting) {
+            session?.audioVideo.startLocalVideo(source: cameraController)
+        } else {
+            session?.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
+        }
     }
     
     private func stopVideo() {
         session?.audioVideo.stopLocalVideo()
-    }
-    
-    private func restartVideo() {
-        session?.audioVideo.startLocalVideo(source: cameraController)
     }
     
     private func retryConnection(sessionConfiguration: MeetingSessionConfiguration) {

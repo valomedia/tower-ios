@@ -103,6 +103,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// How many seconds to wait before retrying the connection, when it fails before an assistant picks up.
     ///
     private static let earlyRetryWaitTimeSeconds: Double = 2;
+    
+    /// How many seconds to wait before restarting the video, when the assistant requests it be restarted.
+    ///
+    private static let restartVideoWaitTimeSeconds: Double = 2;
 
     // MARK: - Life cycle methods
 
@@ -130,6 +134,12 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// their device. Currenlty this means that the user has sent the app to the background (or locked their device).
     ///
     @Published private(set) var isVideoPaused: Bool = false
+    
+    /// Whether the video is currently being restarted.
+    ///
+    /// This indicates whether the video is stopped because the assistant has requested the video to be restarted.
+    ///
+    @Published private(set) var isVideoRestarting: Bool = false
     
     private var earlyFailureRetryCount = 0;
 
@@ -360,6 +370,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         case DataMessageTopic.capturePhotoRequest.rawValue:
             handleCapturePhotoRequest()
             break
+        case DataMessageTopic.restartVideoRequest.rawValue:
+            handleRestartVideoRequest()
+            break
         default:
             break
         }
@@ -421,6 +434,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                         observer: self)
                 session.audioVideo.addRealtimeDataMessageObserver(
                         topic: DataMessageTopic.locationRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.restartVideoRequest.rawValue,
                         observer: self)
 
                 let audioDevices = session.audioVideo.listAudioDevices()
@@ -573,4 +589,27 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             }
         }
     }
+    
+    private func handleRestartVideoRequest() {
+        // If the video is restarting already, just return immediately, without sending an acknowledgement for the
+        // duplicate command.
+        guard !isVideoRestarting else { return }
+        
+        if isVideoPaused {
+            // Video is paused, no need to restart it. Acknowledge the command, but do nothing.
+            sendDataMessage(.restartVideoResponse)
+            return
+        }
+        
+        isVideoRestarting = true
+        stopVideo()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.restartVideoWaitTimeSeconds) { [weak self] in
+            guard let self else { return }
+            if isVideoRestarting, !isVideoPaused { startVideo(restarting: true) }
+            isVideoRestarting = false
+            sendDataMessage(.restartVideoResponse)
+        }
+    }
+    
 }

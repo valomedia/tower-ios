@@ -23,4 +23,6 @@ enum DataMessageTopic: String {
     case locationRequest = "location-request"
     case locationResponse = "location-response"
     case locationEvent = "location-event"
+    case restartVideoRequest = "restart-video-request"
+    case restartVideoResponse = "restart-video-response"
 }

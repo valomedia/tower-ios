@@ -30,6 +30,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         case reconnecting
         case waiting
         case connected
+        case onHold
         case poorConnection
         case connectionLost
         case failed
@@ -49,6 +50,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 return "Warten auf Assistenz…"
             case .connected:
                 return "Verbunden"
+            case .onHold:
+                return "Anruf wird gehalten…"
             case .poorConnection:
                 return "Schlechte Verbindung!"
             case .connectionLost:
@@ -328,13 +331,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
 
     func attendeesDidJoin(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
         logger.info(msg: "attendeesDidJoin")
-        if (state != .connected) {
-            state = state == .connecting ? .waiting : .connected
-        }
-        if (state == .connected) {
-            AVPlayer.callRingbackTone.pause()
-            AVPlayer.callStartTone.seek(to: CMTime.zero)
-            AVPlayer.callStartTone.play()
+        if (state == .connecting) {
+            state = .waiting
         }
     }
 
@@ -373,6 +371,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         case DataMessageTopic.restartVideoRequest.rawValue:
             handleRestartVideoRequest()
             break
+        case DataMessageTopic.assistantReadyEvent.rawValue:
+            handleAssistantReadyEvent()
+            break
+        case DataMessageTopic.assistantBusyEvent.rawValue:
+            handleAssistantBusyEvent()
         default:
             break
         }
@@ -437,6 +440,12 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                         observer: self)
                 session.audioVideo.addRealtimeDataMessageObserver(
                         topic: DataMessageTopic.restartVideoRequest.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.assistantReadyEvent.rawValue,
+                        observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.assistantBusyEvent.rawValue,
                         observer: self)
 
                 let audioDevices = session.audioVideo.listAudioDevices()
@@ -610,6 +619,19 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             isVideoRestarting = false
             sendDataMessage(.restartVideoResponse)
         }
+    }
+    
+    private func handleAssistantReadyEvent() {
+        state = .connected
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callStartTone.seek(to: CMTime.zero)
+        AVPlayer.callStartTone.play()
+    }
+    
+    private func handleAssistantBusyEvent() {
+        state = .onHold
+        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
+        AVPlayer.callRingbackTone.play()
     }
     
 }

@@ -495,6 +495,15 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// called.
     ///
     private func leave() {
+        session?.audioVideo.removeAudioVideoObserver(observer: self)
+        session?.audioVideo.removeRealtimeObserver(observer: self)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.capturePhotoRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.switchCameraRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.toggleTorchRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.locationRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.restartVideoRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.assistantReadyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.assistantBusyEvent.rawValue)
         session?.audioVideo.stop()
         cameraController.stop()
         cameraController.torchEnabled = false

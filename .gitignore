@@ -112,6 +112,9 @@ Sessionx.vim
 tags
 [._]*.un~
 
+# Visual Studio Code
+/.vscode
+
 #
 # macOS
 #

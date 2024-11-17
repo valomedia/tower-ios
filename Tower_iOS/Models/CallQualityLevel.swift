@@ -13,7 +13,7 @@ import AmazonChimeSDK
 
 /// Different presets for the video quality for the call.
 ///
-enum CallQualityLevel: Int {
+enum CallQualityLevel: Int, Codable {
     
     /// Max 180p15 @ 200 kbit/s.
     ///

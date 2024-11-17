@@ -334,6 +334,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         if (state == .connecting) {
             state = .waiting
         }
+
+        sendCallQualityEvent(Settings.callQualityLevel)
     }
 
     func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
@@ -642,5 +644,11 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         AVPlayer.callRingbackTone.seek(to: CMTime.zero)
         AVPlayer.callRingbackTone.play()
     }
-    
+
+    private func sendCallQualityEvent(_ callQualityLevel: CallQualityLevel) {
+        sendDataMessage(
+            .callQualityEvent,
+            data: try! JSONEncoder.shared.encode(CallQualityEventData(callQualityLevel: callQualityLevel)))
+    }
+
 }

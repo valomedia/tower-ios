@@ -650,7 +650,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private func sendCallQualityEvent(_ callQualityLevel: CallQualityLevel) {
         sendDataMessage(
             .callQualityEvent,
-            data: try! JSONEncoder.shared.encode(CallQualityEventData(callQualityLevel: callQualityLevel)))
+            data: try! JSONEncoder.shared.encode(CallQualityData(callQualityLevel: callQualityLevel)))
+    }
     }
 
 }

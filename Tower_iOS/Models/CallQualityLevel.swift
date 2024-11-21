@@ -47,6 +47,8 @@ enum CallQualityLevel: Int, Codable {
         }
     }
     
+    /// The maximum bandwith required by each call quality level.
+    ///
     var maximumBandwidth: UInt32 {
         switch self {
         case .veryLow: return 200

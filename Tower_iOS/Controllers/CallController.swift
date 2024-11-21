@@ -378,6 +378,10 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             break
         case DataMessageTopic.assistantBusyEvent.rawValue:
             handleAssistantBusyEvent()
+            break
+        case DataMessageTopic.changeCallQualityRequest.rawValue:
+            handleChangeCallQualityRequest(dataMessage.data)
+            break
         default:
             break
         }
@@ -451,6 +455,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 session.audioVideo.addRealtimeDataMessageObserver(
                         topic: DataMessageTopic.assistantBusyEvent.rawValue,
                         observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.changeCallQualityRequest.rawValue,
+                        observer: self)
 
                 let audioDevices = session.audioVideo.listAudioDevices()
                 for device in audioDevices {
@@ -501,13 +508,22 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private func leave() {
         session?.audioVideo.removeAudioVideoObserver(observer: self)
         session?.audioVideo.removeRealtimeObserver(observer: self)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.capturePhotoRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.switchCameraRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.toggleTorchRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.locationRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.restartVideoRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.assistantReadyEvent.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.assistantBusyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.capturePhotoRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.switchCameraRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.toggleTorchRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.locationRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.restartVideoRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.assistantReadyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.assistantBusyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.changeCallQualityRequest.rawValue)
         session?.audioVideo.stop()
         cameraController.stop()
         cameraController.torchEnabled = false
@@ -652,6 +668,19 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             .callQualityEvent,
             data: try! JSONEncoder.shared.encode(CallQualityData(callQualityLevel: callQualityLevel)))
     }
+
+    private func handleChangeCallQualityRequest(_ data: Data) {
+        do {
+            let newCallQualityLevel = try JSONDecoder.shared.decode(CallQualityData.self, from: data).callQualityLevel
+            (newCallQualityLevel?.videoFormat).map { cameraController.format = $0 }
+            let data = try JSONEncoder.shared.encode(CallQualityData(callQualityLevel: newCallQualityLevel))
+            sendDataMessage(.changeCallQualityResponse, data: data)
+            sendDataMessage(.callQualityEvent, data: data)
+        } catch {
+            sendDataMessage(
+                .changeCallQualityResponse,
+                data: try! JSONEncoder.shared.encode(CallQualityData(message: error.localizedDescription)))
+        }
     }
 
 }

@@ -384,6 +384,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
+        logger.info(msg: "sendDataMessage \(topic) (\(data?.count ?? 0) bytes)");
+
         do {
             try session?.audioVideo.realtimeSendDataMessage(
                     topic: topic.rawValue,

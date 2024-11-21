@@ -98,16 +98,19 @@ class CameraController:
     var torchEnabled: Bool = false {
         didSet {
             if let captureDevice, torchAvailable {
-                do {
-                    try captureDevice.lockForConfiguration()
-                    if torchEnabled {
-                        captureDevice.torchMode = .on
-                    } else {
-                        captureDevice.torchMode = .off
+                captureQueue.async { [weak self] in
+                    guard let self else { return }
+                    do {
+                        try captureDevice.lockForConfiguration()
+                        if torchEnabled {
+                            captureDevice.torchMode = .on
+                        } else {
+                            captureDevice.torchMode = .off
+                        }
+                        captureDevice.unlockForConfiguration()
+                    } catch {
+                        logger.error(msg: "Unable to set torch on current camera. Error: \(error)")
                     }
-                    captureDevice.unlockForConfiguration()
-                } catch {
-                    logger.error(msg: "Unable to set torch on current camera. Error: \(error)")
                 }
             } else {
                 torchEnabled = false

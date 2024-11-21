@@ -281,6 +281,10 @@ class CameraController:
             throw CameraError.codecUnavailable
         }
 
+        // Temporarily switch to the highest resolution
+        let format = self.format
+        self.format = CallQualityLevel.high.videoFormat
+
         captureQueue.async { [weak self] in
             guard let self else { return }
             
@@ -302,6 +306,9 @@ class CameraController:
             }
 
             photoOutput.capturePhoto(with: photoSettings, delegate: self)
+
+            // Turn the torch back on if necessary and switch back to the previous video format.
+            self.format = format
             self.torchEnabled = torchEnabled
         }
 

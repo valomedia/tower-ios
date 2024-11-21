@@ -153,7 +153,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     }
 
     private let logger = ConsoleLogger(name: "CallController")
-    private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: Settings.callQualityLevel.maximumBandwidth)
+    private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: CallQualityLevel.veryHigh.maximumBandwidth)
     private let cameraController = CameraController()
 
     // MARK: - Methods
@@ -334,6 +334,8 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         if (state == .connecting) {
             state = .waiting
         }
+
+        sendCallQualityEvent(Settings.callQualityLevel)
     }
 
     func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
@@ -376,12 +378,18 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             break
         case DataMessageTopic.assistantBusyEvent.rawValue:
             handleAssistantBusyEvent()
+            break
+        case DataMessageTopic.changeCallQualityRequest.rawValue:
+            handleChangeCallQualityRequest(dataMessage.data)
+            break
         default:
             break
         }
     }
 
     func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
+        logger.info(msg: "sendDataMessage \(topic) (\(data?.count ?? 0) bytes)");
+
         do {
             try session?.audioVideo.realtimeSendDataMessage(
                     topic: topic.rawValue,
@@ -447,6 +455,9 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
                 session.audioVideo.addRealtimeDataMessageObserver(
                         topic: DataMessageTopic.assistantBusyEvent.rawValue,
                         observer: self)
+                session.audioVideo.addRealtimeDataMessageObserver(
+                        topic: DataMessageTopic.changeCallQualityRequest.rawValue,
+                        observer: self)
 
                 let audioDevices = session.audioVideo.listAudioDevices()
                 for device in audioDevices {
@@ -497,13 +508,22 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private func leave() {
         session?.audioVideo.removeAudioVideoObserver(observer: self)
         session?.audioVideo.removeRealtimeObserver(observer: self)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.capturePhotoRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.switchCameraRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.toggleTorchRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.locationRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.restartVideoRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.assistantReadyEvent.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: DataMessageTopic.assistantBusyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.capturePhotoRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.switchCameraRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.toggleTorchRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.locationRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.restartVideoRequest.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.assistantReadyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.assistantBusyEvent.rawValue)
+        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
+            topic: DataMessageTopic.changeCallQualityRequest.rawValue)
         session?.audioVideo.stop()
         cameraController.stop()
         cameraController.torchEnabled = false
@@ -642,5 +662,25 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         AVPlayer.callRingbackTone.seek(to: CMTime.zero)
         AVPlayer.callRingbackTone.play()
     }
-    
+
+    private func sendCallQualityEvent(_ callQualityLevel: CallQualityLevel) {
+        sendDataMessage(
+            .callQualityEvent,
+            data: try! JSONEncoder.shared.encode(CallQualityData(callQualityLevel: callQualityLevel)))
+    }
+
+    private func handleChangeCallQualityRequest(_ data: Data) {
+        do {
+            let newCallQualityLevel = try JSONDecoder.shared.decode(CallQualityData.self, from: data).callQualityLevel
+            (newCallQualityLevel?.videoFormat).map { cameraController.format = $0 }
+            let data = try JSONEncoder.shared.encode(CallQualityData(callQualityLevel: newCallQualityLevel))
+            sendDataMessage(.changeCallQualityResponse, data: data)
+            sendDataMessage(.callQualityEvent, data: data)
+        } catch {
+            sendDataMessage(
+                .changeCallQualityResponse,
+                data: try! JSONEncoder.shared.encode(CallQualityData(message: error.localizedDescription)))
+        }
+    }
+
 }

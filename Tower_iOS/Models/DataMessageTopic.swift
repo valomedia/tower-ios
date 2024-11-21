@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 // MARK: DataMessageTopic
 
 /// The various messages that can be sent.
@@ -27,4 +26,7 @@ enum DataMessageTopic: String {
     case restartVideoResponse = "restart-video-response"
     case assistantReadyEvent = "assistant-ready-event"
     case assistantBusyEvent = "assistant-busy-event"
+    case changeCallQualityRequest = "change-call-quality-request"
+    case changeCallQualityResponse = "change-call-quality-response"
+    case callQualityEvent = "call-quality-event"
 }

@@ -28,6 +28,7 @@
 		E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */; };
 		E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
+		E1DF7A922CEA645C000498C0 /* CallQualityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1DF7A912CEA645C000498C0 /* CallQualityData.swift */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
 		E1ECE03B2C00E0490041180E /* AmazonChimeSDKMedia in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE03A2C00E0490041180E /* AmazonChimeSDKMedia */; };
@@ -136,6 +137,7 @@
 		E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+compacted.swift"; sourceTree = "<group>"; };
 		E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentMutableSet.swift; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		E1DF7A912CEA645C000498C0 /* CallQualityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityData.swift; sourceTree = "<group>"; };
 		E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 		E9E975997A8FE85D76C63200 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E1DF7A912CEA645C000498C0 /* CallQualityData.swift */,
 				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
 				E9E973F83FB2243F93C24577 /* Assets+Generated.swift */,
@@ -642,6 +645,7 @@
 				E9E97293EE5E7BBDD50F4281 /* JSONEncoder+shared.swift in Sources */,
 				E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */,
 				E9E977BE52440D6C568D87BA /* View+if.swift in Sources */,
+				E1DF7A922CEA645C000498C0 /* CallQualityData.swift in Sources */,
 				E9E979C728D84904A56D8864 /* View+ifNotNil.swift in Sources */,
 				E154D26C2C984942004751CF /* AVPlayer+callRingbackTone.swift in Sources */,
 				E9E97F16E513CFDC104779A8 /* View+hidden.swift in Sources */,

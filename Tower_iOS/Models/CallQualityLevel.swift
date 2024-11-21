@@ -13,7 +13,7 @@ import AmazonChimeSDK
 
 /// Different presets for the video quality for the call.
 ///
-enum CallQualityLevel: Int {
+enum CallQualityLevel: Int, Codable {
     
     /// Max 180p15 @ 200 kbit/s.
     ///
@@ -47,6 +47,8 @@ enum CallQualityLevel: Int {
         }
     }
     
+    /// The maximum bandwith required by each call quality level.
+    ///
     var maximumBandwidth: UInt32 {
         switch self {
         case .veryLow: return 200
@@ -55,5 +57,29 @@ enum CallQualityLevel: Int {
         default: return 2500
         }
     }
-    
+
+    /// Human-readable names for each call quality level.
+    ///
+    var description: String {
+        switch self {
+        case .veryLow: return "Very low"
+        case .low: return "Low"
+        case .medium: return "Medium"
+        case .high: return "High"
+        case .veryHigh: return "Very high"
+        }
+    }
+
+    /// Localized version of the human-readable names qor each call quality level.
+    ///
+    var localizedDescription: String {
+        switch self {
+        case .veryLow: return "Sehr niedrig"
+        case .low: return "Niedrig"
+        case .medium: return "Mittel"
+        case .high: return "Hoch"
+        case .veryHigh: return "Sehr hoch"
+        }
+    }
+
 }

@@ -57,5 +57,29 @@ enum CallQualityLevel: Int, Codable {
         default: return 2500
         }
     }
-    
+
+    /// Human-readable names for each call quality level.
+    ///
+    var description: String {
+        switch self {
+        case .veryLow: return "Very low"
+        case .low: return "Low"
+        case .medium: return "Medium"
+        case .high: return "High"
+        case .veryHigh: return "Very high"
+        }
+    }
+
+    /// Localized version of the human-readable names qor each call quality level.
+    ///
+    var localizedDescription: String {
+        switch self {
+        case .veryLow: return "Sehr niedrig"
+        case .low: return "Niedrig"
+        case .medium: return "Mittel"
+        case .high: return "Hoch"
+        case .veryHigh: return "Sehr hoch"
+        }
+    }
+
 }

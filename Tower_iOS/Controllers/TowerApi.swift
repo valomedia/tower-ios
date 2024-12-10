@@ -35,6 +35,20 @@ class TowerApi {
         try await request()
     }
 
+    /// Make a request for an assistance session.
+    /// 
+    /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the
+    /// queue of users waiting for an assistant.
+    ///
+    /// - Returns: The RequestAssistanceResponse with the UserToken.
+    /// - Throws:
+    /// 
+    class func requestAssistance() async throws -> RequestAssistanceResponse {
+        try JSONDecoder.shared.decode(
+            RequestAssistanceResponse.self,
+            from: await request ("POST", "/requestAssistance"))
+    }
+
     /// Make a request to the start endpoint.
     ///
     /// The start endpoint will create both the room and the attendee.

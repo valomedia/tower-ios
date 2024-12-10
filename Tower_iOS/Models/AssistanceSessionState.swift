@@ -12,7 +12,7 @@ import Foundation
 
 /// An enum representing the lifecycle of an assistance session.
 ///
-enum AssistanceSessionState {
+enum AssistanceSessionState: CustomStringConvertible {
     case none
     case initializing
     case waiting

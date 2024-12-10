@@ -17,6 +17,7 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
     case invalidEndpoint
     case missingCredentials
     case badCredentials
+    case notFound
     case serverError
     case unexpectedError
 
@@ -28,6 +29,8 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
             return "Credentials are missing"
         case .badCredentials:
             return "Credentials are invalid"
+        case .notFound:
+            return "Assistance request not found"
         case .serverError:
             return "Server error"
         case .unexpectedError:
@@ -43,6 +46,8 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
             return "Zugangsdaten fehlen"
         case .badCredentials:
             return "Zugangsdaten falsch"
+        case .notFound:
+            return "Hilfegesuch nicht gefunden"
         case .serverError:
             return "Serverfehler"
         case .unexpectedError:

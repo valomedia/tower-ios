@@ -140,6 +140,8 @@ class TowerApi {
             return data
         case 401:
             throw TowerError.badCredentials
+        case 404:
+            throw TowerError.notFound
         case 500...599:
             throw TowerError.serverError
         default:

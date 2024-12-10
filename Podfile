@@ -12,6 +12,7 @@ target 'Tower_iOS' do
   use_frameworks!
 
   # Pods for Tower_iOS
+  pod 'AzureCommunicationCalling', '~> 1.0.0'
 
   target 'Tower_iOSTests' do
     inherit! :search_paths

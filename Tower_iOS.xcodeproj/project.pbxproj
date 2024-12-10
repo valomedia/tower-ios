@@ -476,6 +476,7 @@
 				E9E976D70D4E12441A9D7C73 /* Frameworks */,
 				E9E97C9106368EEADD769267 /* Resources */,
 				E11F4EB329EFA50C00D39816 /* Embed Frameworks */,
+				26F183BD6CF6D92EDB2F04B2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -499,6 +500,7 @@
 				E9E975E238203FC3FB3DA05E /* Sources */,
 				E9E97623ADDA47A0BBBDBCDA /* Frameworks */,
 				E9E970009CFD8AAC851B5E4E /* Resources */,
+				AEC0B3B30DF2CAE768CC2FBD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -590,6 +592,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		26F183BD6CF6D92EDB2F04B2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AzureCommunicationCommon/AzureCommunicationCommon.framework",
+				"${BUILT_PRODUCTS_DIR}/AzureCore/AzureCore.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/AzureCommunicationCalling/AzureCommunicationCalling.framework/AzureCommunicationCalling",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCommon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCalling.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7627B4DF03BE26064AC7E7A7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -632,6 +656,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AEC0B3B30DF2CAE768CC2FBD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AzureCommunicationCommon/AzureCommunicationCommon.framework",
+				"${BUILT_PRODUCTS_DIR}/AzureCore/AzureCore.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/AzureCommunicationCalling/AzureCommunicationCalling.framework/AzureCommunicationCalling",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCommon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCalling.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D0F331BC387343AD4E083434 /* [CP] Check Pods Manifest.lock */ = {

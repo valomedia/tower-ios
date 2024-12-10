@@ -49,6 +49,16 @@ class TowerApi {
             from: await request ("POST", "/requestAssistance"))
     }
 
+    /// Signal to the backend, that the caller is still waiting.
+    /// 
+    /// This will inform the backend, that the caller is still on the line, so the assistance request doesn't time out.
+    /// 
+    /// - Throws:
+    /// 
+    class func awaitAssistance() async throws -> Void {
+        try await request ("POST", "/awaitAssistance")
+    }
+
     /// Make a request to the start endpoint.
     ///
     /// The start endpoint will create both the room and the attendee.

@@ -61,6 +61,12 @@ Package.resolved
 .build/
 
 #
+# Cocoapods
+#
+
+Pods/
+
+#
 # fastlane
 #
 

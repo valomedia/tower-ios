@@ -31,6 +31,7 @@
 		E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E1DF7A922CEA645C000498C0 /* CallQualityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1DF7A912CEA645C000498C0 /* CallQualityData.swift */; };
+		E1E32B312D08A42B00617B34 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B302D08A42B00617B34 /* User.swift */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
 		E1ECE03B2C00E0490041180E /* AmazonChimeSDKMedia in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE03A2C00E0490041180E /* AmazonChimeSDKMedia */; };
@@ -150,6 +151,7 @@
 		E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentMutableSet.swift; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E1DF7A912CEA645C000498C0 /* CallQualityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityData.swift; sourceTree = "<group>"; };
+		E1E32B302D08A42B00617B34 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 		E9E975997A8FE85D76C63200 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E1E32B302D08A42B00617B34 /* User.swift */,
 				E1DF7A912CEA645C000498C0 /* CallQualityData.swift */,
 				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
@@ -776,6 +779,7 @@
 				E154D2682C9844CA004751CF /* AVPlayer+callEndTone.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
 				E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */,
+				E1E32B312D08A42B00617B34 /* User.swift in Sources */,
 				E1CB1BD92C5B93680078AF3A /* CapturePhotoResponseData.swift in Sources */,
 				E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */,
 				E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */,

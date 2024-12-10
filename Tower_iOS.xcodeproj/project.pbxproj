@@ -34,6 +34,7 @@
 		E1E32B2D2D08A09B00617B34 /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B2C2D08A09B00617B34 /* UserToken.swift */; };
 		E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */; };
 		E1E32B312D08A42B00617B34 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B302D08A42B00617B34 /* User.swift */; };
+		E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */; };
 		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
 		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
 		E1ECE03B2C00E0490041180E /* AmazonChimeSDKMedia in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE03A2C00E0490041180E /* AmazonChimeSDKMedia */; };
@@ -156,6 +157,7 @@
 		E1E32B2C2D08A09B00617B34 /* UserToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserToken.swift; sourceTree = "<group>"; };
 		E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAssistanceResponse.swift; sourceTree = "<group>"; };
 		E1E32B302D08A42B00617B34 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistanceSessionState.swift; sourceTree = "<group>"; };
 		E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 		E9E975997A8FE85D76C63200 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */,
 				E1E32B302D08A42B00617B34 /* User.swift */,
 				E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */,
 				E1E32B2C2D08A09B00617B34 /* UserToken.swift */,
@@ -774,6 +777,7 @@
 				E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */,
 				E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */,
 				E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */,
+				E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */,
 				E9E9785836011CE532198B31 /* OnboardingSheet.swift in Sources */,
 				E9E97D676B5FC0654D0AE376 /* TrailingIconLabelStyle.swift in Sources */,
 				E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */,

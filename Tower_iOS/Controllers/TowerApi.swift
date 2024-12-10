@@ -59,6 +59,17 @@ class TowerApi {
         try await request ("POST", "/awaitAssistance")
     }
 
+    /// Signal to the backend, that the caller has given up on waiting.
+    /// 
+    /// This will inform the backend, that the caller has cancelled the assistance request and no assistant needs to
+    /// respond anymore.
+    /// 
+    /// - Throws:
+    /// 
+    class func cancelAssistance() async throws -> Void {
+        try await request("POST", "/cancelAssistance")
+    }
+
     /// Make a request to the start endpoint.
     ///
     /// The start endpoint will create both the room and the attendee.

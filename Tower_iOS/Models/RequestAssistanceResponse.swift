@@ -27,6 +27,6 @@ struct RequestAssistanceResponse: Codable {
 
     /// How often to send a request to the `/awaitAssistance`-endpoint.
     ///
-    var keepaliveInterval: Int
+    var keepaliveInterval: Int?
 
 }

@@ -17,7 +17,6 @@ struct UserToken: Codable {
     enum CodingKeys: String, CodingKey {
         case user = "user"
         case token = "token"
-        case expiresOn = "expiresOn"
     }
 
     // MARK: - Properties
@@ -29,9 +28,5 @@ struct UserToken: Codable {
     /// The access token issued for the user.
     /// 
     var token: String
-
-    /// The expiry time of the token.
-    /// 
-    var expiresOn: Date
 
 }

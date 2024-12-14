@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import AmazonChimeSDK
 import CoreLocation
 import AVFoundation
 import SwiftUI
@@ -19,57 +18,7 @@ import AzureCommunicationCalling
 ///
 /// This contains for the application logic for the actual chime SDK itself.
 ///
-class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegate, IncomingCallDelegate, AudioVideoObserver, RealtimeObserver, DataMessageObserver {
-
-    /// The life cycle of the call.
-    ///
-    enum CallState: CustomStringConvertible {
-        case none
-        case notConnected
-        case connecting
-        case reconnecting
-        case waiting
-        case connected
-        case onHold
-        case poorConnection
-        case connectionLost
-        case failed
-        case disconnected
-
-        var description: String {
-            switch self {
-            case .none:
-                return "Verbindung herstellen…"
-            case .notConnected:
-                return "Verbindung herstellen…"
-            case .connecting:
-                return "Anrufaufbau…"
-            case .reconnecting:
-                return "Neu verbinden…"
-            case .waiting:
-                return "Warten auf Assistenz…"
-            case .connected:
-                return "Verbunden"
-            case .onHold:
-                return "Anruf wird gehalten…"
-            case .poorConnection:
-                return "Schlechte Verbindung!"
-            case .connectionLost:
-                return "Verbindungsabbruch!"
-            case .failed:
-                return "Verbindung fehlgeschlagen!"
-            case .disconnected:
-                return "Verbindung getrennt"
-            }
-        }
-
-        /// Whether there is an assistant in the call.
-        ///
-        var isAssistantConnected: Bool {
-            self == .connected || self == .poorConnection || self == .connectionLost || self == .reconnecting
-        }
-
-    }
+class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegate, IncomingCallDelegate {
 
     // MARK: - Static properties
 
@@ -117,19 +66,9 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     ///
     @Published var sessionState: AssistanceSessionState = .none {
         didSet {
-            UIAccessibility.post(notification: .announcement, argument: state.description)
+            UIAccessibility.post(notification: .announcement, argument: sessionState.localizedDescription)
         }
     }
-
-    @Published var state: CallState = .none {
-        didSet {
-            UIAccessibility.post(notification: .announcement, argument: state.description)
-        }
-    }
-
-    /// The MeetingSession this CallController is attached to.
-    ///
-    @Published var session: MeetingSession? = nil
     
     /// Whether the video is currently paused.
     ///
@@ -154,13 +93,7 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     private var earlyFailureRetryCount = 0;
 
     private var locationController: LocationController? = nil
-    
-    private var shouldRetryConnection: Bool {
-        !state.isAssistantConnected && earlyFailureRetryCount <= CallController.maxRetriesOnEarlyFailure
-    }
 
-    private let logger = ConsoleLogger(name: "CallController")
-    private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: CallQualityLevel.veryHigh.maximumBandwidth)
     private let cameraController = CameraController()
     private let audioSession = AVAudioSession.sharedInstance()
 
@@ -229,240 +162,8 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     func callAgent(_ callAgent: CallAgent, didRecieveIncomingCall incomingCall: IncomingCall) {
         Task { await handleIncomingCall(incomingCall) }
     }
-    
-    /// Start a new call.
-    ///
-    /// This will register a new call with the backend, then join the call.
-    ///
-    /// - Parameters:
-    ///     - onCallEnd: A closure to call when the call ends, no matter why.
-    ///     - onCallError: A closure to call when the call ends because of a fatal Error during the initial connection.
-    ///
-    func startCall(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
-        self.onCallEnd = onCallEnd
-        self.onCallError = onCallError
-        join()
-    }
-
-    /// End the call.
-    ///
-    /// This will hang up the call and unregister it from the backend.
-    ///
-    func endCall() {
-        if let configuration = session?.configuration {
-            Task { try? await TowerApi.end(sessionConfiguration: configuration) }
-        }
-        
-        state = .disconnected
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callEndTone.seek(to: CMTime.zero)
-        AVPlayer.callEndTone.play()
-        
-        onCallEnd?()
-        leave()
-        
-        earlyFailureRetryCount = 0
-    }
-    
-    /// Pause the video feed.
-    ///
-    /// This will pause the video feed, if it is not paused already. This means, that the video will be stopped and
-    /// `isVideoPaused` will be set to `true`, indicating that the video has been manually stopped.
-    ///
-    func pauseVideo() {
-        guard !isVideoPaused else { return }
-        stopVideo()
-        isVideoPaused = true
-    }
-    
-    /// Resume the video feed.
-    ///
-    /// This will resume the video feed, if it is currenlty paused. If the video feed has been previously paused using
-    /// `pauseVideo()`, this will restart the video and set `isVideoPaused` back to `false`.
-    ///
-    /// If the video isn't paused when this is called, this will be a no-op. This function will only resume the video
-    /// if it is paused. If the video is stopped, but there hasn't been a call to `pauseVideo()`, this will not
-    /// attempt to restart the video.
-    ///
-    func resumeVideo() {
-        guard isVideoPaused else { return }
-        startVideo(restarting: true)
-        isVideoPaused = false
-    }
-
-    func audioSessionDidStartConnecting(reconnecting: Bool) {
-        logger.info(msg: "audioSessionDidStartConnecting")
-        
-        // We don't have a good implementiation for reconnecting yet. When the call drops, we just end it. Ignore all
-        // reconnecting events.
-        guard (!reconnecting) else { return }
-
-        state = .connecting
-        
-        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
-        AVPlayer.callRingbackTone.play()
-    }
-
-    func audioSessionDidStart(reconnecting: Bool) {
-        logger.info(msg: "audioSessionDidStart")
-    }
-
-    func audioSessionDidDrop() {
-        logger.info(msg: "audioSessionDidDrop")
-        
-        guard state.isAssistantConnected else {
-            retryConnectionOrEndCall()
-            return
-        }
-        
-        state = .connectionLost
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callErrorTone.seek(to: CMTime.zero)
-        AVPlayer.callErrorTone.play()
-        
-        // For now, if the connection becomes so poor that the audio disconnects completely, just drop the call like
-        // a hot potato.
-        endCall()
-    }
-
-    func audioSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "audioSessionDidStopWithStatus \(sessionStatus.statusCode)")
-    }
-
-    func audioSessionDidCancelReconnect() {
-        logger.info(msg: "audioSessionDidCancelReconnect")
-        state = .failed
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callErrorTone.seek(to: CMTime.zero)
-        AVPlayer.callErrorTone.play()
-    }
-
-    func connectionDidRecover() {
-        logger.info(msg: "connectionDidRecover")
-        if (state.isAssistantConnected) {
-            state = .connected
-        }
-    }
-
-    func connectionDidBecomePoor() {
-        logger.info(msg: "connectionDidBecomePoor")
-        if (state.isAssistantConnected) {
-            state = .poorConnection
-        }
-    }
-
-    func videoSessionDidStartConnecting() {
-        logger.info(msg: "videoSessionDidStartConnecting")
-    }
-
-    func videoSessionDidStartWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "videoSessionDidStartWithStatus \(sessionStatus.statusCode)")
-    }
-
-    func videoSessionDidStopWithStatus(sessionStatus: AmazonChimeSDK.MeetingSessionStatus) {
-        logger.info(msg: "videoSessionDidStopWithStatus \(sessionStatus.statusCode)")
-        
-        if state != .none && state != .disconnected {
-            retryConnectionOrEndCall()
-        }
-    }
-
-    func remoteVideoSourcesDidBecomeAvailable(sources: [AmazonChimeSDK.RemoteVideoSource]) {
-        logger.info(msg: "remoteVideoSourcesDidBecomeAvailable")
-    }
-
-    func remoteVideoSourcesDidBecomeUnavailable(sources: [AmazonChimeSDK.RemoteVideoSource]) {
-        logger.info(msg: "remoteVideoSourcesDidBecomeUnavailable")
-    }
-
-    func cameraSendAvailabilityDidChange(available: Bool) {
-        logger.info(msg: "cameraSendAvailabilityDidChange")
-    }
-
-    func volumeDidChange(volumeUpdates: [AmazonChimeSDK.VolumeUpdate]) {}
-
-    func signalStrengthDidChange(signalUpdates: [AmazonChimeSDK.SignalUpdate]) {
-        logger.info(msg: "signalStrengthDidChange")
-    }
-
-    func attendeesDidJoin(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
-        logger.info(msg: "attendeesDidJoin")
-        if (state == .connecting) {
-            state = .waiting
-        }
-
-        sendCallQualityEvent(Settings.callQualityLevel)
-    }
-
-    func attendeesDidLeave(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
-        logger.info(msg: "attendeesDidLeave")
-    }
-
-    func attendeesDidDrop(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
-        logger.info(msg: "attendeesDidDrop")
-    }
-
-    func attendeesDidMute(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
-        logger.info(msg: "attendeesDidMute")
-    }
-
-    func attendeesDidUnmute(attendeeInfo: [AmazonChimeSDK.AttendeeInfo]) {
-        logger.info(msg: "attendeesDidUnmute")
-    }
-
-    func dataMessageDidReceived(dataMessage: AmazonChimeSDK.DataMessage) {
-        logger.info(msg: "dataMessageDidReceived \(dataMessage.timestampMs) \(dataMessage.topic) \(dataMessage.senderAttendeeId)");
-
-        switch dataMessage.topic {
-        case DataMessageTopic.switchCameraRequest.rawValue:
-            handleSwitchCameraRequest()
-            break
-        case DataMessageTopic.toggleTorchRequest.rawValue:
-            handleToggleTorchRequest()
-            break
-        case DataMessageTopic.locationRequest.rawValue:
-            handleLocationRequest()
-            break
-        case DataMessageTopic.capturePhotoRequest.rawValue:
-            handleCapturePhotoRequest()
-            break
-        case DataMessageTopic.restartVideoRequest.rawValue:
-            handleRestartVideoRequest()
-            break
-        case DataMessageTopic.assistantReadyEvent.rawValue:
-            handleAssistantReadyEvent()
-            break
-        case DataMessageTopic.assistantBusyEvent.rawValue:
-            handleAssistantBusyEvent()
-            break
-        case DataMessageTopic.changeCallQualityRequest.rawValue:
-            handleChangeCallQualityRequest(dataMessage.data)
-            break
-        default:
-            break
-        }
-    }
 
     func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
-        logger.info(msg: "sendDataMessage \(topic) (\(data?.count ?? 0) bytes)");
-
-        do {
-            try session?.audioVideo.realtimeSendDataMessage(
-                    topic: topic.rawValue,
-                    data: data ?? "{}".data(using: .utf8) as Any,
-                    lifetimeMs: CallController.dataMessageLifetimeMs)
-        } catch let err as SendDataMessageError {
-            switch err {
-            case SendDataMessageError.invalidDataLength:
-                logger.error(msg: "Message too long, was \(data?.count ?? 0) bytes!")
-                break
-            default:
-                logger.error(msg: "Failed to send message! \(err)")
-                break
-            }
-        } catch {
-            logger.error(msg: "Unknown error \(error.localizedDescription)")
-        }
     }
 
     private func createSession() async throws -> CommunicationTokenCredential {
@@ -572,158 +273,6 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         }
     }
     
-    /// Join a meeting with a given configuration.
-    ///
-    /// This takes the configuration returned by the start endpoint and connects to the meeting with audio and video.
-    ///
-    /// - Parameter configuration: The MeetingSessionConfiguration
-    /// - Throws:
-    ///
-    private func join(configuration: MeetingSessionConfiguration? = nil) {
-        Task { @MainActor in
-            do {
-                let session = try DefaultMeetingSession(
-                    configuration: configuration != nil ? configuration! : await TowerApi.start(),
-                    logger: logger)
-                self.session = session
-                
-                if (state == .disconnected) {
-                    // The user killed the call while we were still waiting for a config from the backend. Just bail
-                    // at this point.
-                    Task { try? await TowerApi.end(sessionConfiguration: session.configuration) }
-                    return
-                }
-                
-                state = .notConnected
-                session.audioVideo.addAudioVideoObserver(observer: self)
-                session.audioVideo.addRealtimeObserver(observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.capturePhotoRequest.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.switchCameraRequest.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.toggleTorchRequest.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.locationRequest.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.restartVideoRequest.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.assistantReadyEvent.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.assistantBusyEvent.rawValue,
-                        observer: self)
-                session.audioVideo.addRealtimeDataMessageObserver(
-                        topic: DataMessageTopic.changeCallQualityRequest.rawValue,
-                        observer: self)
-
-                let audioDevices = session.audioVideo.listAudioDevices()
-                for device in audioDevices {
-                    logger.info(msg: "Device type: \(device.type), label: \(device.label)");
-                }
-
-                try session.audioVideo.start()
-
-                // Start the capture
-                cameraController.start()
-
-                startVideo()
-                
-                // If no external devices are attached, switch to the loudspeaker.
-                if (
-                    audioDevices
-                        .filter { $0.type != .audioBuiltInSpeaker && $0.type != .audioHandset }
-                        .isEmpty
-                ) {
-                    let device = audioDevices
-                        .filter {
-                            $0.type == .audioBuiltInSpeaker
-                        }
-                        .first
-                    device.map(session.audioVideo.chooseAudioDevice(mediaDevice:))
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                }
-
-                locationController = LocationController()
-                locationController?.callController = self
-            } catch {
-                if shouldRetryConnection, let configuration = session?.configuration {
-                    retryConnection(sessionConfiguration: configuration)
-                } else {
-                    endCall()
-                    onCallError?(error)
-                }
-            }
-        }
-    }
-    
-    /// End the meeting.
-    ///
-    /// This disconnects from the meeting. This is called after onCallEnd() to end the connection as far as the Chime
-    /// SDK is concerned. This does not affect the meeting on the server, which should have already ended when this is
-    /// called.
-    ///
-    private func leave() {
-        session?.audioVideo.removeAudioVideoObserver(observer: self)
-        session?.audioVideo.removeRealtimeObserver(observer: self)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.capturePhotoRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.switchCameraRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.toggleTorchRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.locationRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.restartVideoRequest.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.assistantReadyEvent.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.assistantBusyEvent.rawValue)
-        session?.audioVideo.removeRealtimeDataMessageObserverFromTopic(
-            topic: DataMessageTopic.changeCallQualityRequest.rawValue)
-        session?.audioVideo.stop()
-        cameraController.stop()
-        cameraController.torchEnabled = false
-        state = .none
-        session = nil
-        locationController = nil
-    }
-    
-    private func startVideo(restarting: Bool = false) {
-        if (restarting) {
-            session?.audioVideo.startLocalVideo(source: cameraController)
-        } else {
-            session?.audioVideo.startLocalVideo(source: cameraController, config: localVideoConfig)
-        }
-    }
-    
-    private func stopVideo() {
-        session?.audioVideo.stopLocalVideo()
-    }
-    
-    private func retryConnection(sessionConfiguration: MeetingSessionConfiguration) {
-        state = .none
-        earlyFailureRetryCount += 1
-        leave()
-        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.earlyRetryWaitTimeSeconds) { [weak self] in
-            self?.join(configuration: sessionConfiguration)
-        }
-    }
-    
-    private func retryConnectionOrEndCall() {
-        if shouldRetryConnection, let configuration = session?.configuration {
-            retryConnection(sessionConfiguration: configuration)
-        } else {
-            endCall()
-        }
-    }
-
     private func handleSwitchCameraRequest() {
         cameraController.switchCamera()
         sendDataMessage(.switchCameraResponse)
@@ -747,7 +296,7 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         Task {
             do {
                 let photoData = try await cameraController.takePhoto()
-                logger.info(msg: "Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
+                print("Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
                 
                 let uuid = UUID()
                 let encodedData = photoData.imageData.base64EncodedString()
@@ -788,61 +337,6 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
                     .capturePhotoResponse,
                     data: try! JSONEncoder.shared.encode(CapturePhotoResponseData(message: "\(error)")))
             }
-        }
-    }
-    
-    private func handleRestartVideoRequest() {
-        // If the video is restarting already, just return immediately, without sending an acknowledgement for the
-        // duplicate command.
-        guard !isVideoRestarting else { return }
-        
-        if isVideoPaused {
-            // Video is paused, no need to restart it. Acknowledge the command, but do nothing.
-            sendDataMessage(.restartVideoResponse)
-            return
-        }
-        
-        isVideoRestarting = true
-        stopVideo()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.restartVideoWaitTimeSeconds) { [weak self] in
-            guard let self else { return }
-            if isVideoRestarting, !isVideoPaused { startVideo(restarting: true) }
-            isVideoRestarting = false
-            sendDataMessage(.restartVideoResponse)
-        }
-    }
-    
-    private func handleAssistantReadyEvent() {
-        state = .connected
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callStartTone.seek(to: CMTime.zero)
-        AVPlayer.callStartTone.play()
-    }
-    
-    private func handleAssistantBusyEvent() {
-        state = .onHold
-        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
-        AVPlayer.callRingbackTone.play()
-    }
-
-    private func sendCallQualityEvent(_ callQualityLevel: CallQualityLevel) {
-        sendDataMessage(
-            .callQualityEvent,
-            data: try! JSONEncoder.shared.encode(CallQualityData(callQualityLevel: callQualityLevel)))
-    }
-
-    private func handleChangeCallQualityRequest(_ data: Data) {
-        do {
-            let newCallQualityLevel = try JSONDecoder.shared.decode(CallQualityData.self, from: data).callQualityLevel
-            (newCallQualityLevel?.videoFormat).map { cameraController.format = $0 }
-            let data = try JSONEncoder.shared.encode(CallQualityData(callQualityLevel: newCallQualityLevel))
-            sendDataMessage(.changeCallQualityResponse, data: data)
-            sendDataMessage(.callQualityEvent, data: data)
-        } catch {
-            sendDataMessage(
-                .changeCallQualityResponse,
-                data: try! JSONEncoder.shared.encode(CallQualityData(message: error.localizedDescription)))
         }
     }
 

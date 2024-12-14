@@ -26,10 +26,10 @@ struct CallSheet: View {
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .accessibility(hidden: true)
-            Text(controller.state.description)
+            Text(controller.sessionState.localizedDescription)
                     .font(.largeTitle)
                     .accessibility(hidden: true)
-            Button(role: .destructive, action: controller.endCall, label: {
+            Button(role: .destructive, action: controller.endSession, label: {
                 Label("Auflegen", systemImage: "phone.down.fill")
             })
                     .buttonStyle(.borderedProminent)
@@ -37,7 +37,7 @@ struct CallSheet: View {
                 .dynamicTypeSize(...DynamicTypeSize.accessibility4)
                 .onAppear {
                     UIApplication.shared.isIdleTimerDisabled = true
-                    controller.startCall(
+                    controller.startSession(
                         onCallEnd: { [self] in
                             Task { @MainActor in
                                 UIApplication.shared.isIdleTimerDisabled = false
@@ -55,9 +55,9 @@ struct CallSheet: View {
                 }
                 .onChange(of: phase) { phase in
                     if (phase == .background) {
-                        controller.pauseVideo()
+                        //controller.pauseVideo()
                     } else {
-                        controller.resumeVideo()
+                        //controller.resumeVideo()
                     }
                 }
     }

@@ -11,7 +11,7 @@ import AmazonChimeSDK
 import CoreLocation
 import AVFoundation
 import SwiftUI
-
+import AzureCommunicationCalling
 
 // MARK: CallController
 
@@ -19,7 +19,7 @@ import SwiftUI
 ///
 /// This contains for the application logic for the actual chime SDK itself.
 ///
-class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, DataMessageObserver {
+class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegate, IncomingCallDelegate, AudioVideoObserver, RealtimeObserver, DataMessageObserver {
 
     /// The life cycle of the call.
     ///
@@ -111,16 +111,16 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     ///
     private static let restartVideoWaitTimeSeconds: Double = 2;
 
-    // MARK: - Life cycle methods
-
-    /// Constructor.
-    ///
-    init() { }
-
     // MARK: - Properties
 
     /// The life-cycle state of the current session.
     ///
+    @Published var sessionState: AssistanceSessionState = .none {
+        didSet {
+            UIAccessibility.post(notification: .announcement, argument: state.description)
+        }
+    }
+
     @Published var state: CallState = .none {
         didSet {
             UIAccessibility.post(notification: .announcement, argument: state.description)
@@ -143,6 +143,13 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// This indicates whether the video is stopped because the assistant has requested the video to be restarted.
     ///
     @Published private(set) var isVideoRestarting: Bool = false
+
+    private var callClient: CallClient?
+    private var callAgent: CallAgent?
+    private var call: Call?
+    private var deviceManager: DeviceManager?
+    private var localVideoStream: LocalVideoStream?
+    private var remoteParticipant: RemoteParticipant?
     
     private var earlyFailureRetryCount = 0;
 
@@ -155,6 +162,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     private let logger = ConsoleLogger(name: "CallController")
     private let localVideoConfig = LocalVideoConfiguration(maxBitRateKbps: CallQualityLevel.veryHigh.maximumBandwidth)
     private let cameraController = CameraController()
+    private let audioSession = AVAudioSession.sharedInstance()
 
     // MARK: - Methods
 
@@ -173,6 +181,54 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
     /// to the user).
     ///
     var onCallError: ((Error) -> Void)? = nil
+
+    func startSession(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
+        sessionState = .initializing
+        self.onCallEnd = onCallEnd
+        self.onCallError = onCallError
+
+        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
+        AVPlayer.callRingbackTone.play()
+
+        Task {
+            do {
+                try await createAgent(credential: try await createSession()).delegate = self
+                DispatchQueue.main.async { self.sessionState = .waiting }
+            } catch {
+                handleSessionError(error)
+            }
+        }
+    }
+
+    func endSession() {
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callEndTone.seek(to: CMTime.zero)
+        AVPlayer.callEndTone.play()
+        
+        Task {
+            do {
+                let options = HangUpOptions()
+                options.forEveryone = true
+                try await (call.!?).hangUp(options: options)
+            } catch {
+                if sessionState == .waiting {
+                    // Tell the backend we're gone. It's ok if this fails, the backend will notice on its own eventually.
+                    Task { try? await TowerApi.cancelAssistance() }
+                }
+
+                disposeSession()
+            }
+        }
+    }
+
+    func call(_ call: Call, didChangeState args: PropertyChangedEventArgs) {
+        if call.state == .connected { handleCallConnected() }
+        if call.state == .disconnected { disposeSession() }
+    }
+    
+    func callAgent(_ callAgent: CallAgent, didRecieveIncomingCall incomingCall: IncomingCall) {
+        Task { await handleIncomingCall(incomingCall) }
+    }
     
     /// Start a new call.
     ///
@@ -187,7 +243,7 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
         self.onCallError = onCallError
         join()
     }
-    
+
     /// End the call.
     ///
     /// This will hang up the call and unregister it from the backend.
@@ -406,6 +462,113 @@ class CallController: ObservableObject, AudioVideoObserver, RealtimeObserver, Da
             }
         } catch {
             logger.error(msg: "Unknown error \(error.localizedDescription)")
+        }
+    }
+
+    private func createSession() async throws -> CommunicationTokenCredential {
+        let requestAssistanceResponse = try await TowerApi.requestAssistance()
+        _ = requestAssistanceResponse.keepaliveInterval.map { keepaliveInterval in
+            Task { await sendKeepalives(keepaliveInterval) }
+        }
+        return try CommunicationTokenCredential(token: requestAssistanceResponse.userToken.token)
+    }
+
+    private func sendKeepalives(_ keepaliveInterval: Int) async {
+        do { try await Task.sleep(for: .seconds(keepaliveInterval)) } catch { return }
+        repeat {
+            do { try await Task.sleep(for: .seconds(keepaliveInterval)) } catch { return }
+            do {
+                try await TowerApi.awaitAssistance()
+            } catch {
+                // Got an error updating the request. This might be because the assistant has already the request
+                // and is in the process of picking up though, so give it a little time.
+                do { try await Task.sleep(for: .seconds(keepaliveInterval)) } catch { return }
+                if sessionState == .waiting {
+                    // If we still haven't heard from the assistant by now, we probably have a connection issue.
+                    handleSessionError(error)
+                }
+            }
+        } while sessionState == .waiting
+    }
+
+    private func createAgent(credential: CommunicationTokenCredential) async throws -> CallAgent {
+        let callClient = CallClient()
+        let callAgent = try await callClient.createCallAgent(userCredential: credential)
+        let deviceManager = try await callClient.getDeviceManager()
+
+        self.callClient = callClient
+        self.callAgent = callAgent
+        self.deviceManager = deviceManager
+
+        return callAgent
+    }
+
+    private func handleIncomingCall(_ incomingCall: IncomingCall) async {
+        DispatchQueue.main.async { self.sessionState = .connecting }
+
+        let camera = deviceManager?.cameras.first
+        self.localVideoStream = camera.map { camera in LocalVideoStream(camera: camera) }
+
+        let options = AcceptCallOptions()
+        let videoOptions = VideoOptions(localVideoStreams: [localVideoStream].compacted())
+        options.videoOptions = videoOptions
+
+        do {
+            let call = try await incomingCall.accept(options: options)
+            call.delegate = self
+            self.call = call
+        } catch {
+            try? await incomingCall.reject()
+            handleSessionError(error)
+        }
+
+        // If no external devices are attached, switch to the loudspeaker.
+        if (
+            audioSession
+                .currentRoute
+                .outputs
+                .filter { $0.portType != .builtInReceiver && $0.portType != .builtInSpeaker }
+                .isEmpty
+        ) {
+            try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+        }
+    }
+
+    private func handleCallConnected() {
+        DispatchQueue.main.async { self.sessionState = .connected }
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callStartTone.seek(to: CMTime.zero)
+        AVPlayer.callStartTone.play()
+    }
+
+    private func handleSessionError(_ error: Error) {
+        AVPlayer.callRingbackTone.pause()
+        AVPlayer.callErrorTone.seek(to: CMTime.zero)
+        AVPlayer.callErrorTone.play()
+
+        disposeSession()
+        DispatchQueue.main.async { self.onCallError?(error) }
+    }
+
+    private func disposeSession() {
+        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+
+        cameraController.stop()
+        cameraController.torchEnabled = false
+
+        DispatchQueue.main.async {
+            self.callClient = nil
+            self.callAgent = nil
+            self.call = nil
+            self.deviceManager = nil
+            self.localVideoStream = nil
+            self.remoteParticipant = nil
+            self.locationController = nil
+            self.isVideoPaused = false
+
+            self.onCallEnd?()
+            self.onCallEnd = nil
+            self.sessionState = .disconnected
         }
     }
     

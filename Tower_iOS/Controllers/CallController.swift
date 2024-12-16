@@ -18,7 +18,7 @@ import AzureCommunicationCalling
 ///
 /// This contains for the application logic for the actual chime SDK itself.
 ///
-class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegate, IncomingCallDelegate {
+class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegate {
 
     // MARK: - Static properties
 

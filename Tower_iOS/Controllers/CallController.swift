@@ -140,9 +140,7 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         
         Task {
             do {
-                let options = HangUpOptions()
-                options.forEveryone = true
-                try await (call.!?).hangUp(options: options)
+                try await hangUp()
             } catch {
                 if sessionState == .waiting {
                     // Tell the backend we're gone. It's ok if this fails, the backend will notice on its own eventually.
@@ -235,6 +233,12 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         ) {
             try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
         }
+    }
+
+    private func hangUp() async throws {
+        let options = HangUpOptions()
+        options.forEveryone = true
+        try await (call.!?).hangUp(options: options)
     }
 
     private func handleCallConnected() {

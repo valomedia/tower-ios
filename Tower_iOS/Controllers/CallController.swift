@@ -210,9 +210,11 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         let camera = deviceManager?.cameras.first
         self.localVideoStream = camera.map { camera in LocalVideoStream(camera: camera) }
 
+        let outgoingVideoOptions = OutgoingVideoOptions()
+        outgoingVideoOptions.streams = [localVideoStream].compacted()
+
         let options = AcceptCallOptions()
-        let videoOptions = VideoOptions(localVideoStreams: [localVideoStream].compacted())
-        options.videoOptions = videoOptions
+        options.outgoingVideoOptions = outgoingVideoOptions
 
         do {
             let call = try await incomingCall.accept(options: options)

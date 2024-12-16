@@ -7,55 +7,61 @@
 //
 
 import Foundation
-import AmazonChimeSDK
+import AVFoundation
+import AzureCommunicationCalling
 
 // MARK: CallQualityLevel
 
-/// Different presets for the video quality for the call.
+/// The various video formats the stream will switch to depending on the quality of the connection.
 ///
 enum CallQualityLevel: Int, Codable {
     
-    /// Max 180p15 @ 200 kbit/s.
+    /// 180p15
     ///
     case veryLow = 1
     
-    /// Max 360p15 @ 600 kbit/s.
+    /// 270p15
     ///
     case low = 2
     
-    /// Max 540p15 @ 1400 kbit/s.
+    /// 360p15
     ///
     case medium = 3
     
-    /// Max 720p15 @ 2500 kbit/s.
+    /// 540p15
     ///
     case high = 4
     
-    /// Max 720p30 @ 2500 kbit/s.
+    /// 720p15
     ///
     case veryHigh = 5
-    
-    /// The resolution and frame rate to use for the video transmission.
+
+    /// The frame rate to use for the video transmission.
+    /// 
+    var frameRate: Float64 { 15 }
+
+    /// The Azure Communications Services VideoStreamResolution that corresponds to the CallQualityLevel.
     ///
-    var videoFormat: VideoCaptureFormat {
+    var resolution: VideoStreamResolution {
         switch self {
-        case .veryLow: return VideoCaptureFormat(width: 320, height: 180, maxFrameRate: 15)
-        case .low: return VideoCaptureFormat(width: 640, height: 360, maxFrameRate: 15)
-        case .medium: return VideoCaptureFormat(width: 960, height: 540, maxFrameRate: 15)
-        case .high: return VideoCaptureFormat(width: 1280, height: 720, maxFrameRate: 15)
-        case .veryHigh: return VideoCaptureFormat(width: 1280, height: 720, maxFrameRate: 30)
+        case .veryLow:  return VideoStreamResolution.p108
+        case .low:      return VideoStreamResolution.p270
+        case .medium:   return VideoStreamResolution.p360
+        case .high:     return VideoStreamResolution.p540
+        case .veryHigh: return VideoStreamResolution.p720
         }
     }
-    
-    /// The maximum bandwith required by each call quality level.
-    ///
-    var maximumBandwidth: UInt32 {
-        switch self {
-        case .veryLow: return 200
-        case .low: return 600
-        case .medium: return 1400
-        default: return 2500
-        }
+
+    /// The Azure Communications Services VideoStreamFormat used at each CallQualityLevel.
+    /// 
+    var videoStreamFormat: VideoStreamFormat {
+        let videoStreamFormat = VideoStreamFormat()
+        videoStreamFormat.resolution = resolution
+        videoStreamFormat.pixelFormat = VideoStreamPixelFormat.nv12
+        videoStreamFormat.framesPerSecond = Float(frameRate)
+        videoStreamFormat.stride1 = resolution.dimensions.width
+        videoStreamFormat.stride2 = resolution.dimensions.width / 2
+        return videoStreamFormat
     }
 
     /// Human-readable names for each call quality level.

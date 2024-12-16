@@ -52,32 +52,6 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Anrufqualität</string>
-			<key>Key</key>
-			<string>quality_preference</string>
-			<key>DefaultValue</key>
-			<integer>3</integer>
-			<key>Titles</key>
-			<array>
-				<string>Sehr niedrig</string>
-				<string>Niedrig</string>
-				<string>Mittel</string>
-				<string>Hoch</string>
-				<string>Sehr hoch</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<integer>1</integer>
-				<integer>2</integer>
-				<integer>3</integer>
-				<integer>4</integer>
-				<integer>5</integer>
-			</array>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>APP INFO</string>

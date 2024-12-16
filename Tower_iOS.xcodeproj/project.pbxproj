@@ -19,7 +19,6 @@
 		E154D26C2C984942004751CF /* AVPlayer+callRingbackTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */; };
 		E154D26E2C984A22004751CF /* AVPlayer+callStartTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */; };
 		E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */; };
-		E15F9B332CD6531F005FBB8C /* Settings+callQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B322CD65313005FBB8C /* Settings+callQualityLevel.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E19DC87F2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */; };
 		E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */; };
@@ -141,7 +140,6 @@
 		E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+callStartTone.swift"; sourceTree = "<group>"; };
 		E15E8B962C6D497E00BC8B90 /* ACKNOWLEDGEMENTS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ACKNOWLEDGEMENTS.txt; sourceTree = "<group>"; };
 		E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityLevel.swift; sourceTree = "<group>"; };
-		E15F9B322CD65313005FBB8C /* Settings+callQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+callQualityLevel.swift"; sourceTree = "<group>"; };
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
@@ -418,7 +416,6 @@
 			isa = PBXGroup;
 			children = (
 				E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */,
-				E15F9B322CD65313005FBB8C /* Settings+callQualityLevel.swift */,
 				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
 				E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */,
 				E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */,
@@ -614,13 +611,11 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AzureCommunicationCommon/AzureCommunicationCommon.framework",
-				"${BUILT_PRODUCTS_DIR}/AzureCore/AzureCore.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/AzureCommunicationCalling/AzureCommunicationCalling.framework/AzureCommunicationCalling",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCommon.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCalling.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -680,13 +675,11 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AzureCommunicationCommon/AzureCommunicationCommon.framework",
-				"${BUILT_PRODUCTS_DIR}/AzureCore/AzureCore.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/AzureCommunicationCalling/AzureCommunicationCalling.framework/AzureCommunicationCalling",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCommon.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AzureCommunicationCalling.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -768,7 +761,6 @@
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
-				E15F9B332CD6531F005FBB8C /* Settings+callQualityLevel.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
 				E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */,
 				E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */,

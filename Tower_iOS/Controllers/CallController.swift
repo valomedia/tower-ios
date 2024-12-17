@@ -43,22 +43,6 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     /// The maximum number of realtime data messages to send in one burst.
     ///
     private static let dataMessageMaxBurstCount = 500;
-    
-    /// How often to retry a connection that fails before an assistant picks up.
-    ///
-    /// Sometimes the call will immediately fail, before an assistant even joins the call. In this case, the call can
-    /// be retried without the user even noticing, since the user is still waiting for the call to connect anyways.
-    /// This parameter controls the number of retries that will be made in this particular case.
-    ///
-    private static let maxRetriesOnEarlyFailure = 3;
-    
-    /// How many seconds to wait before retrying the connection, when it fails before an assistant picks up.
-    ///
-    private static let earlyRetryWaitTimeSeconds: Double = 2;
-    
-    /// How many seconds to wait before restarting the video, when the assistant requests it be restarted.
-    ///
-    private static let restartVideoWaitTimeSeconds: Double = 2;
 
     // MARK: - Properties
 
@@ -69,19 +53,6 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
             UIAccessibility.post(notification: .announcement, argument: sessionState.localizedDescription)
         }
     }
-    
-    /// Whether the video is currently paused.
-    ///
-    /// This indicates whether the video is stopped because the user has stopped the video through an action taken on
-    /// their device. Currenlty this means that the user has sent the app to the background (or locked their device).
-    ///
-    @Published private(set) var isVideoPaused: Bool = false
-    
-    /// Whether the video is currently being restarted.
-    ///
-    /// This indicates whether the video is stopped because the assistant has requested the video to be restarted.
-    ///
-    @Published private(set) var isVideoRestarting: Bool = false
 
     private var callClient: CallClient?
     private var callAgent: CallAgent?
@@ -89,9 +60,6 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     private var deviceManager: DeviceManager?
     private var localVideoStream: LocalVideoStream?
     private var remoteParticipant: RemoteParticipant?
-    
-    private var earlyFailureRetryCount = 0;
-
     private var locationController: LocationController? = nil
 
     private let cameraController = CameraController()

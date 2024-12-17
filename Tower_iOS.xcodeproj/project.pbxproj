@@ -22,6 +22,9 @@
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E19DC87F2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */; };
 		E1A6F9432D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */; };
+		E1A6F9452D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */; };
+		E1A6F9472D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9462D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift */; };
+		E1A6F9492D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9482D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift */; };
 		E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */; };
 		E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */; };
 		E1CB1BD72C5B87860078AF3A /* CameraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD62C5B87860078AF3A /* CameraError.swift */; };
@@ -146,6 +149,9 @@
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+aspectRatio.swift"; sourceTree = "<group>"; };
 		E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoStreamResolution+dimensions.swift"; sourceTree = "<group>"; };
+		E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+Hashable.swift"; sourceTree = "<group>"; };
+		E1A6F9462D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+Equatable.swift"; sourceTree = "<group>"; };
+		E1A6F9482D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+image.swift"; sourceTree = "<group>"; };
 		E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image_Orientation+init.swift"; sourceTree = "<group>"; };
 		E1CB1BD62C5B87860078AF3A /* CameraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraError.swift; sourceTree = "<group>"; };
@@ -417,6 +423,9 @@
 		E9E977DCDBBAEFA016EA4DD1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E1A6F9482D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift */,
+				E1A6F9462D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift */,
+				E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */,
 				E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */,
 				E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */,
 				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
@@ -778,9 +787,12 @@
 				E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */,
 				E1A6F9432D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift in Sources */,
 				E9E9785836011CE532198B31 /* OnboardingSheet.swift in Sources */,
+				E1A6F9492D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift in Sources */,
 				E9E97D676B5FC0654D0AE376 /* TrailingIconLabelStyle.swift in Sources */,
+				E1A6F9472D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift in Sources */,
 				E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */,
 				E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */,
+				E1A6F9452D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift in Sources */,
 				E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */,
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
 				E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */,

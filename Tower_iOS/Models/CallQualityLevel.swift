@@ -14,8 +14,8 @@ import AzureCommunicationCalling
 
 /// The various video formats the stream will switch to depending on the quality of the connection.
 ///
-enum CallQualityLevel: Int, Codable {
-    
+enum CallQualityLevel: Int, Codable, CaseIterable {
+
     /// 180p15
     ///
     case veryLow = 1

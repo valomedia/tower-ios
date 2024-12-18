@@ -16,39 +16,43 @@ import AzureCommunicationCalling
 ///
 enum CallQualityLevel: Int, Codable, CaseIterable {
 
-    /// 180p15
+    /// VGA
     ///
     case veryLow = 1
     
-    /// 270p15
+    /// 540p7.5
     ///
     case low = 2
     
-    /// 360p15
+    /// 540p15
     ///
     case medium = 3
     
-    /// 540p15
+    /// 720p15
     ///
     case high = 4
     
-    /// 720p15
+    /// 720p30
     ///
     case veryHigh = 5
 
     /// The frame rate to use for the video transmission.
     /// 
-    var frameRate: Float64 { 15 }
+    var frameRate: Float64 {
+        switch self {
+        case .veryLow, .low:    return 7.5
+        case .medium, .high:    return 15
+        case .veryHigh:         return 30
+        }
+    }
 
     /// The Azure Communications Services VideoStreamResolution that corresponds to the CallQualityLevel.
     ///
     var resolution: VideoStreamResolution {
         switch self {
-        case .veryLow:  return VideoStreamResolution.p108
-        case .low:      return VideoStreamResolution.p270
-        case .medium:   return VideoStreamResolution.p360
-        case .high:     return VideoStreamResolution.p540
-        case .veryHigh: return VideoStreamResolution.p720
+        case .veryLow:          return VideoStreamResolution.vga
+        case .low, .medium:     return VideoStreamResolution.p540
+        case .high, .veryHigh:  return VideoStreamResolution.p720
         }
     }
 

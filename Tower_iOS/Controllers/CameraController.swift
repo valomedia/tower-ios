@@ -33,13 +33,6 @@ class CameraController:
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
         ]
         captureDevice = captureDevices.first
-        
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(deviceOrientationDidChange),
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil)
     }
     
     deinit {
@@ -49,7 +42,6 @@ class CameraController:
         if isRunning {
             captureSession.stopRunning()
         }
-        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Properties

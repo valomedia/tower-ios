@@ -48,7 +48,7 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
 
     /// The life-cycle state of the current session.
     ///
-    @Published var sessionState: AssistanceSessionState = .none {
+    @Published fileprivate(set) var sessionState: AssistanceSessionState = .none {
         didSet {
             UIAccessibility.post(notification: .announcement, argument: sessionState.localizedDescription)
         }

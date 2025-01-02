@@ -66,7 +66,6 @@ class CallController: NSObject, ObservableObject {
     private var videoHandler: VideoHandler?
 
 
-    private var locationController: LocationController? = nil
 
 
     // MARK: - Methods
@@ -462,12 +461,6 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
     
     private func handleLocationRequest() {
-        do {
-            try locationController?.requestLocation()
-            sendDataMessage(.locationResponse)
-        } catch {
-            sendDataMessage(.locationResponse, data: try! JSONEncoder.shared.encode(["message": "\(error)"]))
-        }
     }
 
     private func handleCapturePhotoRequest() {

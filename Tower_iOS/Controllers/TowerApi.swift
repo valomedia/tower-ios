@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import AmazonChimeSDK
-
 
 // MARK: TowerApi
 
@@ -68,52 +66,6 @@ class TowerApi {
     /// 
     class func cancelAssistance() async throws -> Void {
         try await request("POST", "/cancelAssistance")
-    }
-
-    /// Make a request to the start endpoint.
-    ///
-    /// The start endpoint will create both the room and the attendee.
-    ///
-    /// - Returns: A MeetingSessionConfiguration with the new meeting and attendee already configured in it.
-    /// - Throws:
-    ///
-    class func start() async throws -> MeetingSessionConfiguration {
-        let data = try await request("POST", "/start");
-        let joinResponse = try JSONDecoder.shared.decode(JoinResponse.self, from: data)
-        let meeting = joinResponse.joinInfo.meetingResponse.meeting
-        let attendee = joinResponse.joinInfo.attendeeResponse.attendee
-
-        return MeetingSessionConfiguration(
-                createMeetingResponse: CreateMeetingResponse(
-                        meeting: Meeting(
-                                externalMeetingId: meeting.externalMeetingId,
-                                mediaPlacement: MediaPlacement(
-                                        audioFallbackUrl: meeting.mediaPlacement.audioFallbackUrl ?? "",
-                                        audioHostUrl: meeting.mediaPlacement.audioHostUrl,
-                                        signalingUrl: meeting.mediaPlacement.signalingUrl,
-                                        turnControlUrl: meeting.mediaPlacement.turnControlUrl ?? "",
-                                        eventIngestionUrl: meeting.mediaPlacement.eventIngestionUrl),
-                                mediaRegion: meeting.mediaRegion,
-                                meetingId: meeting.meetingId
-                        )
-                ),
-                createAttendeeResponse: CreateAttendeeResponse(
-                        attendee: Attendee(
-                                attendeeId: attendee.attendeeId,
-                                externalUserId: attendee.externalUserId,
-                                joinToken: attendee.joinToken)
-                )
-        )
-    }
-
-    /// Make a request to the end endpoint.
-    ///
-    /// The end endpoint will remove the meeting, causing all attendee connections to hang up.
-    ///
-    /// - Throws:
-    ///
-    class func end(sessionConfiguration: MeetingSessionConfiguration) async throws -> Void {
-        try await request("POST", "/end?meetingId=" + sessionConfiguration.meetingId);
     }
 
     @discardableResult

@@ -12,21 +12,16 @@ import Foundation
 
 /// The various messages that can be sent.
 ///
-enum DataMessageTopic: String {
-    case capturePhotoRequest = "capture-photo-request"
-    case capturePhotoResponse = "capture-photo-response"
-    case switchCameraRequest = "switch-camera-request"
-    case switchCameraResponse = "switch-camera-response"
-    case toggleTorchRequest = "toggle-torch-request"
-    case toggleTorchResponse = "toggle-torch-response"
-    case locationRequest = "location-request"
-    case locationResponse = "location-response"
-    case locationEvent = "location-event"
-    case restartVideoRequest = "restart-video-request"
-    case restartVideoResponse = "restart-video-response"
-    case assistantReadyEvent = "assistant-ready-event"
-    case assistantBusyEvent = "assistant-busy-event"
-    case changeCallQualityRequest = "change-call-quality-request"
-    case changeCallQualityResponse = "change-call-quality-response"
-    case callQualityEvent = "call-quality-event"
+enum DataMessageTopic: String, CodingKey {
+    case capturePhotoRequest = "capturePhotoRequest"
+    case capturePhotoResponse = "capturePhotoResponse"
+    case switchCameraRequest = "switchCameraRequest"
+    case switchCameraResponse = "switchCameraResponse"
+    case toggleTorchRequest = "toggleTorchRequest"
+    case toggleTorchResponse = "toggleTorchResponse"
+    case locationRequest = "locationRequest"
+    case locationResponse = "locationResponse"
+    case locationEvent = "locationEvent"
+    case orientationEvent = "orientationEvent"
+    case errorEvent = "errorEvent"
 }

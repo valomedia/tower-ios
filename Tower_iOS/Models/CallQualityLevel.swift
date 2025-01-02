@@ -20,19 +20,19 @@ enum CallQualityLevel: Int, Codable, CaseIterable {
     ///
     case veryLow = 1
     
-    /// 540p7.5
+    /// 540p15
     ///
     case low = 2
     
-    /// 540p15
+    /// 540p
     ///
     case medium = 3
     
-    /// 720p15
+    /// 720p
     ///
     case high = 4
     
-    /// 720p30
+    /// 1080p
     ///
     case veryHigh = 5
 
@@ -40,9 +40,9 @@ enum CallQualityLevel: Int, Codable, CaseIterable {
     /// 
     var frameRate: Float64 {
         switch self {
-        case .veryLow, .low:    return 7.5
-        case .medium, .high:    return 15
-        case .veryHigh:         return 30
+        case .veryLow:  return 7.5
+        case .low:      return 15
+        default:        return 30
         }
     }
 
@@ -50,9 +50,10 @@ enum CallQualityLevel: Int, Codable, CaseIterable {
     ///
     var resolution: VideoStreamResolution {
         switch self {
-        case .veryLow:          return VideoStreamResolution.vga
-        case .low, .medium:     return VideoStreamResolution.p540
-        case .high, .veryHigh:  return VideoStreamResolution.p720
+        case .veryLow:      return VideoStreamResolution.vga
+        case .low, .medium: return VideoStreamResolution.p540
+        case .high:         return VideoStreamResolution.p720
+        case .veryHigh:     return VideoStreamResolution.p1080
         }
     }
 

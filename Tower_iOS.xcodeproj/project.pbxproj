@@ -556,6 +556,7 @@
 				TargetAttributes = {
 					E9E9788D0F6AB5A2D5ECD54C = {
 						DevelopmentTeam = PKW2VF887G;
+						LastSwiftMigration = 1620;
 					};
 					E9E97CC6FF0AF1241CB4CB96 = {
 						DevelopmentTeam = PKW2VF887G;

@@ -22,27 +22,27 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
 
     // MARK: - Static properties
 
-    /// How long the data messages are valid.
-    ///
-    /// Since the messages are always transmitted to the user in real time (there is no situation where messages are
-    /// sent for an assistant that isn't on the call yet), the messages are usually delivered immediately.  The
-    /// messages still have a lifetime of ten seconds however, in order to account for users who may be experiencing
-    /// brief intermittent interruptions in their connection, due to a spotty network.
-    ///
-    /// If the message does not reach the assistant within ten seconds, the message will be quietly discarded.  This
-    /// will currently result in actions in the ui becoming disabled for the duration of the call.  The inherent
-    /// assumption being, that if the call hangs completely for more than ten seconds at a time, assistance will
-    /// become impossible anyway, and there is no reasonable way to gracefully recover.
-    ///
-    private static let dataMessageLifetimeMs: Int32 = 10_000;
-    
     /// The maximum allowable size for the data in the realtime data messages.
     ///
-    private static let dataMessageMaxSize = 2048;
-    
+    static let dataMessageMaxSize = 32_000;
+
     /// The maximum number of realtime data messages to send in one burst.
     ///
-    private static let dataMessageMaxBurstCount = 500;
+    static let dataMessageMaxBurstCount = 99;
+    
+    static let durableDataChannelId: Int32 = 1000;
+    
+    static let lossyDataChannelId: Int32 = 1010;
+    
+    static let durableDataChannelBandwidthKbps: Int32 = 32;
+    
+    static let lossyDataChannelBandwidthKbps: Int32 = 512;
+    
+    static let lossyDataChannelChunkedMessageDelay = 1.0;
+    
+    static let dataChannelRetrySendDelay = 2.0;
+    
+    static let dataChannelEstablishDelay = 1.0;
 
     // MARK: - Properties
 

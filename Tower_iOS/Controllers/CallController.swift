@@ -18,7 +18,7 @@ import AzureCommunicationCalling
 ///
 /// This contains for the application logic for the actual chime SDK itself.
 ///
-class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegate {
+class CallController: NSObject, ObservableObject {
 
     // MARK: - Static properties
 
@@ -54,16 +54,20 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         }
     }
 
+    fileprivate let cameraController = CameraController()
+    fileprivate var rawOutgoingVideoStream: VirtualOutgoingVideoStream?
+
+    private let audioSession = AVAudioSession.sharedInstance()
+
     private var callClient: CallClient?
     private var callAgent: CallAgent?
     private var call: Call?
-    private var deviceManager: DeviceManager?
-    private var localVideoStream: LocalVideoStream?
-    private var remoteParticipant: RemoteParticipant?
+    private var callHandler: CallHandler?
+    private var videoHandler: VideoHandler?
+
+
     private var locationController: LocationController? = nil
 
-    private let cameraController = CameraController()
-    private let audioSession = AVAudioSession.sharedInstance()
 
     // MARK: - Methods
 
@@ -84,16 +88,23 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     var onCallError: ((Error) -> Void)? = nil
 
     func startSession(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
+        playRingbackTone()
         sessionState = .initializing
+
+        let callHandler = CallHandler()
+        callHandler.callController = self
+        self.callHandler = callHandler
+
+        let videoHandler = VideoHandler()
+        videoHandler.callController = self
+        self.videoHandler = videoHandler
+
         self.onCallEnd = onCallEnd
         self.onCallError = onCallError
 
-        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
-        AVPlayer.callRingbackTone.play()
-
         Task {
             do {
-                try await createAgent(credential: try await createSession()).delegate = self
+                try await createAgent(credential: try await createSession()).delegate = callHandler
                 DispatchQueue.main.async { self.sessionState = .waiting }
             } catch {
                 handleSessionError(error)
@@ -102,10 +113,9 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     }
 
     func endSession() {
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callEndTone.seek(to: CMTime.zero)
-        AVPlayer.callEndTone.play()
-        
+        stopRingbackTone()
+        playEndTone()
+
         Task {
             do {
                 try await hangUp()
@@ -120,13 +130,125 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
         }
     }
 
-    func call(_ call: Call, didChangeState args: PropertyChangedEventArgs) {
-        if call.state == .connected { handleCallConnected() }
-        if call.state == .disconnected { disposeSession() }
+
+    func pauseVideo() {
+        guard let call, let rawOutgoingVideoStream else { return }
+        Task {
+            do {
+                try await call.stopVideo(stream: rawOutgoingVideoStream)
+            } catch {
+                print("Pausing video failed: \(error)")
+                sendMessage(ErrorMessage.errorEvent(error: "\(error)"))
+            }
+        }
+    }
+
+    func resumeVideo() {
+        guard let call, let rawOutgoingVideoStream else { return }
+        Task {
+            do {
+                try await call.startVideo(stream: rawOutgoingVideoStream)
+            } catch {
+                print("Resuming video failed: \(error)")
+                sendMessage(ErrorMessage.errorEvent(error: "\(error)"))
+            }
+        }
+    }
+
+    fileprivate func answerIncomingCall(_ incomingCall: IncomingCall) async {
+        let rawOutgoingVideoStreamOptions = RawOutgoingVideoStreamOptions()
+        rawOutgoingVideoStreamOptions.formats = CallQualityLevel
+            .allCases
+            .filter { cameraController.universallySupportedResolutions.contains($0.resolution.dimensions) }
+            .map(\.videoStreamFormat)
+        let rawOutgoingVideoStream = VirtualOutgoingVideoStream(videoStreamOptions: rawOutgoingVideoStreamOptions)
+        rawOutgoingVideoStream.delegate = videoHandler
+        self.rawOutgoingVideoStream = rawOutgoingVideoStream
+
+        let outgoingVideoOptions = OutgoingVideoOptions()
+        outgoingVideoOptions.streams = [rawOutgoingVideoStream]
+
+        let acceptCallOptions = AcceptCallOptions()
+        acceptCallOptions.outgoingVideoOptions = outgoingVideoOptions
+
+        do {
+            let call = try await incomingCall.accept(options: acceptCallOptions)
+            call.delegate = callHandler
+            self.call = call
+
+        } catch {
+            try? await incomingCall.reject()
+            handleSessionError(error)
+        }
+
+        // If no external devices are attached, switch to the loudspeaker.
+        if (
+            audioSession
+                .currentRoute
+                .outputs
+                .filter { $0.portType != .builtInReceiver && $0.portType != .builtInSpeaker }
+                .isEmpty
+        ) {
+            try? audioSession.overrideOutputAudioPort(.speaker)
+        }
+    }
+
+    fileprivate func handleSessionError(_ error: Error) {
+        stopRingbackTone()
+        playErrorTone()
+        disposeSession()
+        DispatchQueue.main.async { self.onCallError?(error) }
+    }
+
+    fileprivate func disposeSession() {
+        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+
+        cameraController.stop()
+        cameraController.torchEnabled = false
+
+        DispatchQueue.main.async {
+            self.callClient = nil
+            self.callAgent = nil
+            self.call = nil
+            self.rawOutgoingVideoStream = nil
+            self.callHandler = nil
+            self.videoHandler = nil
+
+            self.onCallEnd?()
+            self.onCallEnd = nil
+            self.sessionState = .disconnected
+        }
+    }
+
+    fileprivate func hangUp() async throws {
+        let options = HangUpOptions()
+        options.forEveryone = true
+        try await (call.!?).hangUp(options: options)
     }
     
-    func callAgent(_ callAgent: CallAgent, didRecieveIncomingCall incomingCall: IncomingCall) {
-        Task { await handleIncomingCall(incomingCall) }
+
+    fileprivate func playRingbackTone() {
+        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
+        AVPlayer.callRingbackTone.play()
+    }
+
+    fileprivate func stopRingbackTone() {
+        AVPlayer.callRingbackTone.pause()
+    }
+
+    fileprivate func playErrorTone() {
+        AVPlayer.callErrorTone.seek(to: CMTime.zero)
+        AVPlayer.callErrorTone.play()
+    }
+
+    fileprivate func playStartTone() {
+        AVPlayer.callStartTone.seek(to: CMTime.zero)
+        AVPlayer.callStartTone.play()
+    }
+
+    fileprivate func playEndTone() {
+        AVPlayer.callEndTone.seek(to: CMTime.zero)
+        AVPlayer.callEndTone.play()
     }
 
     func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
@@ -161,89 +283,171 @@ class CallController: NSObject, ObservableObject, CallDelegate, CallAgentDelegat
     private func createAgent(credential: CommunicationTokenCredential) async throws -> CallAgent {
         let callClient = CallClient()
         let callAgent = try await callClient.createCallAgent(userCredential: credential)
-        let deviceManager = try await callClient.getDeviceManager()
 
         self.callClient = callClient
         self.callAgent = callAgent
-        self.deviceManager = deviceManager
 
         return callAgent
     }
 
-    private func handleIncomingCall(_ incomingCall: IncomingCall) async {
-        DispatchQueue.main.async { self.sessionState = .connecting }
+}
 
-        let camera = deviceManager?.cameras.first
-        self.localVideoStream = camera.map { camera in LocalVideoStream(camera: camera) }
+// MARK: CallHandler
 
-        let outgoingVideoOptions = OutgoingVideoOptions()
-        outgoingVideoOptions.streams = [localVideoStream].compacted()
+class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
 
-        let options = AcceptCallOptions()
-        options.outgoingVideoOptions = outgoingVideoOptions
+    // MARK: - Properties
 
-        do {
-            let call = try await incomingCall.accept(options: options)
-            call.delegate = self
-            self.call = call
-        } catch {
-            try? await incomingCall.reject()
-            handleSessionError(error)
-        }
+    weak var callController: CallController?
 
-        // If no external devices are attached, switch to the loudspeaker.
-        if (
-            audioSession
-                .currentRoute
-                .outputs
-                .filter { $0.portType != .builtInReceiver && $0.portType != .builtInSpeaker }
-                .isEmpty
-        ) {
-            try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+    // MARK: - Methods
+
+    func callAgent(_ callAgent: CallAgent, didRecieveIncomingCall incomingCall: IncomingCall) {
+        handleIncomingCall(incomingCall)
+    }
+
+    func call(_ call: Call, didChangeState args: PropertyChangedEventArgs) {
+        if call.state == .connected { handleCallConnected(call) }
+        if call.state == .disconnected { handleCallDisconnected() }
+    }
+
+    private func handleIncomingCall(_ incomingCall: IncomingCall) {
+        DispatchQueue.main.async { [weak self] in 
+            guard let callController = self?.callController else { return }
+            callController.sessionState = .connecting
+            callController.stopRingbackTone()
+            Task { await callController.answerIncomingCall(incomingCall) }
         }
     }
 
-    private func hangUp() async throws {
-        let options = HangUpOptions()
-        options.forEveryone = true
-        try await (call.!?).hangUp(options: options)
+    private func handleCallConnected(_ call: Call) {
+        DispatchQueue.main.async { [weak self] in
+            guard let callController = self?.callController else { return }
+            callController.sessionState = .connected
+            callController.playStartTone()
+        }
     }
 
-    private func handleCallConnected() {
-        DispatchQueue.main.async { self.sessionState = .connected }
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callStartTone.seek(to: CMTime.zero)
-        AVPlayer.callStartTone.play()
+    private func handleCallDisconnected() {
+        callController?.disposeSession()
     }
 
-    private func handleSessionError(_ error: Error) {
-        AVPlayer.callRingbackTone.pause()
-        AVPlayer.callErrorTone.seek(to: CMTime.zero)
-        AVPlayer.callErrorTone.play()
+}
 
-        disposeSession()
-        DispatchQueue.main.async { self.onCallError?(error) }
+// MARK: VideoHandler
+
+class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+
+    // MARK: - Static properties
+
+    private static let portraitRotationAngle = 90.0
+    private static let portraitUpsideDownRotationAngle = 270.0
+    private static let landscapeLeftRotationAngle = 0.0
+    private static let landscapeRightRotationAngle = 180.0
+    private static let defaultRotationAngle = 90.0
+
+    // MARK: - Life cycle methods
+
+    override init() {
+        super.init()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(deviceOrientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil)
     }
 
-    private func disposeSession() {
-        try? AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
-        cameraController.stop()
-        cameraController.torchEnabled = false
+    // MARK: - Properties
 
-        DispatchQueue.main.async {
-            self.callClient = nil
-            self.callAgent = nil
-            self.call = nil
-            self.deviceManager = nil
-            self.localVideoStream = nil
-            self.remoteParticipant = nil
-            self.locationController = nil
-            self.isVideoPaused = false
+    weak var callController: CallController?
 
-            self.onCallEnd?()
-            self.onCallEnd = nil
-            self.sessionState = .disconnected
+    weak private var virtualOutgoingVideoStream: VirtualOutgoingVideoStream?
+
+    // MARK: - Methods
+
+    func virtualOutgoingVideoStream(
+        _ virtualOutgoingVideoStream: VirtualOutgoingVideoStream,
+        didChangeState args: VideoStreamStateChangedEventArgs
+    ) {
+        if args.stream.state == .available { handleVideoStreamAvailable(virtualOutgoingVideoStream) }
+        if args.stream.state == .started { handleVideoStreamStarted(virtualOutgoingVideoStream) }
+        if args.stream.state == .stopped { handleVideoStreamStopped() }
+    }
+
+    func virtualOutgoingVideoStream(
+        _ virtualOutgoingVideoStream: VirtualOutgoingVideoStream,
+        didChangeFormat args: VideoStreamFormatChangedEventArgs
+    ) {
+        handleFrameRateChanged(virtualOutgoingVideoStream)
+        handleDimensionsChanged(virtualOutgoingVideoStream)
+    }
+
+    func captureOutput(_: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from _: AVCaptureConnection) {
+        guard
+            let imageBuffer = sampleBuffer.imageBuffer,
+            let virtualOutgoingVideoStream = callController?.rawOutgoingVideoStream,
+            virtualOutgoingVideoStream.state == .started
+        else { return }
+
+        let videoFrameBuffer = RawVideoFrameBuffer()
+        videoFrameBuffer.buffer = imageBuffer
+        videoFrameBuffer.streamFormat = virtualOutgoingVideoStream.format
+        virtualOutgoingVideoStream.send(frame: videoFrameBuffer) { error in
+            guard let error else { return }
+            print(error)
+        }
+    }
+
+    @objc func deviceOrientationDidChange(notification: NSNotification) {
+        updateOrientation()
+    }
+    
+    func updateOrientation() {
+    }
+
+    private func handleVideoStreamAvailable(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        callController?.cameraController.delegate = self
+    }
+
+    private func handleVideoStreamStarted(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        callController?.cameraController.start { [weak self] error in
+            Task {
+                guard let self else { return }
+                try? await self.callController?.hangUp()
+                self.callController?.handleSessionError(error)
+            }
+        }
+    }
+
+    private func handleVideoStreamStopped() {
+        callController?.cameraController.stop()
+    }
+
+    private func handleFrameRateChanged(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        guard let cameraController = callController?.cameraController else { return }
+        cameraController.captureFrameRate = Float64(virtualOutgoingVideoStream.format.framesPerSecond)
+    }
+
+    private func handleDimensionsChanged(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        guard let cameraController = callController?.cameraController else { return }
+        cameraController.captureDimensions = virtualOutgoingVideoStream.format.resolution.dimensions
+    }
+
+    private func videoRotationAngle(for deviceOrientation: UIDeviceOrientation) -> Double {
+        switch deviceOrientation {
+        case .portrait: return VideoHandler.portraitRotationAngle
+        case .portraitUpsideDown: return VideoHandler.portraitUpsideDownRotationAngle
+        case .landscapeLeft: return VideoHandler.landscapeLeftRotationAngle
+        case .landscapeRight: return VideoHandler.landscapeRightRotationAngle
+        default: return VideoHandler.defaultRotationAngle
+        }
+    }
+
+}
         }
     }
     

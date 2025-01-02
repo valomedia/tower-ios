@@ -18,6 +18,7 @@ enum AssistanceSessionState: CustomStringConvertible {
     case waiting
     case connecting
     case connected
+    case onHold
     case disconnected
 
     /// A description of the state in English.
@@ -29,6 +30,7 @@ enum AssistanceSessionState: CustomStringConvertible {
         case .waiting: return "Warten auf Assistenz…"
         case .connecting: return "Connecting call…"
         case .connected: return "Connected"
+        case .onHold: return "On hold…"
         case .disconnected: return "Call ended"
         }
     }
@@ -42,6 +44,7 @@ enum AssistanceSessionState: CustomStringConvertible {
         case .waiting: return "Warten auf Assistenz…"
         case .connecting: return "Anrufaufbau…"
         case .connected: return "Verbunden"
+        case .onHold: return "Anruf wird gehalten…"
         case .disconnected: return "Verbindung getrennt"
         }
     }

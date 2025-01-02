@@ -561,6 +561,8 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
         case .toggleTorchRequest: handleToggleTorchRequest()
         case .locationRequest: handleLocationRequest()
         case .capturePhotoRequest: handleCapturePhotoRequest()
+        case .holdEvent: handleHoldEvent()
+        case .resumeEvent: handleResumeEvent()
         default: ()
         }
     }
@@ -626,6 +628,17 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
         }
     }
     
+    private func handleHoldEvent() {
+        guard let callController else { return }
+        callController.sessionState = .onHold
+        callController.playRingbackTone()
+    }
+    
+    private func handleResumeEvent() {
+        guard let callController else { return }
+        callController.sessionState = .connected
+        callController.stopRingbackTone()
+        callController.playStartTone()
     }
 
 }

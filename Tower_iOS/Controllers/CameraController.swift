@@ -29,6 +29,9 @@ class CameraController:
         super.init()
         photoOutput.maxPhotoQualityPrioritization = .speed
         videoOutput.setSampleBufferDelegate(self, queue: captureQueue)
+        videoOutput.videoSettings = [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+        ]
         captureDevice = captureDevices.first
         
         let notificationCenter = NotificationCenter.default

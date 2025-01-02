@@ -55,6 +55,9 @@ class CallController: NSObject, ObservableObject {
     }
 
     fileprivate let cameraController = CameraController()
+
+    fileprivate var dataChannelSender: DataChannelSender? = nil
+    fileprivate var dataChannelSenderLossy: DataChannelSender? = nil
     fileprivate var rawOutgoingVideoStream: VirtualOutgoingVideoStream?
 
     private let audioSession = AVAudioSession.sharedInstance()
@@ -62,11 +65,10 @@ class CallController: NSObject, ObservableObject {
     private var callClient: CallClient?
     private var callAgent: CallAgent?
     private var call: Call?
+    private var dataChannelCallFeature: DataChannelCallFeature?
     private var callHandler: CallHandler?
     private var videoHandler: VideoHandler?
-
-
-
+    private var dataHandler: DataHandler?
 
     // MARK: - Methods
 
@@ -97,6 +99,10 @@ class CallController: NSObject, ObservableObject {
         let videoHandler = VideoHandler()
         videoHandler.callController = self
         self.videoHandler = videoHandler
+
+        let dataHandler = DataHandler()
+        dataHandler.callController = self
+        self.dataHandler = dataHandler
 
         self.onCallEnd = onCallEnd
         self.onCallError = onCallError
@@ -152,6 +158,42 @@ class CallController: NSObject, ObservableObject {
                 sendMessage(ErrorMessage.errorEvent(error: "\(error)"))
             }
         }
+    }
+
+    func sendMessage(_ message: Message, dataChannelSender: DataChannelSender? = nil, retryOnFailure: Bool = true) {
+        do {
+            sendMessage(
+                try JSONEncoder.shared.encode(message),
+                dataChannelSender: dataChannelSender,
+                retryOnFailure: retryOnFailure)
+        } catch {
+            print("Encoding data message failed: \(error)")
+            sendMessage(
+                try! JSONEncoder.shared.encode(ErrorMessage.errorEvent(error: "\(error)")),
+                dataChannelSender: dataChannelSender,
+                retryOnFailure: false)
+        }
+    }
+
+    func sendMessage(_ data: Data, dataChannelSender: DataChannelSender? = nil, retryOnFailure: Bool = true) {
+        guard let sender = dataChannelSender ?? self.dataChannelSender else { return }
+        do {
+            try ObjC.catchException { sender.sendMessage(data: data) }
+        } catch let error as NSError {
+            print("Data message failed to send: \(error.localizedDescription)")
+            if (retryOnFailure) {
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + CallController.dataChannelRetrySendDelay
+                ) { [weak self] in
+                    print("Retrying…")
+                    self?.sendMessage(data, dataChannelSender: dataChannelSender)
+                }
+            }
+        }
+    }
+
+    func sendMessageLossy(_ message: Message) {
+        sendMessage(message, dataChannelSender: dataChannelSenderLossy, retryOnFailure: false)
     }
 
     fileprivate func answerIncomingCall(_ incomingCall: IncomingCall) async {
@@ -210,8 +252,12 @@ class CallController: NSObject, ObservableObject {
             self.callAgent = nil
             self.call = nil
             self.rawOutgoingVideoStream = nil
+            self.dataChannelCallFeature = nil
+            self.dataChannelSender = nil
+            self.dataChannelSenderLossy = nil
             self.callHandler = nil
             self.videoHandler = nil
+            self.dataHandler = nil
 
             self.onCallEnd?()
             self.onCallEnd = nil
@@ -225,6 +271,40 @@ class CallController: NSObject, ObservableObject {
         try await (call.!?).hangUp(options: options)
     }
     
+
+    fileprivate func establishDataChannel(for call: Call) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelEstablishDelay) { [weak self] in
+            guard let self else { return }
+
+            let dataChannelCallFeature = call.feature(Features.dataChannel)
+            dataChannelCallFeature.delegate = self.dataHandler
+            self.dataChannelCallFeature = dataChannelCallFeature
+
+            let durableDataChannelSenderOptions = DataChannelSenderOptions()
+            durableDataChannelSenderOptions.channelId = CallController.durableDataChannelId
+            durableDataChannelSenderOptions.bitrateInKbps = CallController.durableDataChannelBandwidthKbps
+            durableDataChannelSenderOptions.priority = .high
+            durableDataChannelSenderOptions.reliability = .durable
+
+            let dataChannelSender
+                = dataChannelCallFeature.getDataChannelSender(options: durableDataChannelSenderOptions)
+            dataChannelSender.setParticipants(participants: call.remoteParticipants.map(\.identifier))
+
+            let lossyDataChannelSenderOptions = DataChannelSenderOptions()
+            lossyDataChannelSenderOptions.channelId = CallController.lossyDataChannelId
+            lossyDataChannelSenderOptions.bitrateInKbps = CallController.lossyDataChannelBandwidthKbps
+            lossyDataChannelSenderOptions.priority = .normal
+            lossyDataChannelSenderOptions.reliability = .lossy
+
+            let dataChannelSenderLossy
+                = dataChannelCallFeature.getDataChannelSender(options: lossyDataChannelSenderOptions)
+            dataChannelSenderLossy.setParticipants(participants: call.remoteParticipants.map(\.identifier))
+
+            self.dataChannelSender = dataChannelSender
+            self.dataChannelSenderLossy = dataChannelSenderLossy
+            self.videoHandler?.updateOrientation()
+        }
+    }
 
     fileprivate func playRingbackTone() {
         AVPlayer.callRingbackTone.seek(to: CMTime.zero)
@@ -248,9 +328,6 @@ class CallController: NSObject, ObservableObject {
     fileprivate func playEndTone() {
         AVPlayer.callEndTone.seek(to: CMTime.zero)
         AVPlayer.callEndTone.play()
-    }
-
-    func sendDataMessage(_ topic: DataMessageTopic, data: Data? = nil) {
     }
 
     private func createSession() async throws -> CommunicationTokenCredential {
@@ -324,6 +401,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
             guard let callController = self?.callController else { return }
             callController.sessionState = .connected
             callController.playStartTone()
+            callController.establishDataChannel(for: call)
         }
     }
 
@@ -406,6 +484,8 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
     
     func updateOrientation() {
+        callController?.sendMessage(
+            DataMessage.orientationEvent(rotationAngle: videoRotationAngle(for: UIDevice.current.orientation)))
     }
 
     private func handleVideoStreamAvailable(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
@@ -447,17 +527,54 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
 
 }
-        }
+
+// MARK: DataHandler
+
+class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiverDelegate {
+    
+    // MARK: - Properties
+    
+    weak var callController: CallController?
+    
+    // MARK: - Methods
+    
+    func dataChannelCallFeature(
+        _ dataChannelCallFeature: DataChannelCallFeature,
+        didCreateReceiver args: DataChannelReceiverCreatedEventArgs
+    ) {
+        args.receiver.delegate = self
     }
     
+    func dataChannelReceiver(
+        _ dataChannelReceiver: DataChannelReceiver,
+        didReceiveMessage args: PropertyChangedEventArgs
+    ) {
+        // Make sure that we have data and that the data is a DataMessage. The tower-staff app currently doesn't send
+        // ErrorMessages, but if it does, we wanna ignore them here.
+        guard
+            let data = dataChannelReceiver.receiveMessage()?.data,
+            let message = try? JSONDecoder.shared.decode(DataMessage.self, from: data)
+        else { return }
+        
+        switch message {
+        case .switchCameraRequest: handleSwitchCameraRequest()
+        case .toggleTorchRequest: handleToggleTorchRequest()
+        case .locationRequest: handleLocationRequest()
+        case .capturePhotoRequest: handleCapturePhotoRequest()
+        default: ()
+        }
+    }
+
     private func handleSwitchCameraRequest() {
-        cameraController.switchCamera()
-        sendDataMessage(.switchCameraResponse)
+        guard let callController else { return }
+        callController.cameraController.switchCamera()
+        callController.sendMessage(DataMessage.switchCameraResponse)
     }
     
     private func handleToggleTorchRequest() {
-        cameraController.torchEnabled.toggle();
-        sendDataMessage(.toggleTorchResponse)
+        guard let callController else { return }
+        callController.cameraController.torchEnabled.toggle();
+        callController.sendMessage(DataMessage.toggleTorchResponse)
     }
     
     private func handleLocationRequest() {
@@ -465,24 +582,24 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
     private func handleCapturePhotoRequest() {
         Task {
+            guard let callController else { return }
             do {
-                let photoData = try await cameraController.takePhoto()
+                let photoData = try await callController.cameraController.takePhoto()
                 print("Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
-                
+
                 let uuid = UUID()
                 let encodedData = photoData.imageData.base64EncodedString()
                 let chunkSize = try CallController.dataMessageMaxSize
                     - JSONEncoder
                         .shared
                         .encode(
-                            CapturePhotoResponseData(
-                                photoData: PhotoDataChunk(
-                                    imageData: "",
-                                    imageSize: photoData.imageSize,
-                                    chunkingInfo: ChunkingInfo(
-                                        index: CallController.dataMessageMaxBurstCount,
-                                        count: CallController.dataMessageMaxBurstCount,
-                                        uuid: uuid))))
+                            DataMessage.photoDataEvent(
+                                imageData: "",
+                                imageSize: photoData.imageSize,
+                                chunkingInfo: DataMessage.ImageChunkingInfo(
+                                    index: CallController.dataMessageMaxBurstCount,
+                                    count: CallController.dataMessageMaxBurstCount,
+                                    uuid: uuid)))
                         .count
                 let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
                     let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
@@ -491,24 +608,24 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
                     return String(encodedData[start..<end])
                 }
                 for (index, imageData) in chunks.enumerated() {
-                    sendDataMessage(
-                        .capturePhotoResponse,
-                        data: try! JSONEncoder.shared.encode(
-                                CapturePhotoResponseData(
-                                photoData: PhotoDataChunk(
-                                    imageData: imageData,
-                                    imageSize: photoData.imageSize,
-                                    chunkingInfo: ChunkingInfo(
-                                        index: index,
-                                        count: chunks.count,
-                                        uuid: uuid)))))
+                    callController.sendMessageLossy(
+                        DataMessage.photoDataEvent(
+                            imageData: imageData,
+                            imageSize: photoData.imageSize,
+                            chunkingInfo: DataMessage.ImageChunkingInfo(
+                                index: index,
+                                count: chunks.count,
+                                uuid: uuid)))
+                    try await Task.sleep(for: .seconds(CallController.lossyDataChannelChunkedMessageDelay))
                 }
+                callController.sendMessage(DataMessage.capturePhotoResponse(uuid: uuid))
             } catch {
-                sendDataMessage(
-                    .capturePhotoResponse,
-                    data: try! JSONEncoder.shared.encode(CapturePhotoResponseData(message: "\(error)")))
+                print("Photo capture failed: \(error)")
+                callController.sendMessage(ErrorMessage.capturePhotoResponse(error: "\(error)"))
             }
         }
+    }
+    
     }
 
 }

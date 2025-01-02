@@ -7,11 +7,9 @@
 //
 
 import Foundation
-import AmazonChimeSDK
 import AVFoundation
 import CoreImage
 import UIKit
-
 
 // MARK: CameraController
 
@@ -19,9 +17,7 @@ import UIKit
 ///
 /// This contains the application logic for capturing photos and video from the device cameras.
 ///
-class CameraController:
-    NSObject, CameraCaptureSource, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate
-{
+class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // MARK: - Life cycle methods
 
@@ -45,28 +41,35 @@ class CameraController:
     }
 
     // MARK: - Properties
-    
-    var device: MediaDevice? {
+
+    weak var delegate: AVCaptureVideoDataOutputSampleBufferDelegate?
+
+    lazy var universallySupportedResolutions: Set<CMVideoDimensions> = {
+        let supportedResolutions = captureDevices.map { Set($0.formats.map(\.formatDescription.dimensions)) }
+        return supportedResolutions.dropFirst().reduce(supportedResolutions.first) { $0?.intersection($1) } ?? []
+    }()
+
+    var captureDimensions: CMVideoDimensions? {
         get {
-            guard let captureDevice else { return nil }
-            if (isUsingFrontCamera) {
-                return MediaDevice(label: captureDevice.localizedName, type: MediaDeviceType.videoFrontCamera)
-            }
-            if (isUsingBackCamera) {
-                return MediaDevice(label: captureDevice.localizedName, type: MediaDeviceType.videoBackCamera)
-            }
-            return MediaDevice(label: captureDevice.localizedName, type: MediaDeviceType.other)
+            (captureDevice != nil && isRunning) .!! _captureDimensions
         }
         set {
-            guard let newValue else { return }
-            captureDevice = AVCaptureDevice.default(
-                deviceType,
-                for: .video,
-                position: newValue.type == .videoFrontCamera ? .front : .back)
+            guard let newValue, captureDevice != nil, isRunning else { return }
+            captureQueue.async { [weak self] in self?._captureDimensions = self?.updateDeviceCaptureFormat(newValue) }
         }
     }
-    
-    var videoContentHint: VideoContentHint = .motion
+    private var _captureDimensions: CMVideoDimensions?
+
+    var captureFrameRate: Float64? {
+        get {
+            (captureDevice != nil && isRunning) .!! _captureFrameRate
+        }
+        set {
+            guard let newValue, captureDevice != nil, isRunning else { return }
+            captureQueue.async { [weak self] in self?._captureFrameRate = self?.updateVideoFrameRate(newValue) }
+        }
+    }
+    private var _captureFrameRate: Float64?
 
     var isRunning: Bool {
         captureSession.isRunning
@@ -80,14 +83,6 @@ class CameraController:
     var isUsingBackCamera: Bool {
         guard let captureDevice else { return false }
         return captureDevice.position == .back
-    }
-    
-    var format: VideoCaptureFormat = Settings.callQualityLevel.videoFormat {
-        didSet {
-            if captureDevice != nil, isRunning {
-                captureQueue.async { [weak self] in self?.updateDeviceCaptureFormat() }
-            }
-        }
     }
     
     var torchEnabled: Bool = false {
@@ -104,12 +99,12 @@ class CameraController:
                         }
                         captureDevice.unlockForConfiguration()
                     } catch {
-                        logger.error(msg: "Unable to set torch on current camera. Error: \(error)")
+                        print("Unable to set torch on current camera. Error: \(error)")
                     }
                 }
             } else {
                 torchEnabled = false
-                logger.info(msg: "Torch is not available on current camera.")
+                print("Torch is not available on current camera.")
             }
         }
     }
@@ -118,8 +113,7 @@ class CameraController:
         guard let captureDevice else { return false }
         return captureDevice.hasTorch && captureDevice.isTorchAvailable
     }
-    
-    private let logger = ConsoleLogger(name: "CameraController")
+
     private let cameraLock = NSLock()
     private let captureQueue = DispatchQueue(label: "captureQueue")
     private let captureSession = AVCaptureSession()
@@ -133,7 +127,6 @@ class CameraController:
     private var photoOutputContinuations: [CheckedContinuation<PhotoData, Error>] = []
     private var sinks = ConcurrentMutableSet()
     private var captureSourceObservers = ConcurrentMutableSet()
-    private var eventAnalyticsController: EventAnalyticsController?
 
     private var frontCaptureDevice: AVCaptureDevice? {
         AVCaptureDevice.default(deviceType, for: .video, position: .front)
@@ -158,7 +151,7 @@ class CameraController:
     private var captureDevice: AVCaptureDevice? {
         didSet {
             guard let captureDevice else { return }
-            logger.info(msg: "Using capture device: \(captureDevice.localizedName)")
+            print("Using capture device: \(captureDevice.localizedName)")
             captureQueue.async { [weak self] in self?.updateSessionForCaptureDevice(captureDevice) }
         }
     }
@@ -168,39 +161,21 @@ class CameraController:
     }
 
     // MARK: - Methods
-    
-    func addVideoSink(sink: VideoSink) {
-        sinks.add(sink)
-    }
-    
-    func removeVideoSink(sink: VideoSink) {
-        sinks.remove(sink)
-    }
-       
-    func addCaptureSourceObserver(observer: CaptureSourceObserver) {
-        captureSourceObservers.add(observer)
-    }
-    
-    func removeCaptureSourceObserver(observer: CaptureSourceObserver) {
-        captureSourceObservers.remove(observer)
-    }
 
-    func setEventAnalyticsController(eventAnalyticsController: EventAnalyticsController?) {
-        self.eventAnalyticsController = eventAnalyticsController
-    }
- 
-    func start() {
+    func start(onCaptureFailed: @escaping (Error) -> Void) {
         guard captureDevice != nil else {
-            logger.error(msg: "No capture device available.")
+            print("No capture device available.")
+            onCaptureFailed(CameraError.unavailable)
             return
         }
         
         let authorized = checkAuthorization()
         guard authorized else {
-            logger.error(msg: "Camera access was not authorized.")
+            print("Camera access was not authorized.")
+            onCaptureFailed(CameraError.unauthorized)
             return
-        }        
-        
+        }
+
         if isCaptureSessionConfigured {
             if !captureSession.isRunning {
                 captureQueue.async { [self] in self.captureSession.startRunning() }
@@ -210,12 +185,13 @@ class CameraController:
 
         captureQueue.async { [self] in
             self.configureCaptureSession { success in
-                guard success else { return }
+                guard success else {
+                    onCaptureFailed(CameraError.configurationFailure)
+                    return
+                }
                 self.captureSession.startRunning()
             }
         }
-        
-        captureSourceObservers.forEach { observer in (observer as? CaptureSourceObserver)?.captureDidStart() }
     }
 
     func stop() {
@@ -223,7 +199,6 @@ class CameraController:
 
         captureQueue.async { [weak self] in
             self?.captureSession.stopRunning()
-            self?.captureSourceObservers.forEach { observer in (observer as? CaptureSourceObserver)?.captureDidStop() }
         }
     }
 
@@ -233,15 +208,12 @@ class CameraController:
             self.captureDevice = availableCaptureDevices[nextIndex]
         } else {
             self.captureDevice = AVCaptureDevice.default(for: .video)
-        }        
-        if captureDevice != nil {
-            eventAnalyticsController?.pushHistory(historyEventName: .videoInputSelected)
         }
     }
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error {
-            logger.error(msg: "Error capturing photo: \(error.localizedDescription)")
+            print("Error capturing photo: \(error.localizedDescription)")
         }
         let data = photo.fileDataRepresentation()
         let size = ImageSize(photo.resolvedSettings.photoDimensions)
@@ -257,18 +229,25 @@ class CameraController:
         }
         photoOutputContinuations = []
     }
-    
-    func captureOutput(_: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from _: AVCaptureConnection) {
-        guard let frame = VideoFrame(sampleBuffer: sampleBuffer) else {
-            handleCaptureFailed(reason: .invalidFrame)
-            logger.error(msg: "DefaultCameraCaptureSource could not convert captured CMSampleBuffer to video frame.")
+
+    func captureOutput(
+        _ output: AVCaptureOutput,
+        didOutput sampleBuffer: CMSampleBuffer,
+        from connection: AVCaptureConnection
+    ) {
+        guard let captureDevice, captureDevice.activeFormat.formatDescription.dimensions == _captureDimensions else {
+            delegate?.captureOutput?(output, didDrop: sampleBuffer, from: connection)
             return
         }
-        
-        sinks.forEach { item in
-            guard let sink = item as? VideoSink else { return }
-            sink.onVideoFrameReceived(frame: frame)
-        }
+        delegate?.captureOutput?(output, didOutput: sampleBuffer, from: connection)
+    }
+
+    func captureOutput(
+        _ output: AVCaptureOutput,
+        didDrop sampleBuffer: CMSampleBuffer,
+        from connection: AVCaptureConnection
+    ) {
+        delegate?.captureOutput?(output, didDrop: sampleBuffer, from: connection)
     }
 
     func takePhoto() async throws -> PhotoData {
@@ -277,12 +256,12 @@ class CameraController:
         }
 
         // Temporarily switch to the highest resolution
-        let format = self.format
-        self.format = CallQualityLevel.high.videoFormat
+        let captureDimensions = self.captureDimensions
+        self.captureDimensions = CallQualityLevel.veryHigh.resolution.dimensions
 
         captureQueue.async { [weak self] in
             guard let self else { return }
-            
+
             let photoSettings = AVCapturePhotoSettings(
                 format: [
                     AVVideoCodecKey: AVVideoCodecType.jpeg, 
@@ -303,7 +282,7 @@ class CameraController:
             photoOutput.capturePhoto(with: photoSettings, delegate: self)
 
             // Turn the torch back on if necessary and switch back to the previous video format.
-            self.format = format
+            self.captureDimensions = captureDimensions
             self.torchEnabled = torchEnabled
         }
 
@@ -326,24 +305,20 @@ class CameraController:
             let captureDevice = captureDevice,
             let deviceInput = try? AVCaptureDeviceInput(device: captureDevice)
         else {
-            handleCaptureFailed(reason: .configurationFailure)
-            logger.error(msg: "Failed to obtain video input.")
+            print("Failed to obtain video input.")
             return
         }
 
         guard captureSession.canAddInput(deviceInput) else {
-            handleCaptureFailed(reason: .configurationFailure)
-            logger.error(msg: "Unable to add device input to capture session.")
+            print("Unable to add device input to capture session.")
             return
         }
         guard captureSession.canAddOutput(photoOutput) else {
-            handleCaptureFailed(reason: .configurationFailure)
-            logger.error(msg: "Unable to add photo output to capture session.")
+            print("Unable to add photo output to capture session.")
             return
         }
         guard captureSession.canAddOutput(videoOutput) else {
-            handleCaptureFailed(reason: .configurationFailure)
-            logger.error(msg: "Unable to add video output to capture session.")
+            print("Unable to add video output to capture session.")
             return
         }
 
@@ -352,9 +327,9 @@ class CameraController:
         captureSession.addOutput(videoOutput)
 
         self.deviceInput = deviceInput
-        
-        updateDeviceCaptureFormat()
-        updateOrientation()
+
+        self._captureDimensions = updateDeviceCaptureFormat(CallQualityLevel.veryHigh.resolution.dimensions)
+        self._captureFrameRate = updateVideoFrameRate(CallQualityLevel.veryHigh.frameRate)
 
         isCaptureSessionConfigured = true
 
@@ -364,16 +339,15 @@ class CameraController:
     private func checkAuthorization() -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            logger.info(msg: "Camera access authorized.")
             return true
         case .notDetermined:
-            logger.info(msg: "Camera access not determined.")
+            print("Camera access not determined.")
             return false
         case .denied:
-            logger.info(msg: "Camera access denied.")
+            print("Camera access denied.")
             return false
         case .restricted:
-            logger.info(msg: "Camera library access restricted")
+            print("Camera library access restricted")
             return false
         @unknown default:
             return false
@@ -385,7 +359,7 @@ class CameraController:
         do {
             return try AVCaptureDeviceInput(device: device)
         } catch let error {
-            logger.error(msg: "Error getting capture device input: \(error.localizedDescription)")
+            print("Error getting capture device input: \(error.localizedDescription)")
             return nil
         }
     }
@@ -411,9 +385,9 @@ class CameraController:
         {
             captureSession.addInput(deviceInput)
         }
-        
+
+        _captureDimensions = _captureDimensions.flatMap(updateDeviceCaptureFormat)
         updateVideoOutputConnection()
-        updateOrientation()
     }
     
     private func updateVideoOutputConnection() {
@@ -422,31 +396,7 @@ class CameraController:
             videoOutputConnection.isVideoMirrored = isUsingFrontCamera
         }
     }
-    
-    private func updateDeviceCaptureFormat() {
-        guard let captureDevice else { return }
-        try? captureDevice.lockForConfiguration()
-        defer { captureDevice.unlockForConfiguration() }
-        
-        let newAVFormat = captureDevice.formats.min { avFormatA, avFormatB in
-            let formatA = VideoCaptureFormat.fromAVCaptureDeviceFormat(format: avFormatA)
-            let formatB = VideoCaptureFormat.fromAVCaptureDeviceFormat(format: avFormatB)
-            return closestFormat(formatA: formatA, formatB: formatB)
-        }
-        guard let chosenFormat = newAVFormat, chosenFormat != captureDevice.activeFormat else { return }
-        
-        captureDevice.activeFormat = chosenFormat
-    }
-    
-    private func closestFormat(formatA: VideoCaptureFormat, formatB: VideoCaptureFormat) -> Bool {
-        let diffA = abs(formatA.width - format.width) + abs(formatA.height - format.height)
-        let diffB = abs(formatB.width - format.width) + abs(formatB.height - format.height)
-        if diffA == diffB {
-            return abs(formatA.maxFrameRate - format.maxFrameRate) < abs(formatB.maxFrameRate - format.maxFrameRate)
-        }
-        return diffA < diffB
-    }
-    
+
     private func videoOrientationFor(_ deviceOrientation: UIDeviceOrientation) -> AVCaptureVideoOrientation? {
         switch deviceOrientation {
         case .portrait: return AVCaptureVideoOrientation.portrait
@@ -456,33 +406,94 @@ class CameraController:
         default: return nil
         }
     }
-    
-    private func updateOrientation() {
-        guard
-            let connection = videoOutput.connection(with: AVMediaType.video),
-            let videoOrientation = videoOrientationFor(deviceOrientation)
-        else { return }
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            
-            connection.videoOrientation = videoOrientation
-            
-            // Need to reenable the torch if it was on before the rotation change caused the camera to restart.
-            if self.torchEnabled {
-                self.torchEnabled.toggle()
-                self.torchEnabled.toggle()
+
+    @discardableResult
+    private func updateDeviceCaptureFormat(_ dimensions: CMVideoDimensions) -> CMVideoDimensions? {
+        guard let captureDevice else { return nil }
+        try? captureDevice.lockForConfiguration()
+        defer { captureDevice.unlockForConfiguration() }
+
+        let newAVFormat = captureDevice
+            .formats
+            .filter { format in 
+                format.formatDescription.mediaSubType == .init(rawValue: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
             }
+            .min { formatA, formatB in
+                closestDimensions(
+                    to: dimensions,
+                    dimensionsA: formatA.formatDescription.dimensions,
+                    dimensionsB: formatB.formatDescription.dimensions)
+            }
+
+        if let chosenFormat = newAVFormat, chosenFormat != captureDevice.activeFormat {
+            print("Set resolution for capture device to \(chosenFormat.formatDescription.dimensions).")
+            captureDevice.activeFormat = chosenFormat
+            _captureFrameRate = _captureFrameRate.flatMap(updateVideoFrameRate)
         }
+
+        return captureDevice.activeFormat.formatDescription.dimensions
     }
-    
-    @objc private func deviceOrientationDidChange(notification: NSNotification) {
-        captureQueue.async { [weak self] in self?.updateOrientation() }
+
+    private func closestDimensions(
+        to dimensions: CMVideoDimensions,
+        dimensionsA: CMVideoDimensions,
+        dimensionsB: CMVideoDimensions
+    ) -> Bool {
+        let resolutionA = dimensionsA.width * dimensionsA.height
+        let resolutionB = dimensionsB.width * dimensionsB.height
+
+        if  dimensionsA.width >= dimensions.width,
+            dimensionsA.height >= dimensions.height,
+            dimensionsB.width >= dimensions.width,
+            dimensionsB.height >= dimensions.height
+        { return resolutionA < resolutionB }
+
+        if  dimensionsA.width >= dimensions.width,
+            dimensionsA.height >= dimensions.height
+        { return true }
+
+        if  dimensionsB.width >= dimensions.width,
+            dimensionsB.height >= dimensions.height
+        { return false }
+
+        let usableResolutionA = calculateUsableResolution(cropping: dimensionsA, to: dimensions)
+        let usableResolutionB = calculateUsableResolution(cropping: dimensionsB, to: dimensions)
+        if usableResolutionA != usableResolutionB {
+            return usableResolutionA > usableResolutionB
+        }
+
+        return resolutionA < resolutionB
     }
-    
-    private func handleCaptureFailed(reason: CaptureSourceError) {
-        let attributes = [EventAttributeName.videoInputError: reason]
-        eventAnalyticsController?.publishEvent(name: .videoInputFailed, attributes: attributes)
-        captureSourceObservers.forEach { observer in (observer as? CaptureSourceObserver)?.captureDidFail(error: reason) }
+
+    private func calculateUsableResolution(cropping cameraDimensions: CMVideoDimensions, to streamDimensions: CMVideoDimensions) -> Int32 {
+        return min(cameraDimensions.width, Int32(Double(cameraDimensions.height) * streamDimensions.aspectRatio))
+            * min(cameraDimensions.height, Int32(Double(cameraDimensions.width) / streamDimensions.aspectRatio))
+    }
+
+    @discardableResult
+    private func updateVideoFrameRate(_ frameRate: Float64) -> Float64? {
+        guard let captureDevice else { return nil }
+        try? captureDevice.lockForConfiguration()
+        defer { captureDevice.unlockForConfiguration() }
+
+        let timescale = closestFramerate(to: frameRate, in: captureDevice.activeFormat.videoSupportedFrameRateRanges)
+        let duration = CMTime(value: 1, timescale: Int32(timescale))
+
+        if captureDevice.activeVideoMinFrameDuration != duration || captureDevice.activeVideoMaxFrameDuration != duration {
+            print("Set framerate for capture device to \(timescale) fps.")
+            captureDevice.activeVideoMinFrameDuration = duration
+            captureDevice.activeVideoMaxFrameDuration = duration
+        }
+
+        return timescale
+    }
+
+    private func closestFramerate(to frameRate: Float64, in supportedFrameRateRanges: [AVFrameRateRange]) -> Float64 {
+        !supportedFrameRateRanges.filter { $0.maxFrameRate >= frameRate && frameRate >= $0.minFrameRate }.isEmpty
+            .!! frameRate
+            ?? supportedFrameRateRanges.map(\.minFrameRate).filter { $0 > frameRate }.sorted().first
+            ?? captureDevice?.activeFormat.videoSupportedFrameRateRanges.map(\.maxFrameRate).sorted().last
+            ?? frameRate
     }
 
 }

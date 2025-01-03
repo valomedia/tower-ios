@@ -11,7 +11,7 @@ import AVFoundation
 
 // MARK: CMVideoDimensions
 
-extension CMVideoDimensions: CustomStringConvertible {
+extension CMVideoDimensions: @retroactive CustomStringConvertible {
 
     // MARK: + CustomStringConvertible
 

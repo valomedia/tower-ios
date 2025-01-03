@@ -11,7 +11,7 @@ import AVFoundation
 
 // MARK: CMVideoDimensions
 
-extension CMVideoDimensions: Hashable {
+extension CMVideoDimensions: @retroactive Hashable {
 
     // MARK: + Hashable
 

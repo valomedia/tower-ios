@@ -11,7 +11,7 @@ import AVFoundation
 
 // MARK: CMVideoDimensions
 
-extension CMVideoDimensions: Equatable {
+extension CMVideoDimensions: @retroactive Equatable {
 
     // MARK: + Equatable
 

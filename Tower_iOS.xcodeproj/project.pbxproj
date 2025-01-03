@@ -81,7 +81,6 @@
 		E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */; };
 		E9E97D676B5FC0654D0AE376 /* TrailingIconLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */; };
 		E9E97D9435E71A5FB03C32C2 /* Bool+then.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */; };
-		E9E97D987307335B79C9339E /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E979DC20654943442D3251 /* LocationController.swift */; };
 		E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */; };
 		E9E97DC5146A1DC309049ABA /* Assets.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E978CCD179D7A92701559C /* Assets.stencil */; };
 		E9E97E935578B91E74C5F7B9 /* Tower_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97260BBD5D0A05DD50473 /* Tower_iOSTests.swift */; };
@@ -200,7 +199,6 @@
 		E9E978CCD179D7A92701559C /* Assets.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Assets.stencil; sourceTree = "<group>"; };
 		E9E979C2B3EBCB06EBACBDA4 /* DolceVitaHeavyBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file.ttf; path = DolceVitaHeavyBold.ttf; sourceTree = "<group>"; };
 		E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wrapper.swift; sourceTree = "<group>"; };
-		E9E979DC20654943442D3251 /* LocationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
 		E9E97A368C0877C4B4E7B387 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tower_iOSApp.swift; sourceTree = "<group>"; };
 		E9E97B2EB631D23B7381BB19 /* Tower_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tower_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -295,7 +293,6 @@
 				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 				E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */,
 				E9E9787B1722DC8C49605991 /* CallController.swift */,
-				E9E979DC20654943442D3251 /* LocationController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -823,7 +820,6 @@
 				E1DFEF312D18BFA8001E7AFD /* ObjC.m in Sources */,
 				E9E97ACB93E9A4DBEC1906D6 /* CLLocation+init.swift in Sources */,
 				E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */,
-				E9E97D987307335B79C9339E /* LocationController.swift in Sources */,
 				E19DC87F2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift in Sources */,
 				E9E97293EE5E7BBDD50F4281 /* JSONEncoder+shared.swift in Sources */,
 				E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */,

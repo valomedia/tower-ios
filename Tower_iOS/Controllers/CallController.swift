@@ -55,6 +55,7 @@ class CallController: NSObject, ObservableObject {
     }
 
     fileprivate let cameraController = CameraController()
+    fileprivate let locationManager = CLLocationManager()
 
     fileprivate var dataChannelSender: DataChannelSender? = nil
     fileprivate var dataChannelSenderLossy: DataChannelSender? = nil
@@ -68,6 +69,7 @@ class CallController: NSObject, ObservableObject {
     private var dataChannelCallFeature: DataChannelCallFeature?
     private var callHandler: CallHandler?
     private var videoHandler: VideoHandler?
+    private var locationHandler: LocationHandler?
     private var dataHandler: DataHandler?
 
     // MARK: - Methods
@@ -77,7 +79,7 @@ class CallController: NSObject, ObservableObject {
     /// This will be called whenever the call ends, no matter the reason.
     ///
     var onCallEnd: (() -> Void)? = nil
-    
+
     /// Callback to invoke when the call ends because of a fata Error during the initial connection.
     ///
     /// This will be called when the call fails because of an Error received while establishing the call, that the
@@ -99,6 +101,10 @@ class CallController: NSObject, ObservableObject {
         let videoHandler = VideoHandler()
         videoHandler.callController = self
         self.videoHandler = videoHandler
+
+        let locationHandler = LocationHandler()
+        locationHandler.callController = self
+        self.locationHandler = locationHandler
 
         let dataHandler = DataHandler()
         dataHandler.callController = self
@@ -257,6 +263,7 @@ class CallController: NSObject, ObservableObject {
             self.dataChannelSenderLossy = nil
             self.callHandler = nil
             self.videoHandler = nil
+            self.locationHandler = nil
             self.dataHandler = nil
 
             self.onCallEnd?()
@@ -271,6 +278,26 @@ class CallController: NSObject, ObservableObject {
         try await (call.!?).hangUp(options: options)
     }
     
+    /// Start updating the location.
+    ///
+    /// - Throws: CLError
+    ///
+    fileprivate func startSendingLocation() throws {
+        locationManager.delegate = locationHandler
+        switch locationManager.authorizationStatus {
+        case .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+            break
+        case .restricted, .denied:
+            throw CLError(.denied)
+        case .notDetermined:
+            print("Requesting location permissions")
+            locationManager.requestWhenInUseAuthorization()
+            break
+        default:
+            break
+        }
+    }
 
     fileprivate func establishDataChannel(for call: Call) {
         DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelEstablishDelay) { [weak self] in
@@ -528,6 +555,52 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
 }
 
+// MARK: LocationHandler
+
+/// The controller for location services.
+///
+/// This contains all the application logic around retrieving locations.
+///
+class LocationHandler: NSObject, CLLocationManagerDelegate {
+
+    // MARK: - Properties
+
+    /// The call controller to use to send location messages.
+    ///
+    weak var callController: CallController?
+
+    // MARK: - Methods
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse:
+            print("User allowed access to location.");
+            manager.startUpdatingLocation()
+            break
+        case .restricted, .denied:
+            print("User denied access to location.")
+            callController?.sendMessage(ErrorMessage.locationEvent(error: "\(CLError(.denied))"))
+            break
+        default:
+            break
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        locations
+            .last
+            .map(Location.init)
+            .flatMap(DataMessage.init)
+            .map { message in callController?.sendMessage(message) }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location access failed: \(error)")
+        callController?.sendMessage(ErrorMessage.locationEvent(error: "\(error)"))
+    }
+
+}
+
 // MARK: DataHandler
 
 class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiverDelegate {
@@ -580,6 +653,14 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
     }
     
     private func handleLocationRequest() {
+        guard let callController else { return }
+        do {
+            try callController.startSendingLocation()
+            callController.sendMessage(DataMessage.locationResponse)
+        } catch {
+            print("User denied access to location.")
+            callController.sendMessage(ErrorMessage.locationResponse(error: "\(error)"))
+        }
     }
 
     private func handleCapturePhotoRequest() {

@@ -55,9 +55,9 @@ struct CallSheet: View {
                 }
                 .onChange(of: phase) { phase in
                     if (phase == .background) {
-                        //controller.pauseVideo()
+                        controller.pauseVideo()
                     } else {
-                        //controller.resumeVideo()
+                        controller.resumeVideo()
                     }
                 }
     }

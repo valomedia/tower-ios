@@ -1,9 +1,9 @@
 #
-# .gitignore
-# Tower_iOS
+# Podfile
+# tower-ios
 #
-# Created by Jean-Pierre Höhmann on 2022-03-06.
-# Copyright (c) 2024 valo.media GmbH. All rights reserved. 
+# Created by Jean-Pierre Höhmann on 2024-12-09.
+# Copyright (c) 2024-2025 valo.media GmbH. All rights reserved. 
 #
 
 platform :ios, '16.0'

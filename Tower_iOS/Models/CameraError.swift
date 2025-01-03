@@ -1,9 +1,9 @@
 //
 //  CameraError.swift
-//  Tower_iOS
+//  tower-ios
 //
 //  Created by Jean-Pierre Höhmann on 2024-08-01.
-//
+//  Copyright (c) 2024-2025 valo.media GmbH. All rights reserved.
 //
 
 import Foundation

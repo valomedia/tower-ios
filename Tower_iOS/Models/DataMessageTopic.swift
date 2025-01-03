@@ -1,9 +1,9 @@
 //
 //  DataMessageTopic.swift
-//  Tower_iOS
+//  tower-ios
 //
 //  Created by Jean-Pierre Höhmann on 2023-05-19.
-//
+//  Copyright (c) 2023-2025 valo.media GmbH. All rights reserved.
 //
 
 import Foundation

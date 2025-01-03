@@ -282,11 +282,11 @@
 		E9E973C71B69A29E23AB9B0D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E9E9787B1722DC8C49605991 /* CallController.swift */,
 				E1638CB72C48FC5A003A8A1B /* CameraController.swift */,
-				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
 				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 				E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */,
-				E9E9787B1722DC8C49605991 /* CallController.swift */,
+				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -302,20 +302,20 @@
 		E9E97433B81F994F7E441AE3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */,
-				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
-				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
-				E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */,
-				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
-				E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */,
 				E9E97EFA3591C2A194430BD3 /* CallSheet.swift */,
+				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
+				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
+				E9E9739414376D953A5C2437 /* Font+tower.swift */,
+				E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */,
+				E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */,
+				E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */,
+				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
 				E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */,
-				E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */,
-				E9E9739414376D953A5C2437 /* Font+tower.swift */,
+				E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */,
 				E9E97D7516F46B4EEA971AE7 /* View+if.swift */,
 				E9E97717C5D0FDCA28C0662B /* View+ifNotNil.swift */,
-				E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */,
+				E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -333,24 +333,24 @@
 		E9E975997A8FE85D76C63200 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E1A6F94C2D1376F300A28CA4 /* Message.swift */,
+				E9E973F83FB2243F93C24577 /* Assets+Generated.swift */,
 				E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */,
-				E1E32B302D08A42B00617B34 /* User.swift */,
-				E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */,
-				E1E32B2C2D08A09B00617B34 /* UserToken.swift */,
 				E1DF7A912CEA645C000498C0 /* CallQualityData.swift */,
 				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
+				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
+				E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */,
+				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
-				E9E973F83FB2243F93C24577 /* Assets+Generated.swift */,
+				E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */,
+				E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */,
+				E9E9780CA784F10F6DA82E56 /* Location.swift */,
+				E1A6F94C2D1376F300A28CA4 /* Message.swift */,
+				E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */,
+				E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */,
 				E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */,
 				E9E97D46831D8B34FB1AE1F1 /* TowerError.swift */,
-				E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */,
-				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
-				E9E9780CA784F10F6DA82E56 /* Location.swift */,
-				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
-				E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */,
-				E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */,
-				E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */,
+				E1E32B302D08A42B00617B34 /* User.swift */,
+				E1E32B2C2D08A09B00617B34 /* UserToken.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -358,27 +358,27 @@
 		E9E975ED4B2377D212EEC753 /* Tower_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				E1896BD12D18A45100BBB943 /* Tower_iOS.entitlements */,
-				E1DFEF302D18BFA8001E7AFD /* ObjC.m */,
-				E1DFEF2F2D18BFA8001E7AFD /* Tower_iOS-Bridging-Header.h */,
-				E1DFEF322D18BFCF001E7AFD /* ObjC.h */,
-				E1AFBBF82A333D77004E8A3C /* project_fonts */,
-				E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */,
-				E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */,
 				E9E976112608FD8C951A230A /* Assets.xcassets */,
-				E9E97626E2D685C8268AAD5C /* Preview Content */,
-				E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */,
-				E9E97433B81F994F7E441AE3 /* Views */,
-				E9E975997A8FE85D76C63200 /* Models */,
 				E9E973C71B69A29E23AB9B0D /* Controllers */,
 				E9E977DCDBBAEFA016EA4DD1 /* Extensions */,
-				E9E97513447D982B3231EFCD /* Templates */,
+				E9E975997A8FE85D76C63200 /* Models */,
+				E1DFEF322D18BFCF001E7AFD /* ObjC.h */,
+				E1DFEF302D18BFA8001E7AFD /* ObjC.m */,
+				E9E97626E2D685C8268AAD5C /* Preview Content */,
+				E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */,
+				E1AFBBF82A333D77004E8A3C /* project_fonts */,
+				E9E978DE77FD2723E26B3CDE /* Resources */,
+				E1D03DA929DDE2510061E831 /* Settings.bundle */,
+				E9E97B8B66372C78A442F83F /* swiftgen.sh */,
+				E9E9742C24106EEB45A99FFB /* swiftgen.yml */,
 				E9E9739962E5C94DE982482A /* swiftgenInputFiles.xcfilelist */,
 				E9E97ED05425606EE0CF25B0 /* swiftgenOutputFiles.xcfilelist */,
-				E9E9742C24106EEB45A99FFB /* swiftgen.yml */,
-				E9E97B8B66372C78A442F83F /* swiftgen.sh */,
-				E1D03DA929DDE2510061E831 /* Settings.bundle */,
-				E9E978DE77FD2723E26B3CDE /* Resources */,
+				E9E97513447D982B3231EFCD /* Templates */,
+				E1896BD12D18A45100BBB943 /* Tower_iOS.entitlements */,
+				E1DFEF2F2D18BFA8001E7AFD /* Tower_iOS-Bridging-Header.h */,
+				E9E97B1C26E03B3C913AE967 /* Tower_iOSApp.swift */,
+				E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */,
+				E9E97433B81F994F7E441AE3 /* Views */,
 			);
 			path = Tower_iOS;
 			sourceTree = "<group>";
@@ -386,16 +386,16 @@
 		E9E9760709A79B2745E1F42B = {
 			isa = PBXGroup;
 			children = (
+				E9E97A368C0877C4B4E7B387 /* .gitignore */,
 				E15E8B962C6D497E00BC8B90 /* ACKNOWLEDGEMENTS.txt */,
+				E11F4EA929EF99A300D39816 /* Frameworks */,
+				E9E9701FB102ED2BA117951D /* LICENSE */,
+				CB8C39A7ABAE64A61DFBB9CB /* Pods */,
 				E9E97619175184055759984A /* Products */,
+				E9E977DE6191E6A0257F3DC1 /* README.md */,
 				E9E975ED4B2377D212EEC753 /* Tower_iOS */,
 				E9E9742C92C0C45776CAB10B /* Tower_iOSTests */,
 				E9E97E86ECD27CC8CE71A6CF /* Tower_iOSUITests */,
-				E9E97A368C0877C4B4E7B387 /* .gitignore */,
-				E11F4EA929EF99A300D39816 /* Frameworks */,
-				E9E977DE6191E6A0257F3DC1 /* README.md */,
-				E9E9701FB102ED2BA117951D /* LICENSE */,
-				CB8C39A7ABAE64A61DFBB9CB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -420,25 +420,25 @@
 		E9E977DCDBBAEFA016EA4DD1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				E1A6F9482D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift */,
-				E1A6F9462D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift */,
-				E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */,
-				E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */,
-				E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */,
-				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
-				E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */,
-				E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */,
-				E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */,
-				E9E97E5A9111D126202C0CB4 /* Bool+else.swift */,
-				E9E97EC736E76FA9F24A1789 /* CLLocation+init.swift */,
-				E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */,
-				E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */,
-				E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */,
-				E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */,
 				E154D2672C9844CA004751CF /* AVPlayer+callEndTone.swift */,
 				E154D2692C9845C2004751CF /* AVPlayer+callErrorTone.swift */,
 				E154D26B2C984942004751CF /* AVPlayer+callRingbackTone.swift */,
 				E154D26D2C984A22004751CF /* AVPlayer+callStartTone.swift */,
+				E9E97E5A9111D126202C0CB4 /* Bool+else.swift */,
+				E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */,
+				E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */,
+				E9E97EC736E76FA9F24A1789 /* CLLocation+init.swift */,
+				E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */,
+				E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */,
+				E1A6F9482D122C3000A28CA4 /* CMVideoDimensions+CustomStringConvertible.swift */,
+				E1A6F9462D120EBA00A28CA4 /* CMVideoDimensions+Equatable.swift */,
+				E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */,
+				E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */,
+				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
+				E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */,
+				E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */,
+				E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */,
+				E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -446,11 +446,11 @@
 		E9E978DE77FD2723E26B3CDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E181F16C2BF11AE00081A83D /* .gitkeep */,
 				E154D2602C9844B1004751CF /* call-end-tone.mp3 */,
 				E154D2612C9844B1004751CF /* call-error-tone.mp3 */,
 				E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */,
 				E154D25F2C9844B1004751CF /* call-start-tone.mp3 */,
-				E181F16C2BF11AE00081A83D /* .gitkeep */,
 			);
 			path = Resources;
 			sourceTree = "<group>";

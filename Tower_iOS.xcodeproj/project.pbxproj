@@ -40,9 +40,6 @@
 		E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */; };
 		E1E32B312D08A42B00617B34 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B302D08A42B00617B34 /* User.swift */; };
 		E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */; };
-		E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0362C00E0490041180E /* AmazonChimeSDK */; };
-		E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */; };
-		E1ECE03B2C00E0490041180E /* AmazonChimeSDKMedia in Frameworks */ = {isa = PBXBuildFile; productRef = E1ECE03A2C00E0490041180E /* AmazonChimeSDKMedia */; };
 		E9338EF22C7DF7CB008AFF72 /* LoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */; };
 		E9E970154CE4DA57BDFDBB82 /* CLLocationCoordinate2D+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */; };
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
@@ -236,9 +233,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1ECE0392C00E0490041180E /* AmazonChimeSDKMachineLearning in Frameworks */,
-				E1ECE03B2C00E0490041180E /* AmazonChimeSDKMedia in Frameworks */,
-				E1ECE0372C00E0490041180E /* AmazonChimeSDK in Frameworks */,
 				7A633F105F3FC525B55AAB9A /* Pods_Tower_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,9 +504,6 @@
 			);
 			name = Tower_iOS;
 			packageProductDependencies = (
-				E1ECE0362C00E0490041180E /* AmazonChimeSDK */,
-				E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */,
-				E1ECE03A2C00E0490041180E /* AmazonChimeSDKMedia */,
 			);
 			productName = Tower_iOS;
 			productReference = E9E97B2EB631D23B7381BB19 /* Tower_iOS.app */;
@@ -566,7 +557,6 @@
 			);
 			mainGroup = E9E9760709A79B2745E1F42B;
 			packageReferences = (
-				E1ECE0352C00E0490041180E /* XCRemoteSwiftPackageReference "amazon-chime-sdk-ios-spm" */,
 			);
 			productRefGroup = E9E97619175184055759984A /* Products */;
 			projectDirPath = "";
@@ -1156,35 +1146,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		E1ECE0352C00E0490041180E /* XCRemoteSwiftPackageReference "amazon-chime-sdk-ios-spm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/aws/amazon-chime-sdk-ios-spm";
-			requirement = {
-				kind = exactVersion;
-				version = 0.26.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		E1ECE0362C00E0490041180E /* AmazonChimeSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E1ECE0352C00E0490041180E /* XCRemoteSwiftPackageReference "amazon-chime-sdk-ios-spm" */;
-			productName = AmazonChimeSDK;
-		};
-		E1ECE0382C00E0490041180E /* AmazonChimeSDKMachineLearning */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E1ECE0352C00E0490041180E /* XCRemoteSwiftPackageReference "amazon-chime-sdk-ios-spm" */;
-			productName = AmazonChimeSDKMachineLearning;
-		};
-		E1ECE03A2C00E0490041180E /* AmazonChimeSDKMedia */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E1ECE0352C00E0490041180E /* XCRemoteSwiftPackageReference "amazon-chime-sdk-ios-spm" */;
-			productName = AmazonChimeSDKMedia;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E9E970CF23B28B42EF6060D8 /* Project object */;
 }

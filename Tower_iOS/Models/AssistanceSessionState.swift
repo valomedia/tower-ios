@@ -13,12 +13,33 @@ import Foundation
 /// An enum representing the lifecycle of an assistance session.
 ///
 enum AssistanceSessionState: CustomStringConvertible {
+
+    /// No session has been started.
+    ///
     case none
+
+    /// The app is registering an assistance reuest with the backend and connecting to ACS.
+    ///
     case initializing
+
+    /// The app is waiting for an assistant to respond to the assistance reuest.
+    ///
     case waiting
+
+    /// An assistant has accepted the request and is being connected to the user.
+    ///
     case connecting
+
+    /// The user is currently speaking to the assistant.
+    ///
     case connected
+
+    /// The assistant has put the user on hold.
+    ///
     case onHold
+
+    /// The assistance session has ended.
+    ///
     case disconnected
 
     /// A description of the state in English.

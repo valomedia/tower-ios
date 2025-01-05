@@ -14,11 +14,29 @@ import Foundation
 /// An error representing an issue while communicating with the service.
 ///
 enum TowerError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The requested endpoint is not a valid url.
+    ///
     case invalidEndpoint
+
+    /// There are no credentials to authenticate to the api.
+    ///
     case missingCredentials
+
+    /// The credentials are wrong.
+    ///
     case badCredentials
+
+    /// The server responded with a 404-response.
+    ///
     case notFound
+
+    /// The server responded with a 5XX-response.
+    ///
     case serverError
+
+    /// The server responded with a status code other than 200, 401, 404, or 5XX for whatever reason.
+    ///
     case unexpectedError
 
     public var description: String {

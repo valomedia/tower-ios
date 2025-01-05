@@ -42,13 +42,19 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
     // MARK: - Properties
 
+    /// The delegate to send the captured video frames to.
+    ///
     weak var delegate: AVCaptureVideoDataOutputSampleBufferDelegate?
 
+    /// The subset of resolutions supported by all capture devices.
+    ///
     lazy var universallySupportedResolutions: Set<CMVideoDimensions> = {
         let supportedResolutions = captureDevices.map { Set($0.formats.map(\.formatDescription.dimensions)) }
         return supportedResolutions.dropFirst().reduce(supportedResolutions.first) { $0?.intersection($1) } ?? []
     }()
 
+    /// The currently used resolution.
+    ///
     var captureDimensions: CMVideoDimensions? {
         get {
             (captureDevice != nil && isRunning) .!! _captureDimensions
@@ -60,6 +66,8 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     }
     private var _captureDimensions: CMVideoDimensions?
 
+    /// The currently used frame rate.
+    ///
     var captureFrameRate: Float64? {
         get {
             (captureDevice != nil && isRunning) .!! _captureFrameRate
@@ -71,20 +79,28 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     }
     private var _captureFrameRate: Float64?
 
+    /// Whether the capture session is currently running.
+    ///
     var isRunning: Bool {
         captureSession.isRunning
     }
-    
+
+    /// Whether the camera that is currently in use is one facing the user.
+    ///
     var isUsingFrontCamera: Bool {
         guard let captureDevice else { return false }
         return captureDevice.position == .front
     }
-    
+
+    /// Whether the camer that is currently in use is one facing the world.
+    ///
     var isUsingBackCamera: Bool {
         guard let captureDevice else { return false }
         return captureDevice.position == .back
     }
-    
+
+    /// Whether the flashlight is currenlty on.
+    ///
     var torchEnabled: Bool = false {
         didSet {
             if let captureDevice, torchAvailable {
@@ -108,7 +124,9 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             }
         }
     }
-    
+
+    /// Whether a flashlight is available on the camera that is in use.
+    ///
     var torchAvailable: Bool {
         guard let captureDevice else { return false }
         return captureDevice.hasTorch && captureDevice.isTorchAvailable
@@ -160,6 +178,14 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
     // MARK: - Methods
 
+    /// Start the capture session.
+    ///
+    /// This turns on the camera, once this is called, video will be output to the delegate. Before this is called,
+    /// most methods (like taking a photo or setting the format) will have no effect.
+    ///
+    /// - Parameters:
+    ///   - onCaptureFailed: A callback to invoke when the capture session cannot be started for whatever reason.
+    ///
     func start(onCaptureFailed: @escaping (Error) -> Void) {
         guard captureDevice != nil else {
             print("No capture device available.")
@@ -192,6 +218,11 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         }
     }
 
+    /// Stop the capture session.
+    ///
+    /// This can be called to end the capture session, once the cameras are no longer needed. Afterwards, capture can
+    /// be restarted using the `start()` method.
+    ///
     func stop() {
         guard isCaptureSessionConfigured, isRunning else { return }
 
@@ -200,6 +231,11 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         }
     }
 
+    /// Switch to the next available camera.
+    ///
+    /// Currently this will simply toggle back and forth between the front and back camera (assuming the device has
+    /// both a front and a back camera, and both are available, which is currently true for all supported devices).
+    ///
     func switchCamera() {
         if let captureDevice, let index = availableCaptureDevices.firstIndex(of: captureDevice) {
             let nextIndex = (index + 1) % availableCaptureDevices.count
@@ -208,7 +244,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             self.captureDevice = AVCaptureDevice.default(for: .video)
         }
     }
-    
+
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error {
             print("Error capturing photo: \(error.localizedDescription)")
@@ -248,6 +284,11 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         delegate?.captureOutput?(output, didDrop: sampleBuffer, from: connection)
     }
 
+    /// Take a photo.
+    ///
+    /// - Throws: 
+    /// - Returns: The PhotoData for the photo that was taken.
+    ///
     func takePhoto() async throws -> PhotoData {
         guard photoOutput.availablePhotoCodecTypes.contains(.jpeg) else {
             throw CameraError.codecUnavailable

@@ -29,20 +29,46 @@ class CallController: NSObject, ObservableObject {
     /// The maximum number of realtime data messages to send in one burst.
     ///
     static let dataMessageMaxBurstCount = 99;
-    
+
+    /// The id for the data channel everything except photos is transmitted over.
+    ///
     static let durableDataChannelId: Int32 = 1000;
-    
+
+    /// The id for the data channel the photos are transmitted over.
+    ///
     static let lossyDataChannelId: Int32 = 1010;
-    
+
+    /// The bandwith for the data channel everything except photos is transmitted over.
+    ///
     static let durableDataChannelBandwidthKbps: Int32 = 32;
-    
+
+    /// The bandwidth for the data channel the photos are transmitted over.
+    ///
     static let lossyDataChannelBandwidthKbps: Int32 = 512;
-    
-    static let lossyDataChannelChunkedMessageDelay = 1.0;
-    
-    static let dataChannelRetrySendDelay = 2.0;
-    
-    static let dataChannelEstablishDelay = 1.0;
+
+    /// The delay between large messages on the lossy data channel in seconds.
+    ///
+    /// In theory this should be calculatable from `dataMessageMaxSize` and `lossyDataChannelBandwidthKbps`, which
+    /// would result in a delay of half a second, but for some reason this results in bandwidth exceeded exceptions,
+    /// so it's just fixed at one second for now.
+    ///
+    static let lossyDataChannelChunkedMessageDelay: Double = 1.0;
+
+    /// How long to wait before resending a message that failed to send.
+    ///
+    /// We will only retry sending messages on the durable data channel. Those will be resent on a loop until it
+    /// finally works. Since the messages are too small, it's unlikely the resends would ever accumulate to the point
+    /// where that becomes a problem, and if it does, other issues have rendered the call unrecoverably broken before
+    /// then anyways.
+    ///
+    static let dataChannelRetrySendDelay: Double = 2.0;
+
+    /// How long to wait before establishing the data channel after the call connects.
+    ///
+    /// For some reason, establishing the data channel immediately sometimes throws NSExceptions, so we add a little
+    /// bit of a delay.
+    ///
+    static let dataChannelEstablishDelay: Double = 1.0;
 
     // MARK: - Properties
 
@@ -90,6 +116,11 @@ class CallController: NSObject, ObservableObject {
     ///
     var onCallError: ((Error) -> Void)? = nil
 
+    /// Start a new assistance session.
+    ///
+    /// This will make a request to the /requestAssistance-endpoint, connect to ACS using the token returned by the
+    /// endpoint and wait for an incoming call from an assistant.
+    ///
     func startSession(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
         playRingbackTone()
         sessionState = .initializing
@@ -123,6 +154,11 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    /// End the current assistance session.
+    ///
+    /// If the caller is still waiting for an assistant, the request will be cancelled, if the assistant is already on
+    /// the line, the call will be hung up.
+    ///
     func endSession() {
         stopRingbackTone()
         playEndTone()
@@ -141,7 +177,12 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
-
+    /// Pause the outgoing video stream.
+    ///
+    /// This will cleanly stop the outgoing video stream, so tower-staff can tell the difference between a video that
+    /// cuts off because of a bad connection, and a video that is stopped on purpose. Currently, this is only used when
+    /// the app goes into the background (and thus loses access to the camera).
+    ///
     func pauseVideo() {
         guard let call, let rawOutgoingVideoStream else { return }
         Task {
@@ -154,6 +195,10 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    /// Resume the outgoing video stream.
+    ///
+    /// This will resume the video after a call to `pauseVideo()`.
+    ///
     func resumeVideo() {
         guard let call, let rawOutgoingVideoStream else { return }
         Task {
@@ -166,6 +211,16 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    /// Send a Message through a data channel.
+    ///
+    /// This will send a given Message through a data channel. The DataChannelSender to be used and whether to retry on
+    /// failure can be optionally specified.
+    ///
+    /// - Parameters:
+    ///   - message: The Message to send.
+    ///   - dataChannelSender: The DataChannelSender to use, defaults to using the durable data channel.
+    ///   - retryOnFailure: Whether to retry if sending fails, defaults to true.
+    ///
     func sendMessage(_ message: Message, dataChannelSender: DataChannelSender? = nil, retryOnFailure: Bool = true) {
         do {
             sendMessage(
@@ -181,6 +236,16 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    /// Send Data through a data channel.
+    ///
+    /// This will send the given Data through a data channel. The DataChannelSender to be used an whether to retry on
+    /// failure can be optionally specified.
+    ///
+    /// - Parameters:
+    ///   - data: The Data to send.
+    ///   - dataChannelSender: The DataChannelSender to use, defaults to using the durable data channel.
+    ///   - retryOnFailure: Whether to retry if sending fails, defaults to true.
+    ///
     func sendMessage(_ data: Data, dataChannelSender: DataChannelSender? = nil, retryOnFailure: Bool = true) {
         guard let sender = dataChannelSender ?? self.dataChannelSender else { return }
         do {
@@ -198,6 +263,10 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    /// Send a Message through the lossy data channel.
+    ///
+    /// This will send a given message through the lossy data channel. It will not retry if sending fails.
+    ///
     func sendMessageLossy(_ message: Message) {
         sendMessage(message, dataChannelSender: dataChannelSenderLossy, retryOnFailure: false)
     }
@@ -397,10 +466,16 @@ class CallController: NSObject, ObservableObject {
 
 // MARK: CallHandler
 
+/// Handler for things related to the call itself.
+///
+/// This contains methods for handling incoming calls and changes to the incoming call's state.
+///
 class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
 
     // MARK: - Properties
 
+    /// The CallController this CallHandler is attached to.
+    ///
     weak var callController: CallController?
 
     // MARK: - Methods
@@ -440,6 +515,11 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
 
 // MARK: VideoHandler
 
+/// Handler for things related to the video stream.
+///
+/// This contains methods for handling changes to the state and format of the video stream in ACS, handling orientation
+/// changes, as well as sending out the actual video frames as they come in.
+///
 class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // MARK: - Static properties
@@ -467,6 +547,8 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
     // MARK: - Properties
 
+    /// The CallController this VideoHandler is attached to.
+    ///
     weak var callController: CallController?
 
     weak private var virtualOutgoingVideoStream: VirtualOutgoingVideoStream?
@@ -557,15 +639,16 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
 // MARK: LocationHandler
 
-/// The controller for location services.
+/// Handler for location data and location permissions.
 ///
-/// This contains all the application logic around retrieving locations.
+/// This contains methods for handling changes to the location permissions granted by the user, and for sending out the
+/// actual location data when it becomes available.
 ///
 class LocationHandler: NSObject, CLLocationManagerDelegate {
 
     // MARK: - Properties
 
-    /// The call controller to use to send location messages.
+    /// The CallController this LocationHandler is attached to.
     ///
     weak var callController: CallController?
 
@@ -603,21 +686,28 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
 
 // MARK: DataHandler
 
+/// Handler for things related to the data channels.
+///
+/// This contains methods for subscribing to a data channel when it gets established, and for handling the various
+/// messages as they come in.
+///
 class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiverDelegate {
-    
+
     // MARK: - Properties
-    
+
+    /// The CallController this Data Handler is attached to.
+    ///
     weak var callController: CallController?
-    
+
     // MARK: - Methods
-    
+
     func dataChannelCallFeature(
         _ dataChannelCallFeature: DataChannelCallFeature,
         didCreateReceiver args: DataChannelReceiverCreatedEventArgs
     ) {
         args.receiver.delegate = self
     }
-    
+
     func dataChannelReceiver(
         _ dataChannelReceiver: DataChannelReceiver,
         didReceiveMessage args: PropertyChangedEventArgs
@@ -628,7 +718,7 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
             let data = dataChannelReceiver.receiveMessage()?.data,
             let message = try? JSONDecoder.shared.decode(DataMessage.self, from: data)
         else { return }
-        
+
         switch message {
         case .switchCameraRequest: handleSwitchCameraRequest()
         case .toggleTorchRequest: handleToggleTorchRequest()
@@ -645,13 +735,13 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
         callController.cameraController.switchCamera()
         callController.sendMessage(DataMessage.switchCameraResponse)
     }
-    
+
     private func handleToggleTorchRequest() {
         guard let callController else { return }
         callController.cameraController.torchEnabled.toggle();
         callController.sendMessage(DataMessage.toggleTorchResponse)
     }
-    
+
     private func handleLocationRequest() {
         guard let callController else { return }
         do {
@@ -691,6 +781,9 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
                     return String(encodedData[start..<end])
                 }
                 for (index, imageData) in chunks.enumerated() {
+                    // For now, just blast the messages out via the lossy channel with no retransmission mechanism. The
+                    // way this is implemented in ACS right now, it's not lossy anyways, but if it were, in the worst
+                    // case, the assistant will not get the photo and just have to hit the button again.
                     callController.sendMessageLossy(
                         DataMessage.photoDataEvent(
                             imageData: imageData,

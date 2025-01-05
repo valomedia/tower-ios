@@ -125,8 +125,6 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     private var deviceInput: AVCaptureDeviceInput?
     private var orientation = UIInterfaceOrientation.portrait
     private var photoOutputContinuations: [CheckedContinuation<PhotoData, Error>] = []
-    private var sinks = ConcurrentMutableSet()
-    private var captureSourceObservers = ConcurrentMutableSet()
 
     private var frontCaptureDevice: AVCaptureDevice? {
         AVCaptureDevice.default(deviceType, for: .video, position: .front)

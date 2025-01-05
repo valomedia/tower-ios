@@ -32,7 +32,6 @@
 		E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */; };
 		E1CB1BDD2C5FEEEA0078AF3A /* ImageSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */; };
 		E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */; };
-		E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */; };
 		E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E1D03DA929DDE2510061E831 /* Settings.bundle */; };
 		E1DF7A922CEA645C000498C0 /* CallQualityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1DF7A912CEA645C000498C0 /* CallQualityData.swift */; };
 		E1DFEF312D18BFA8001E7AFD /* ObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = E1DFEF302D18BFA8001E7AFD /* ObjC.m */; };
@@ -156,7 +155,6 @@
 		E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoData.swift; sourceTree = "<group>"; };
 		E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSize.swift; sourceTree = "<group>"; };
 		E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+compacted.swift"; sourceTree = "<group>"; };
-		E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentMutableSet.swift; sourceTree = "<group>"; };
 		E1D03DA929DDE2510061E831 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E1DF7A912CEA645C000498C0 /* CallQualityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityData.swift; sourceTree = "<group>"; };
 		E1DFEF2F2D18BFA8001E7AFD /* Tower_iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tower_iOS-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -338,7 +336,6 @@
 				E1DF7A912CEA645C000498C0 /* CallQualityData.swift */,
 				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
 				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
-				E1CF03352C605A2200A5F303 /* ConcurrentMutableSet.swift */,
 				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
 				E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */,
@@ -809,7 +806,6 @@
 				E9E972ED7746A4DADA73309F /* Bool+else.swift in Sources */,
 				E1DFEF312D18BFA8001E7AFD /* ObjC.m in Sources */,
 				E9E97ACB93E9A4DBEC1906D6 /* CLLocation+init.swift in Sources */,
-				E1CF03362C605A2200A5F303 /* ConcurrentMutableSet.swift in Sources */,
 				E19DC87F2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift in Sources */,
 				E9E97293EE5E7BBDD50F4281 /* JSONEncoder+shared.swift in Sources */,
 				E9E977563F415BA3CF2FCDAA /* Font+tower.swift in Sources */,

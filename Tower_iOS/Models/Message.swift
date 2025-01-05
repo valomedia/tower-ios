@@ -155,7 +155,16 @@ enum DataMessage: Message {
     ///   - rotationAngle: Device rotation clockwise relative to landscape left, rounded to a multiple of 90.
     ///
     case orientationEvent(rotationAngle: Double)
-    
+
+    /// A userHelloEvent data message.
+    ///
+    /// The is sent once when the call starts to transmit all the information the assistant needs about the call.
+    ///
+    /// - Parameters:
+    ///   - systemInfo: Information about the app the user is using to connect.
+    ///
+    case userHelloEvent(clientInfo: ClientInfo)
+
     // Mark: - Life cycle methods
 
     /// Initializer for creating a locationEvent from a Location.

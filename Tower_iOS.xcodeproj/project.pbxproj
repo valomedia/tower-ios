@@ -26,6 +26,7 @@
 		E1B5A69E2D2B0E700021D8CE /* AVPlayerItem+callStartTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5A69C2D2B0E700021D8CE /* AVPlayerItem+callStartTone.swift */; };
 		E1B5A69F2D2B0E700021D8CE /* AVPlayerItem+callRingbackTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5A69B2D2B0E700021D8CE /* AVPlayerItem+callRingbackTone.swift */; };
 		E1B5A6A02D2B0E700021D8CE /* AVPlayerItem+callErrorTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5A69A2D2B0E700021D8CE /* AVPlayerItem+callErrorTone.swift */; };
+		E1B5A6A22D2B38A00021D8CE /* ClientInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B5A6A12D2B38A00021D8CE /* ClientInfo.swift */; };
 		E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */; };
 		E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */; };
 		E1CB1BD72C5B87860078AF3A /* CameraError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB1BD62C5B87860078AF3A /* CameraError.swift */; };
@@ -148,6 +149,7 @@
 		E1B5A69A2D2B0E700021D8CE /* AVPlayerItem+callErrorTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerItem+callErrorTone.swift"; sourceTree = "<group>"; };
 		E1B5A69B2D2B0E700021D8CE /* AVPlayerItem+callRingbackTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerItem+callRingbackTone.swift"; sourceTree = "<group>"; };
 		E1B5A69C2D2B0E700021D8CE /* AVPlayerItem+callStartTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerItem+callStartTone.swift"; sourceTree = "<group>"; };
+		E1B5A6A12D2B38A00021D8CE /* ClientInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInfo.swift; sourceTree = "<group>"; };
 		E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+image.swift"; sourceTree = "<group>"; };
 		E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image_Orientation+init.swift"; sourceTree = "<group>"; };
 		E1CB1BD62C5B87860078AF3A /* CameraError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraError.swift; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				E1DF7A912CEA645C000498C0 /* CallQualityData.swift */,
 				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
 				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
+				E1B5A6A12D2B38A00021D8CE /* ClientInfo.swift */,
 				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
 				E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */,
@@ -761,6 +764,7 @@
 				E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */,
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
+				E1B5A6A22D2B38A00021D8CE /* ClientInfo.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
 				E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */,

@@ -70,6 +70,14 @@ class CallController: NSObject, ObservableObject {
     ///
     static let dataChannelEstablishDelay: Double = 1.0;
 
+    /// How long to wait between messages when sending multiple messages through the durable data channel.
+    ///
+    /// When the data channel is established, multiple messages are sent out immediately. Because the data channel
+    /// implementation on iOS is a little bit brittle, we add a small delay between messages, to reduce the likelyhood
+    /// of ACS freaking out and starting to throw NSExceptions our way.
+    ///
+    static let dataChannelMessageBurstDelay: Double = 1.0;
+
     // MARK: - Properties
 
     /// The life-cycle state of the current session.
@@ -345,7 +353,7 @@ class CallController: NSObject, ObservableObject {
         options.forEveryone = true
         try await (call.!?).hangUp(options: options)
     }
-    
+
     /// Start updating the location.
     ///
     /// - Throws: CLError
@@ -368,36 +376,38 @@ class CallController: NSObject, ObservableObject {
     }
 
     fileprivate func establishDataChannel(for call: Call) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelEstablishDelay) { [weak self] in
-            guard let self else { return }
+        let dataChannelCallFeature = call.feature(Features.dataChannel)
+        dataChannelCallFeature.delegate = self.dataHandler
+        self.dataChannelCallFeature = dataChannelCallFeature
 
-            let dataChannelCallFeature = call.feature(Features.dataChannel)
-            dataChannelCallFeature.delegate = self.dataHandler
-            self.dataChannelCallFeature = dataChannelCallFeature
+        let durableDataChannelSenderOptions = DataChannelSenderOptions()
+        durableDataChannelSenderOptions.channelId = CallController.durableDataChannelId
+        durableDataChannelSenderOptions.bitrateInKbps = CallController.durableDataChannelBandwidthKbps
+        durableDataChannelSenderOptions.priority = .high
+        durableDataChannelSenderOptions.reliability = .durable
 
-            let durableDataChannelSenderOptions = DataChannelSenderOptions()
-            durableDataChannelSenderOptions.channelId = CallController.durableDataChannelId
-            durableDataChannelSenderOptions.bitrateInKbps = CallController.durableDataChannelBandwidthKbps
-            durableDataChannelSenderOptions.priority = .high
-            durableDataChannelSenderOptions.reliability = .durable
+        let dataChannelSender
+            = dataChannelCallFeature.getDataChannelSender(options: durableDataChannelSenderOptions)
+        dataChannelSender.setParticipants(participants: call.remoteParticipants.map(\.identifier))
 
-            let dataChannelSender
-                = dataChannelCallFeature.getDataChannelSender(options: durableDataChannelSenderOptions)
-            dataChannelSender.setParticipants(participants: call.remoteParticipants.map(\.identifier))
+        let lossyDataChannelSenderOptions = DataChannelSenderOptions()
+        lossyDataChannelSenderOptions.channelId = CallController.lossyDataChannelId
+        lossyDataChannelSenderOptions.bitrateInKbps = CallController.lossyDataChannelBandwidthKbps
+        lossyDataChannelSenderOptions.priority = .normal
+        lossyDataChannelSenderOptions.reliability = .lossy
 
-            let lossyDataChannelSenderOptions = DataChannelSenderOptions()
-            lossyDataChannelSenderOptions.channelId = CallController.lossyDataChannelId
-            lossyDataChannelSenderOptions.bitrateInKbps = CallController.lossyDataChannelBandwidthKbps
-            lossyDataChannelSenderOptions.priority = .normal
-            lossyDataChannelSenderOptions.reliability = .lossy
+        let dataChannelSenderLossy
+            = dataChannelCallFeature.getDataChannelSender(options: lossyDataChannelSenderOptions)
+        dataChannelSenderLossy.setParticipants(participants: call.remoteParticipants.map(\.identifier))
 
-            let dataChannelSenderLossy
-                = dataChannelCallFeature.getDataChannelSender(options: lossyDataChannelSenderOptions)
-            dataChannelSenderLossy.setParticipants(participants: call.remoteParticipants.map(\.identifier))
+        self.dataChannelSender = dataChannelSender
+        self.dataChannelSenderLossy = dataChannelSenderLossy
 
-            self.dataChannelSender = dataChannelSender
-            self.dataChannelSenderLossy = dataChannelSenderLossy
-            self.videoHandler?.updateOrientation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelMessageBurstDelay) { [weak self] in
+            self?.videoHandler?.updateOrientation()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2 * CallController.dataChannelMessageBurstDelay) { [weak self] in
+            self?.sendMessage(DataMessage.userHelloEvent(clientInfo: ClientInfo()))
         }
     }
 
@@ -497,7 +507,9 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
             guard let callController = self?.callController else { return }
             callController.sessionState = .connected
             callController.playCallTone(AVPlayerItem.callStartTone)
-            callController.establishDataChannel(for: call)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelEstablishDelay) { [weak self] in
+            self?.callController?.establishDataChannel(for: call)
         }
     }
 

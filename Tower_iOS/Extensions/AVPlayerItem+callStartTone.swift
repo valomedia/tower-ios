@@ -1,29 +1,29 @@
 //
-//  AVPlayer+callStartTone.swift
-//  Tower_iOS
+//  AVPlayerItem+callStartTone.swift
+//  tower-ios
 //
 //  Created by Jean-Pierre Höhmann on 2024-09-16.
+//  Copyright (c) 2025 valo.media GmbH. All rights reserved.
 //
 
 import Foundation
 import AVFoundation
 
+// MARK: AVPlayerItem
 
-// MARK: AVPlayer
+extension AVPlayerItem {
 
-// MARK: + callStartTone
+    // MARK: + callStartTone
 
-extension AVPlayer {
-    
-    /// An AVPlayer for a sound to play once, when the assistant joins the call.
+    /// An AVPlayerItem for a sound to play once, when the assistant joins the call.
     ///
     /// - Copyright: Asset by UNIVERSFIELD, see ACKNOWLEDGEMENTS.txt for more information.
     ///
-    static let callStartTone: AVPlayer = {
+    static let callStartTone: AVPlayerItem = {
         guard let url = Bundle.main.url(forResource: "call-start-tone", withExtension: "mp3") else {
             fatalError("Failed to find source file.")
         }
-        return AVPlayer(url: url)
+        return AVPlayerItem(url: url)
     }()
-    
+
 }

@@ -88,6 +88,7 @@ class CallController: NSObject, ObservableObject {
     fileprivate var rawOutgoingVideoStream: VirtualOutgoingVideoStream?
 
     private let audioSession = AVAudioSession.sharedInstance()
+    private let callTonePlayer = AVPlayer()
 
     private var callClient: CallClient?
     private var callAgent: CallAgent?
@@ -122,7 +123,7 @@ class CallController: NSObject, ObservableObject {
     /// endpoint and wait for an incoming call from an assistant.
     ///
     func startSession(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
-        playRingbackTone()
+        playCallTone(AVPlayerItem.callRingbackTone, repeating: true)
         sessionState = .initializing
 
         let callHandler = CallHandler()
@@ -160,8 +161,7 @@ class CallController: NSObject, ObservableObject {
     /// the line, the call will be hung up.
     ///
     func endSession() {
-        stopRingbackTone()
-        playEndTone()
+        playCallTone(AVPlayerItem.callEndTone)
 
         Task {
             do {
@@ -310,8 +310,7 @@ class CallController: NSObject, ObservableObject {
     }
 
     fileprivate func handleSessionError(_ error: Error) {
-        stopRingbackTone()
-        playErrorTone()
+        playCallTone(AVPlayerItem.callErrorTone)
         disposeSession()
         DispatchQueue.main.async { self.onCallError?(error) }
     }
@@ -402,28 +401,23 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
-    fileprivate func playRingbackTone() {
-        AVPlayer.callRingbackTone.seek(to: CMTime.zero)
-        AVPlayer.callRingbackTone.play()
+    fileprivate func playCallTone(_ callTone: AVPlayerItem, repeating: Bool = false) {
+        callTonePlayer.replaceCurrentItem(with: callTone)
+        callTonePlayer.seek(to: .zero)
+        callTonePlayer.play()
+        if repeating {
+            NotificationCenter.default.addObserver(
+                forName: .AVPlayerItemDidPlayToEndTime,
+                object: callTonePlayer.currentItem,
+                queue: .main) { [weak self] _ in
+                    self?.callTonePlayer.seek(to: CMTime.zero)
+                    self?.callTonePlayer.play()
+                }
+        }
     }
 
-    fileprivate func stopRingbackTone() {
-        AVPlayer.callRingbackTone.pause()
-    }
-
-    fileprivate func playErrorTone() {
-        AVPlayer.callErrorTone.seek(to: CMTime.zero)
-        AVPlayer.callErrorTone.play()
-    }
-
-    fileprivate func playStartTone() {
-        AVPlayer.callStartTone.seek(to: CMTime.zero)
-        AVPlayer.callStartTone.play()
-    }
-
-    fileprivate func playEndTone() {
-        AVPlayer.callEndTone.seek(to: CMTime.zero)
-        AVPlayer.callEndTone.play()
+    fileprivate func stopCallTone() {
+        callTonePlayer.replaceCurrentItem(with: nil)
     }
 
     private func createSession() async throws -> CommunicationTokenCredential {
@@ -493,7 +487,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
         DispatchQueue.main.async { [weak self] in 
             guard let callController = self?.callController else { return }
             callController.sessionState = .connecting
-            callController.stopRingbackTone()
+            callController.stopCallTone()
             Task { await callController.answerIncomingCall(incomingCall) }
         }
     }
@@ -502,7 +496,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let callController = self?.callController else { return }
             callController.sessionState = .connected
-            callController.playStartTone()
+            callController.playCallTone(AVPlayerItem.callStartTone)
             callController.establishDataChannel(for: call)
         }
     }
@@ -805,14 +799,13 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
     private func handleHoldEvent() {
         guard let callController else { return }
         callController.sessionState = .onHold
-        callController.playRingbackTone()
+        callController.playCallTone(AVPlayerItem.callRingbackTone, repeating: true)
     }
     
     private func handleResumeEvent() {
         guard let callController else { return }
         callController.sessionState = .connected
-        callController.stopRingbackTone()
-        callController.playStartTone()
+        callController.playCallTone(AVPlayerItem.callStartTone)
     }
 
 }

@@ -1,9 +1,9 @@
 //
 //  TowerError.swift
-//  Tower_iOS
+//  tower-ios
 //
 //  Created by Jean-Pierre Höhmann on 2023-04-19.
-//
+//  Copyright (c) 2023-2025 valo.media GmbH. All rights reserved.
 //
 
 import Foundation
@@ -14,10 +14,29 @@ import Foundation
 /// An error representing an issue while communicating with the service.
 ///
 enum TowerError: Error, LocalizedError, CustomStringConvertible {
+
+    /// The requested endpoint is not a valid url.
+    ///
     case invalidEndpoint
+
+    /// There are no credentials to authenticate to the api.
+    ///
     case missingCredentials
+
+    /// The credentials are wrong.
+    ///
     case badCredentials
+
+    /// The server responded with a 404-response.
+    ///
+    case notFound
+
+    /// The server responded with a 5XX-response.
+    ///
     case serverError
+
+    /// The server responded with a status code other than 200, 401, 404, or 5XX for whatever reason.
+    ///
     case unexpectedError
 
     public var description: String {
@@ -28,6 +47,8 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
             return "Credentials are missing"
         case .badCredentials:
             return "Credentials are invalid"
+        case .notFound:
+            return "Assistance request not found"
         case .serverError:
             return "Server error"
         case .unexpectedError:
@@ -43,6 +64,8 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
             return "Zugangsdaten fehlen"
         case .badCredentials:
             return "Zugangsdaten falsch"
+        case .notFound:
+            return "Hilfegesuch nicht gefunden"
         case .serverError:
             return "Serverfehler"
         case .unexpectedError:

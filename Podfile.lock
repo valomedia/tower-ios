@@ -1,0 +1,20 @@
+PODS:
+  - AzureCommunicationCalling (2.14.1):
+    - AzureCommunicationCommon (~> 1.0)
+  - AzureCommunicationCommon (1.2.0)
+
+DEPENDENCIES:
+  - AzureCommunicationCalling (~> 2.0)
+
+SPEC REPOS:
+  trunk:
+    - AzureCommunicationCalling
+    - AzureCommunicationCommon
+
+SPEC CHECKSUMS:
+  AzureCommunicationCalling: 8907740906f89374676d0b28ae1de9af491a950b
+  AzureCommunicationCommon: 130a21be2be889f83dc4adbf994af6285f962de8
+
+PODFILE CHECKSUM: ea5f94050031d937f8e37128ca7c53fe0a71281a
+
+COCOAPODS: 1.16.2

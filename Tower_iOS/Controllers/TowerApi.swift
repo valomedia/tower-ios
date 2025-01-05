@@ -1,14 +1,12 @@
 //
 //  TowerApi.swift
-//  Tower_iOS
+//  tower-ios
 //
 //  Created by Jean-Pierre Höhmann on 2023-04-20.
-//
+//  Copyright (c) 2023-2025 valo.media GmbH. All rights reserved.
 //
 
 import Foundation
-import AmazonChimeSDK
-
 
 // MARK: TowerApi
 
@@ -35,50 +33,39 @@ class TowerApi {
         try await request()
     }
 
-    /// Make a request to the start endpoint.
+    /// Make a request for an assistance session.
+    /// 
+    /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the
+    /// queue of users waiting for an assistant.
     ///
-    /// The start endpoint will create both the room and the attendee.
-    ///
-    /// - Returns: A MeetingSessionConfiguration with the new meeting and attendee already configured in it.
+    /// - Returns: The RequestAssistanceResponse with the UserToken.
     /// - Throws:
-    ///
-    class func start() async throws -> MeetingSessionConfiguration {
-        let data = try await request("POST", "/start");
-        let joinResponse = try JSONDecoder.shared.decode(JoinResponse.self, from: data)
-        let meeting = joinResponse.joinInfo.meetingResponse.meeting
-        let attendee = joinResponse.joinInfo.attendeeResponse.attendee
-
-        return MeetingSessionConfiguration(
-                createMeetingResponse: CreateMeetingResponse(
-                        meeting: Meeting(
-                                externalMeetingId: meeting.externalMeetingId,
-                                mediaPlacement: MediaPlacement(
-                                        audioFallbackUrl: meeting.mediaPlacement.audioFallbackUrl ?? "",
-                                        audioHostUrl: meeting.mediaPlacement.audioHostUrl,
-                                        signalingUrl: meeting.mediaPlacement.signalingUrl,
-                                        turnControlUrl: meeting.mediaPlacement.turnControlUrl ?? "",
-                                        eventIngestionUrl: meeting.mediaPlacement.eventIngestionUrl),
-                                mediaRegion: meeting.mediaRegion,
-                                meetingId: meeting.meetingId
-                        )
-                ),
-                createAttendeeResponse: CreateAttendeeResponse(
-                        attendee: Attendee(
-                                attendeeId: attendee.attendeeId,
-                                externalUserId: attendee.externalUserId,
-                                joinToken: attendee.joinToken)
-                )
-        )
+    /// 
+    class func requestAssistance() async throws -> RequestAssistanceResponse {
+        try JSONDecoder.shared.decode(
+            RequestAssistanceResponse.self,
+            from: await request ("POST", "/requestAssistance"))
     }
 
-    /// Make a request to the end endpoint.
-    ///
-    /// The end endpoint will remove the meeting, causing all attendee connections to hang up.
-    ///
+    /// Signal to the backend, that the caller is still waiting.
+    /// 
+    /// This will inform the backend, that the caller is still on the line, so the assistance request doesn't time out.
+    /// 
     /// - Throws:
-    ///
-    class func end(sessionConfiguration: MeetingSessionConfiguration) async throws -> Void {
-        try await request("POST", "/end?meetingId=" + sessionConfiguration.meetingId);
+    /// 
+    class func awaitAssistance() async throws -> Void {
+        try await request ("POST", "/awaitAssistance")
+    }
+
+    /// Signal to the backend, that the caller has given up on waiting.
+    /// 
+    /// This will inform the backend, that the caller has cancelled the assistance request and no assistant needs to
+    /// respond anymore.
+    /// 
+    /// - Throws:
+    /// 
+    class func cancelAssistance() async throws -> Void {
+        try await request("POST", "/cancelAssistance")
     }
 
     @discardableResult
@@ -105,6 +92,8 @@ class TowerApi {
             return data
         case 401:
             throw TowerError.badCredentials
+        case 404:
+            throw TowerError.notFound
         case 500...599:
             throw TowerError.serverError
         default:

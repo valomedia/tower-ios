@@ -27,7 +27,7 @@ enum AssistanceSessionState: CustomStringConvertible {
         switch self {
         case .none: return ""
         case .initializing: return "Establishing session…"
-        case .waiting: return "Warten auf Assistenz…"
+        case .waiting: return "Waiting for assistance…"
         case .connecting: return "Connecting call…"
         case .connected: return "Connected"
         case .onHold: return "On hold…"

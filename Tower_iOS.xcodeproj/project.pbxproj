@@ -74,7 +74,6 @@
 		E9E97AD55211643704B83C6C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */; };
 		E9E97B8E8042313538C7361C /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = E9E9742C24106EEB45A99FFB /* swiftgen.yml */; };
 		E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EFA3591C2A194430BD3 /* CallSheet.swift */; };
-		E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */; };
 		E9E97D676B5FC0654D0AE376 /* TrailingIconLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */; };
 		E9E97D9435E71A5FB03C32C2 /* Bool+then.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */; };
 		E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */; };
@@ -167,7 +166,6 @@
 		E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinResponse.swift; sourceTree = "<group>"; };
 		E9E97082EE84DC39CD0A5259 /* Settings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Settings.stencil; sourceTree = "<group>"; };
 		E9E970A06C0834C19E99DE33 /* Tower_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tower_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+shared.swift"; sourceTree = "<group>"; };
@@ -339,7 +337,6 @@
 				E9E97C431C208C3170E8D87C /* DataMessageTopic.swift */,
 				E9E97EFFD492CB4CD07DBB2A /* ErrorWrapper.swift */,
 				E1CB1BDC2C5FEEEA0078AF3A /* ImageSize.swift */,
-				E9E9705FDC69B0006A0F2A88 /* JoinResponse.swift */,
 				E9E9780CA784F10F6DA82E56 /* Location.swift */,
 				E1A6F94C2D1376F300A28CA4 /* Message.swift */,
 				E1CB1BDA2C5FEDF40078AF3A /* PhotoData.swift */,
@@ -789,7 +786,6 @@
 				E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */,
 				E9E97DAF49ACFBD2BD94CB5F /* TowerApi.swift in Sources */,
 				E1CF03322C603F1000A5F303 /* Sequence+compacted.swift in Sources */,
-				E9E97D4F27144BB2E5B00D70 /* JoinResponse.swift in Sources */,
 				E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */,
 				E154D2682C9844CA004751CF /* AVPlayer+callEndTone.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,

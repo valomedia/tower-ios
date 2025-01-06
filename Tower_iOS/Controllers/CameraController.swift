@@ -369,6 +369,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
         self._captureDimensions = updateDeviceCaptureFormat(CallQualityLevel.veryHigh.resolution.dimensions)
         self._captureFrameRate = updateVideoFrameRate(CallQualityLevel.veryHigh.frameRate)
+        updateVideoOutputConnection()
 
         isCaptureSessionConfigured = true
 
@@ -431,6 +432,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     
     private func updateVideoOutputConnection() {
         guard let videoOutputConnection = videoOutput.connection(with: .video) else { return }
+        videoOutputConnection.videoOrientation =  AVCaptureVideoOrientation.landscapeRight
         if videoOutputConnection.isVideoMirroringSupported {
             videoOutputConnection.isVideoMirrored = isUsingFrontCamera
         }

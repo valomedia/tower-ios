@@ -88,6 +88,8 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    @Published fileprivate(set) var viewfinderImage: Image?
+
     fileprivate let cameraController = CameraController()
     fileprivate let locationManager = CLLocationManager()
 
@@ -524,7 +526,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
 /// Handler for things related to the video stream.
 ///
 /// This contains methods for handling changes to the state and format of the video stream in ACS, handling orientation
-/// changes, as well as sending out the actual video frames as they come in.
+/// changes, as well as sending out the actual video frames as they come in, and adding them to the viewfinder.
 ///
 class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
@@ -580,11 +582,13 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
     func captureOutput(_: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from _: AVCaptureConnection) {
         guard
+            let callController,
             let imageBuffer = sampleBuffer.imageBuffer,
-            let virtualOutgoingVideoStream = callController?.rawOutgoingVideoStream,
+            let virtualOutgoingVideoStream = callController.rawOutgoingVideoStream,
             virtualOutgoingVideoStream.state == .started
         else { return }
 
+        // Send frame to video stream
         let videoFrameBuffer = RawVideoFrameBuffer()
         videoFrameBuffer.buffer = imageBuffer
         videoFrameBuffer.streamFormat = virtualOutgoingVideoStream.format
@@ -592,6 +596,9 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
             guard let error else { return }
             print(error)
         }
+
+        // Show frame in preview
+        callController.viewfinderImage = CIImage(cvImageBuffer: imageBuffer).image
     }
 
     @objc func deviceOrientationDidChange(notification: NSNotification) {

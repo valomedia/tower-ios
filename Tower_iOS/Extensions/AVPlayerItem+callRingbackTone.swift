@@ -19,11 +19,11 @@ extension AVPlayerItem {
     ///
     /// - Copyright: Asset by UNIVERSFIELD, see ACKNOWLEDGEMENTS.txt for more information.
     ///
-    static let callRingbackTone: AVPlayerItem = {
+    static var callRingbackTone: AVPlayerItem {
         guard let url = Bundle.main.url(forResource: "call-ringback-tone", withExtension: "mp3") else {
             fatalError("Failed to find source file.")
         }
         return AVPlayerItem(url: url)
-    }()
+    }
 
 }

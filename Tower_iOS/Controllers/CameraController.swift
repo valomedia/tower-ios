@@ -99,31 +99,31 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         return captureDevice.position == .back
     }
 
-    /// Whether the flashlight is currenlty on.
+    /// Whether the flashlight is currently on.
     ///
-    var torchEnabled: Bool = false {
-        didSet {
-            if let captureDevice, torchAvailable {
-                captureQueue.async { [weak self] in
-                    guard let self else { return }
+    var torchEnabled: Bool {
+        get {
+            _torchEnabled
+        }
+        set {
+            captureQueue.async { [weak self] in
+                guard let self else { return }
+                if let captureDevice, torchAvailable {
                     do {
                         try captureDevice.lockForConfiguration()
-                        if torchEnabled {
-                            captureDevice.torchMode = .on
-                        } else {
-                            captureDevice.torchMode = .off
-                        }
+                        _torchEnabled = newValue
+                        captureDevice.torchMode = _torchEnabled ? .on : .off
                         captureDevice.unlockForConfiguration()
                     } catch {
                         print("Unable to set torch on current camera. Error: \(error)")
                     }
+                } else {
+                    _torchEnabled = false
                 }
-            } else {
-                torchEnabled = false
-                print("Torch is not available on current camera.")
             }
         }
     }
+    private var _torchEnabled: Bool = false
 
     /// Whether a flashlight is available on the camera that is in use.
     ///
@@ -237,6 +237,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     /// both a front and a back camera, and both are available, which is currently true for all supported devices).
     ///
     func switchCamera() {
+        _torchEnabled = false
         if let captureDevice, let index = availableCaptureDevices.firstIndex(of: captureDevice) {
             let nextIndex = (index + 1) % availableCaptureDevices.count
             self.captureDevice = availableCaptureDevices[nextIndex]
@@ -322,7 +323,6 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
             // Turn the torch back on if necessary and switch back to the previous video format.
             self.captureDimensions = captureDimensions
-            self.torchEnabled = torchEnabled
         }
 
         return try await withCheckedThrowingContinuation { continuation in photoOutputContinuations.append(continuation) }
@@ -369,6 +369,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
         self._captureDimensions = updateDeviceCaptureFormat(CallQualityLevel.veryHigh.resolution.dimensions)
         self._captureFrameRate = updateVideoFrameRate(CallQualityLevel.veryHigh.frameRate)
+        updateVideoOutputConnection()
 
         isCaptureSessionConfigured = true
 
@@ -431,6 +432,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     
     private func updateVideoOutputConnection() {
         guard let videoOutputConnection = videoOutput.connection(with: .video) else { return }
+        videoOutputConnection.videoOrientation =  AVCaptureVideoOrientation.landscapeRight
         if videoOutputConnection.isVideoMirroringSupported {
             videoOutputConnection.isVideoMirrored = isUsingFrontCamera
         }
@@ -450,7 +452,10 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     private func updateDeviceCaptureFormat(_ dimensions: CMVideoDimensions) -> CMVideoDimensions? {
         guard let captureDevice else { return nil }
         try? captureDevice.lockForConfiguration()
-        defer { captureDevice.unlockForConfiguration() }
+        defer { 
+            if torchAvailable && torchEnabled { captureDevice.torchMode = .on }
+            captureDevice.unlockForConfiguration()
+        }
 
         let newAVFormat = captureDevice
             .formats
@@ -513,7 +518,10 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     private func updateVideoFrameRate(_ frameRate: Float64) -> Float64? {
         guard let captureDevice else { return nil }
         try? captureDevice.lockForConfiguration()
-        defer { captureDevice.unlockForConfiguration() }
+        defer {
+            if torchAvailable && torchEnabled { captureDevice.torchMode = .on }
+            captureDevice.unlockForConfiguration() 
+        }
 
         let timescale = closestFramerate(to: frameRate, in: captureDevice.activeFormat.videoSupportedFrameRateRanges)
         let duration = CMTime(value: 1, timescale: Int32(timescale))

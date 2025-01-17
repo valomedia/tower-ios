@@ -516,6 +516,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
     }
 
     private func handleCallDisconnected() {
+        callController?.playCallTone(AVPlayerItem.callEndTone)
         callController?.disposeSession()
     }
 

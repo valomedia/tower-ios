@@ -19,11 +19,13 @@ struct CallSheet: View {
 
     var body: some View {
         VStack {
-            Image(uiImage: Asset.Assets.logo.image)
+            Spacer()
+            (controller.viewfinderImage ?? Image(uiImage: Asset.Assets.logo.image))
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .accessibility(hidden: true)
+            Spacer()
             Text(controller.sessionState.localizedDescription)
                     .font(.largeTitle)
                     .accessibility(hidden: true)

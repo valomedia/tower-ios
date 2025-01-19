@@ -195,6 +195,7 @@ class CallController: NSObject, ObservableObject {
     ///
     func pauseVideo() {
         guard let call, let rawOutgoingVideoStream else { return }
+        viewfinderImage = nil
         Task {
             do {
                 try await call.stopVideo(stream: rawOutgoingVideoStream)

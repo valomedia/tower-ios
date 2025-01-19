@@ -88,6 +88,8 @@ class CallController: NSObject, ObservableObject {
         }
     }
 
+    @Published fileprivate(set) var viewfinderImage: Image?
+
     fileprivate let cameraController = CameraController()
     fileprivate let locationManager = CLLocationManager()
 
@@ -193,6 +195,7 @@ class CallController: NSObject, ObservableObject {
     ///
     func pauseVideo() {
         guard let call, let rawOutgoingVideoStream else { return }
+        viewfinderImage = nil
         Task {
             do {
                 try await call.stopVideo(stream: rawOutgoingVideoStream)
@@ -514,6 +517,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
     }
 
     private func handleCallDisconnected() {
+        callController?.playCallTone(AVPlayerItem.callEndTone)
         callController?.disposeSession()
     }
 
@@ -524,7 +528,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
 /// Handler for things related to the video stream.
 ///
 /// This contains methods for handling changes to the state and format of the video stream in ACS, handling orientation
-/// changes, as well as sending out the actual video frames as they come in.
+/// changes, as well as sending out the actual video frames as they come in, and adding them to the viewfinder.
 ///
 class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
@@ -580,11 +584,13 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
     func captureOutput(_: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from _: AVCaptureConnection) {
         guard
+            let callController,
             let imageBuffer = sampleBuffer.imageBuffer,
-            let virtualOutgoingVideoStream = callController?.rawOutgoingVideoStream,
+            let virtualOutgoingVideoStream = callController.rawOutgoingVideoStream,
             virtualOutgoingVideoStream.state == .started
         else { return }
 
+        // Send frame to video stream
         let videoFrameBuffer = RawVideoFrameBuffer()
         videoFrameBuffer.buffer = imageBuffer
         videoFrameBuffer.streamFormat = virtualOutgoingVideoStream.format
@@ -592,6 +598,11 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
             guard let error else { return }
             print(error)
         }
+
+        // Show frame in preview
+        callController.viewfinderImage = CIImage(cvImageBuffer: imageBuffer)
+            .oriented(cgImagePropertyOrientation(for: UIDevice.current.orientation))
+            .image
     }
 
     @objc func deviceOrientationDidChange(notification: NSNotification) {
@@ -638,6 +649,16 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
         case .landscapeLeft: return VideoHandler.landscapeLeftRotationAngle
         case .landscapeRight: return VideoHandler.landscapeRightRotationAngle
         default: return VideoHandler.defaultRotationAngle
+        }
+    }
+
+    private func cgImagePropertyOrientation(for deviceOrientation: UIDeviceOrientation) -> CGImagePropertyOrientation {
+        switch deviceOrientation {
+        case .portrait: return .right
+        case .portraitUpsideDown: return .left
+        case .landscapeLeft: return .up
+        case .landscapeRight: return .down
+        default: return .right
         }
     }
 

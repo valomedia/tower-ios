@@ -16,6 +16,7 @@
 		E154D2662C9844B1004751CF /* call-ringback-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */; };
 		E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
+		E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C49112D41A94C00C40146 /* Regex+matches.swift */; };
 		E19DC87F2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */; };
 		E1A6F9432D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */; };
 		E1A6F9452D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */; };
@@ -138,6 +139,7 @@
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E1896BD12D18A45100BBB943 /* Tower_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tower_iOS.entitlements; sourceTree = "<group>"; };
+		E18C49112D41A94C00C40146 /* Regex+matches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Regex+matches.swift"; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+aspectRatio.swift"; sourceTree = "<group>"; };
 		E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoStreamResolution+dimensions.swift"; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
 				E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */,
 				E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */,
+				E18C49112D41A94C00C40146 /* Regex+matches.swift */,
 				E1CF03312C603F1000A5F303 /* Sequence+compacted.swift */,
 				E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */,
 			);
@@ -762,6 +765,7 @@
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
 				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,
 				E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */,
+				E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */,
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E1B5A6A22D2B38A00021D8CE /* ClientInfo.swift in Sources */,

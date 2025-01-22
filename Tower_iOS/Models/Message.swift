@@ -161,9 +161,10 @@ enum DataMessage: Message {
     /// The is sent once when the call starts to transmit all the information the assistant needs about the call.
     ///
     /// - Parameters:
-    ///   - systemInfo: Information about the app the user is using to connect.
+    ///     - clientInfo: Information about the app the user is using to connect.
+    ///     - userProfile: Information about the user making the call.
     ///
-    case userHelloEvent(clientInfo: ClientInfo)
+    case userHelloEvent(clientInfo: ClientInfo, userProfile: UserProfile)
 
     // Mark: - Life cycle methods
 

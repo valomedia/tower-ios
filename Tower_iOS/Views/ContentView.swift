@@ -65,18 +65,25 @@ struct ContentView: View {
                     OnboardingSheet()
                             .interactiveDismissDisabled()
                 }
+                .sheet(isPresented: $isPresentingSignupSheet) {
+                    SignupSheet()
+                }
                 .sheet(isPresented: $isPresentingLoginSheet) {
                     LoginSheet()
                         .interactiveDismissDisabled()
                 }
+                .onChange(of: isPresentingOnboardingSheet) { isPresentingOnboardingSheet in
+                    if !isPresentingOnboardingSheet { isPresentingSignupSheet = true }
+                }
+                .onChange(of: isPresentingSignupSheet) { isPresentingSignupSheet in
+                    if !isPresentingSignupSheet { login() }
+                }
                 .onChange(of: isPresentingLoginSheet) { isPresentingLoginSheet in
-                    if !isPresentingLoginSheet {
-                        login()
-                    }
+                    if !isPresentingLoginSheet { login() }
                 }
                 .onChange(of: phase) { phase in
                     isConnected = false
-                    if (phase == .active && !isPresentingOnboardingSheet) {
+                    if (phase == .active && !isPresentingOnboardingSheet && !isPresentingSignupSheet) {
                         login()
                     }
                 }
@@ -86,7 +93,9 @@ struct ContentView: View {
     @StateObject private var env = TowerEnvironment()
 
     @State private var isPresentingCallSheet = false
-    
+
+    @State private var isPresentingSignupSheet = false
+
     @State private var isPresentingLoginSheet = false
 
     @State private var isPresentingOnboardingSheet

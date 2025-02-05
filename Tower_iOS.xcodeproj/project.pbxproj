@@ -10,6 +10,7 @@
 		79BBFF54BDAF562C38A27D7D /* Pods_Tower_iOS_Tower_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */; };
 		7A633F105F3FC525B55AAB9A /* Pods_Tower_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */; };
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
+		E13F5A6C2D53C9B40067CDFD /* SignupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */; };
 		E13F5A702D53E3180067CDFD /* NewsletterApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */; };
 		E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D25F2C9844B1004751CF /* call-start-tone.mp3 */; };
 		E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2602C9844B1004751CF /* call-end-tone.mp3 */; };
@@ -133,6 +134,7 @@
 		CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tower_iOS_Tower_iOSUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEFF2F75F52C4766E1426D1E /* Pods-Tower_iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOSTests.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOSTests/Pods-Tower_iOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupSheet.swift; sourceTree = "<group>"; };
 		E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterApi.swift; sourceTree = "<group>"; };
 		E154D25F2C9844B1004751CF /* call-start-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-start-tone.mp3"; sourceTree = "<group>"; };
 		E154D2602C9844B1004751CF /* call-end-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-end-tone.mp3"; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */,
 				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
+				E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */,
 				E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */,
 				E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */,
 				E9E97D7516F46B4EEA971AE7 /* View+if.swift */,
@@ -781,6 +784,7 @@
 				E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */,
 				E9E97475D6643D80F248B3A7 /* Wrapper.swift in Sources */,
 				E9E9775BEDEF26BE1277B6BC /* ErrorView.swift in Sources */,
+				E13F5A6C2D53C9B40067CDFD /* SignupSheet.swift in Sources */,
 				E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */,
 				E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */,
 				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,

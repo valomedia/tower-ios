@@ -42,6 +42,7 @@
 		E1D96C432D653BED003F187E /* Sequence+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D96C422D653BED003F187E /* Sequence+sorted.swift */; };
 		E1D96C452D653CFA003F187E /* Date+day.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D96C442D653CFA003F187E /* Date+day.swift */; };
 		E1D96C492D6545FB003F187E /* Date+startOfToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D96C482D6545FB003F187E /* Date+startOfToday.swift */; };
+		E1D96C4B2D6546B0003F187E /* Date+startOfTomorrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D96C4A2D6546B0003F187E /* Date+startOfTomorrow.swift */; };
 		E1DF7A922CEA645C000498C0 /* CallQualityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1DF7A912CEA645C000498C0 /* CallQualityData.swift */; };
 		E1DFEF312D18BFA8001E7AFD /* ObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = E1DFEF302D18BFA8001E7AFD /* ObjC.m */; };
 		E1E32B2D2D08A09B00617B34 /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B2C2D08A09B00617B34 /* UserToken.swift */; };
@@ -173,6 +174,7 @@
 		E1D96C422D653BED003F187E /* Sequence+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+sorted.swift"; sourceTree = "<group>"; };
 		E1D96C442D653CFA003F187E /* Date+day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+day.swift"; sourceTree = "<group>"; };
 		E1D96C482D6545FB003F187E /* Date+startOfToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+startOfToday.swift"; sourceTree = "<group>"; };
+		E1D96C4A2D6546B0003F187E /* Date+startOfTomorrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+startOfTomorrow.swift"; sourceTree = "<group>"; };
 		E1DF7A912CEA645C000498C0 /* CallQualityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityData.swift; sourceTree = "<group>"; };
 		E1DFEF2F2D18BFA8001E7AFD /* Tower_iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tower_iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1DFEF302D18BFA8001E7AFD /* ObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjC.m; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */,
 				E1D96C442D653CFA003F187E /* Date+day.swift */,
 				E1D96C482D6545FB003F187E /* Date+startOfToday.swift */,
+				E1D96C4A2D6546B0003F187E /* Date+startOfTomorrow.swift */,
 				E1CB1BD22C5A9B5C0078AF3A /* Image_Orientation+init.swift */,
 				E9E973C816FD9EF73B5606F6 /* JSONDecoder+shared.swift */,
 				E9E970A6EA11E43D2888ECD5 /* JSONEncoder+shared.swift */,
@@ -827,6 +830,7 @@
 				E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */,
 				E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */,
 				E9E970154CE4DA57BDFDBB82 /* CLLocationCoordinate2D+Codable.swift in Sources */,
+				E1D96C4B2D6546B0003F187E /* Date+startOfTomorrow.swift in Sources */,
 				E1D96C492D6545FB003F187E /* Date+startOfToday.swift in Sources */,
 				E9E970595F70053E9C579045 /* Location.swift in Sources */,
 				E1E32B2D2D08A09B00617B34 /* UserToken.swift in Sources */,

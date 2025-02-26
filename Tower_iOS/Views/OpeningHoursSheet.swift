@@ -53,8 +53,16 @@ struct OpeningHoursSheet: View {
                     }
                 }
             }
+                .toolbar {
+                    Button("Trotzdem anrufen") {
+                        dismiss()
+                    }
+                }
         }
     }
+
+    @Environment(\.dismiss)
+    private var dismiss
 
 }
 

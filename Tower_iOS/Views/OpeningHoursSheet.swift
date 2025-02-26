@@ -49,8 +49,13 @@ struct OpeningHoursSheet: View {
                         default: Text(dateFormatter.string(for: date) ?? "")
                         }
                         Spacer()
-                        Text(hours ?? "Geschlossen")
+                        Text(hours ?? "Geschlossen").accessibilityLabel(
+                            (hours ?? "Geschlossen")
+                                .replacing(/:0*/, with: " Uhr ")
+                                .replacing("-", with: " bis ")
+                                .replacing(", ", with: " und "))
                     }
+                        .accessibilityElement(children: .combine)
                 }
             }
                 .toolbar {

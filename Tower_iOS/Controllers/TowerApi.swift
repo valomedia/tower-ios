@@ -29,8 +29,8 @@ class TowerApi {
     ///
     /// - Throws:
     ///
-    class func index() async throws -> Void {
-        try await request()
+    class func index() async throws -> IndexResponse {
+        try JSONDecoder.shared.decode(IndexResponse.self, from: await request())
     }
 
     /// Make a request for an assistance session.

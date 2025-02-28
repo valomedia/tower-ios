@@ -72,6 +72,9 @@ struct ContentView: View {
                     LoginSheet()
                         .interactiveDismissDisabled()
                 }
+                .sheet(isPresented: $isPresentingOpeningHours) {
+                    OpeningHoursSheet(schedule: schedule)
+                }
                 .onChange(of: isPresentingOnboardingSheet) { isPresentingOnboardingSheet in
                     if !isPresentingOnboardingSheet { isPresentingSignupSheet = true }
                 }
@@ -84,6 +87,7 @@ struct ContentView: View {
                 .onChange(of: phase) { phase in
                     isConnected = false
                     if (phase == .active && !isPresentingOnboardingSheet && !isPresentingSignupSheet) {
+                        isPresentingOpeningHours = false
                         login()
                     }
                 }
@@ -104,6 +108,10 @@ struct ContentView: View {
 
     @State private var isConnected = false
 
+    @State private var isPresentingOpeningHours = false
+
+    @State private var schedule: [(Date, String?)] = []
+
     @Environment(\.scenePhase)
     private var phase
     
@@ -112,7 +120,11 @@ struct ContentView: View {
     private func login() {
         Task {
             do {
-                try await TowerApi.index()
+                let response = try await TowerApi.index()
+                schedule = response.openingHours.schedule
+                if response.openingHours.status == .closed {
+                    isPresentingOpeningHours = true
+                }
                 isConnected = true
             }
             catch {

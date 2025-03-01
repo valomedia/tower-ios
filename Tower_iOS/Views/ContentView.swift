@@ -110,12 +110,31 @@ struct ContentView: View {
     
     private func login() {
         Task {
-            let response = try await TowerApi.index()
-            schedule = response.openingHours.schedule
-            if response.openingHours.status == .closed {
-                isPresentingOpeningHours = true
+            do {
+                let indexResponse = try await TowerApi.index()
+                schedule = indexResponse.openingHours.schedule
+                if indexResponse.openingHours.status == .closed {
+                    isPresentingOpeningHours = true
+                }
+
+                // If we don't have an anonymous account yet, create one.
+                if UUID(uuidString: Settings.userIdPreference) == nil {
+                    Settings.userIdPreference = (try await TowerApi.registerUser()).userId.uuidString
+                }
+
+                isConnected = true
             }
-            isConnected = true
+            catch {
+                Task { @MainActor in
+                    env.errorWrapper = ErrorWrapper(
+                        error: error,
+                        guidance: """
+                            Bitte überprüfe ob du die aktuelle Version der Tower-Fernassistenz-App installiert hast \
+                            und versuche es dann erneut. Wenn das Problem weiterhin autritt, wende dich an unseren \
+                            Support.
+                            """)
+                }
+            }
         }
     }
 

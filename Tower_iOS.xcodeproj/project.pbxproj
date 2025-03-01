@@ -54,7 +54,6 @@
 		E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */; };
 		E1E32B312D08A42B00617B34 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B302D08A42B00617B34 /* User.swift */; };
 		E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */; };
-		E9338EF22C7DF7CB008AFF72 /* LoginSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */; };
 		E9E970154CE4DA57BDFDBB82 /* CLLocationCoordinate2D+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */; };
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
 		E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E97449F17B1C6ABD985920 /* Strings.stencil */; };
@@ -193,7 +192,6 @@
 		E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAssistanceResponse.swift; sourceTree = "<group>"; };
 		E1E32B302D08A42B00617B34 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistanceSessionState.swift; sourceTree = "<group>"; };
-		E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSheet.swift; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		E9E97082EE84DC39CD0A5259 /* Settings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Settings.stencil; sourceTree = "<group>"; };
@@ -334,7 +332,6 @@
 				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
 				E9E9739414376D953A5C2437 /* Font+tower.swift */,
 				E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */,
-				E9338EF12C7DF7CB008AFF72 /* LoginSheet.swift */,
 				E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */,
 				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
@@ -800,7 +797,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1CB1BDD2C5FEEEA0078AF3A /* ImageSize.swift in Sources */,
-				E9338EF22C7DF7CB008AFF72 /* LoginSheet.swift in Sources */,
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
 				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,
 				E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */,

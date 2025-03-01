@@ -52,7 +52,7 @@ struct SignupSheet: View {
                         .foregroundColor(.white)
                 }
             }
-                .navigationTitle("Registrierung")
+                .navigationTitle("Angaben zu dir")
         }
             .dynamicTypeSize(...DynamicTypeSize.accessibility4)
     }

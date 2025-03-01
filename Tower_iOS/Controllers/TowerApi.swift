@@ -33,6 +33,21 @@ class TowerApi {
         try JSONDecoder.shared.decode(IndexResponse.self, from: await request())
     }
 
+    /// Make a request to create an identity for this instance of the app.
+    ///
+    /// This will create an identity on the tower backend under a random UUID, along with an asssociated identity in
+    /// Azure Communication Services. The UUID of this lightweight user will be supplied with all following requests
+    /// to allow the backend to associate all requests coming from the same instance of the app.
+    ///
+    /// - Returns: The RegisterUserResponse with the UUID.
+    /// - Throws:
+    ///
+    class func registerUser() async throws -> RegisterUserResponse {
+        try JSONDecoder.shared.decode(
+            RegisterUserResponse.self,
+            from: await request("POST", "/registerUser"))
+    }
+
     /// Make a request for an assistance session.
     /// 
     /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the

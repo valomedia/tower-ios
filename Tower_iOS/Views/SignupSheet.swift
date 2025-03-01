@@ -47,6 +47,7 @@ struct SignupSheet: View {
                             Spacer()
                         }
                     })
+                        .disabled(firstName.isEmpty)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                         .foregroundColor(.white)
                 }

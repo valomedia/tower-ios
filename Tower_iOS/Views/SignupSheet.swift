@@ -52,11 +52,6 @@ struct SignupSheet: View {
                 }
             }
                 .navigationTitle("Registrierung")
-                .toolbar {
-                    Button("Überspringen") {
-                        dismiss()
-                    }
-                }
         }
             .dynamicTypeSize(...DynamicTypeSize.accessibility4)
     }

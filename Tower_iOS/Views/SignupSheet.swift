@@ -43,7 +43,7 @@ struct SignupSheet: View {
                     Button(action: handleSignup, label: {
                         HStack {
                             Spacer()
-                            Label("Registrieren", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                            Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
                             Spacer()
                         }
                     })

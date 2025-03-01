@@ -30,7 +30,7 @@ class TowerApi {
     /// - Throws:
     ///
     class func index() async throws -> IndexResponse {
-        try JSONDecoder.shared.decode(IndexResponse.self, from: await request())
+        try await request("GET", "/", as: IndexResponse.self)
     }
 
     /// Make a request to create an identity for this instance of the app.
@@ -43,9 +43,10 @@ class TowerApi {
     /// - Throws:
     ///
     class func registerUser() async throws -> RegisterUserResponse {
-        try JSONDecoder.shared.decode(
-            RegisterUserResponse.self,
-            from: await request("POST", "/registerUser"))
+        try await request(
+            "POST",
+            "/registerUser",
+            as: RegisterUserResponse.self)
     }
 
     /// Make a request for an assistance session.
@@ -57,9 +58,11 @@ class TowerApi {
     /// - Throws:
     /// 
     class func requestAssistance() async throws -> RequestAssistanceResponse {
-        try JSONDecoder.shared.decode(
-            RequestAssistanceResponse.self,
-            from: await request ("POST", "/requestAssistance", ["userId": Settings.userIdPreference]))
+        try await request(
+            "POST",
+            "/requestAssistance",
+            ["userId": Settings.userIdPreference],
+            as: RequestAssistanceResponse.self)
     }
 
     /// Signal to the backend, that the caller is still waiting.
@@ -69,7 +72,10 @@ class TowerApi {
     /// - Throws:
     /// 
     class func awaitAssistance() async throws -> Void {
-        try await request ("POST", "/awaitAssistance", ["userId": Settings.userIdPreference])
+        try await request(
+            "POST",
+            "/awaitAssistance",
+            ["userId": Settings.userIdPreference])
     }
 
     /// Signal to the backend, that the caller has given up on waiting.
@@ -80,16 +86,25 @@ class TowerApi {
     /// - Throws:
     /// 
     class func cancelAssistance() async throws -> Void {
-        try await request("POST", "/cancelAssistance", ["userId": Settings.userIdPreference])
+        try await request(
+            "POST",
+            "/cancelAssistance",
+            ["userId": Settings.userIdPreference])
     }
 
     @discardableResult
-    private class func request(_ method: String = "GET", _ path: String = "/", _ body: Codable? = nil) async throws -> Data {
+    private class func request<T>(
+        _ method: String,
+        _ path: String,
+        _ body: Codable? = nil,
+        as type: T.Type = [String: String].self
+    ) async throws -> T where T: Decodable {
         let url = URL(string: Settings.endpointPreference + path)
         guard let url else { throw TowerError.invalidEndpoint }
 
         var request = URLRequest(url: url)
         request.httpMethod = method
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         if let body {
             request.httpBody = try JSONEncoder.shared.encode(body)
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -100,7 +115,7 @@ class TowerApi {
 
         switch response.statusCode {
         case 200:
-            return data
+            return try JSONDecoder.shared.decode(type, from: data)
         case 400:
             throw TowerError.badRequest
         case 401:

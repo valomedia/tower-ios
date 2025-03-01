@@ -59,7 +59,7 @@ class TowerApi {
     class func requestAssistance() async throws -> RequestAssistanceResponse {
         try JSONDecoder.shared.decode(
             RequestAssistanceResponse.self,
-            from: await request ("POST", "/requestAssistance"))
+            from: await request ("POST", "/requestAssistance", ["userId": Settings.userIdPreference]))
     }
 
     /// Signal to the backend, that the caller is still waiting.
@@ -69,7 +69,7 @@ class TowerApi {
     /// - Throws:
     /// 
     class func awaitAssistance() async throws -> Void {
-        try await request ("POST", "/awaitAssistance")
+        try await request ("POST", "/awaitAssistance", ["userId": Settings.userIdPreference])
     }
 
     /// Signal to the backend, that the caller has given up on waiting.
@@ -80,24 +80,20 @@ class TowerApi {
     /// - Throws:
     /// 
     class func cancelAssistance() async throws -> Void {
-        try await request("POST", "/cancelAssistance")
+        try await request("POST", "/cancelAssistance", ["userId": Settings.userIdPreference])
     }
 
     @discardableResult
-    private class func request(_ method: String = "GET", _ path: String = "/") async throws -> Data {
-        let user = Settings.usernamePreference
-        let pass = Settings.passwordPreference
-        guard user != "" && pass != "" else { throw TowerError.missingCredentials }
-
-        let auth = (user + ":" + pass).data(using: .utf8)?.base64EncodedString()
-        guard let auth else { throw TowerError.badCredentials }
-
+    private class func request(_ method: String = "GET", _ path: String = "/", _ body: Codable? = nil) async throws -> Data {
         let url = URL(string: Settings.endpointPreference + path)
         guard let url else { throw TowerError.invalidEndpoint }
 
         var request = URLRequest(url: url)
-        request.setValue("Basic " + auth, forHTTPHeaderField: "Authorization")
         request.httpMethod = method
+        if let body {
+            request.httpBody = try JSONEncoder.shared.encode(body)
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        }
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let response = response as? HTTPURLResponse else { throw TowerError.invalidEndpoint }
@@ -105,6 +101,8 @@ class TowerApi {
         switch response.statusCode {
         case 200:
             return data
+        case 400:
+            throw TowerError.badRequest
         case 401:
             throw TowerError.badCredentials
         case 404:

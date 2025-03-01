@@ -149,6 +149,8 @@
 			<string>Nutzer-ID</string>
 			<key>Key</key>
 			<string>user_id_preference</string>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>

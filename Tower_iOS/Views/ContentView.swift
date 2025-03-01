@@ -68,10 +68,6 @@ struct ContentView: View {
                 .sheet(isPresented: $isPresentingSignupSheet) {
                     SignupSheet()
                 }
-                .sheet(isPresented: $isPresentingLoginSheet) {
-                    LoginSheet()
-                        .interactiveDismissDisabled()
-                }
                 .sheet(isPresented: $isPresentingOpeningHours) {
                     OpeningHoursSheet(schedule: schedule)
                 }
@@ -80,9 +76,6 @@ struct ContentView: View {
                 }
                 .onChange(of: isPresentingSignupSheet) { isPresentingSignupSheet in
                     if !isPresentingSignupSheet { login() }
-                }
-                .onChange(of: isPresentingLoginSheet) { isPresentingLoginSheet in
-                    if !isPresentingLoginSheet { login() }
                 }
                 .onChange(of: phase) { phase in
                     isConnected = false
@@ -99,8 +92,6 @@ struct ContentView: View {
     @State private var isPresentingCallSheet = false
 
     @State private var isPresentingSignupSheet = false
-
-    @State private var isPresentingLoginSheet = false
 
     @State private var isPresentingOnboardingSheet
             = AVAudioSession.sharedInstance().recordPermission != .granted
@@ -119,19 +110,12 @@ struct ContentView: View {
     
     private func login() {
         Task {
-            do {
-                let response = try await TowerApi.index()
-                schedule = response.openingHours.schedule
-                if response.openingHours.status == .closed {
-                    isPresentingOpeningHours = true
-                }
-                isConnected = true
+            let response = try await TowerApi.index()
+            schedule = response.openingHours.schedule
+            if response.openingHours.status == .closed {
+                isPresentingOpeningHours = true
             }
-            catch {
-                Task { @MainActor in
-                    isPresentingLoginSheet = true
-                }
-            }
+            isConnected = true
         }
     }
 

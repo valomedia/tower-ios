@@ -20,6 +20,7 @@ struct SignupSheet: View {
     var body: some View {
         NavigationView {
             Form {
+                Text("Verrate uns bitte deinen Namen, damit wir dich bei Anrufen besser ansprechen können.")
                 Section {
                     HStack {
                         Text("Vorname")

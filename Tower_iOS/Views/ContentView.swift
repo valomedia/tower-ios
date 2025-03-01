@@ -68,10 +68,6 @@ struct ContentView: View {
                 .sheet(isPresented: $isPresentingSignupSheet) {
                     SignupSheet()
                 }
-                .sheet(isPresented: $isPresentingLoginSheet) {
-                    LoginSheet()
-                        .interactiveDismissDisabled()
-                }
                 .sheet(isPresented: $isPresentingOpeningHours) {
                     OpeningHoursSheet(schedule: schedule)
                 }
@@ -80,9 +76,6 @@ struct ContentView: View {
                 }
                 .onChange(of: isPresentingSignupSheet) { isPresentingSignupSheet in
                     if !isPresentingSignupSheet { login() }
-                }
-                .onChange(of: isPresentingLoginSheet) { isPresentingLoginSheet in
-                    if !isPresentingLoginSheet { login() }
                 }
                 .onChange(of: phase) { phase in
                     isConnected = false
@@ -99,8 +92,6 @@ struct ContentView: View {
     @State private var isPresentingCallSheet = false
 
     @State private var isPresentingSignupSheet = false
-
-    @State private var isPresentingLoginSheet = false
 
     @State private var isPresentingOnboardingSheet
             = AVAudioSession.sharedInstance().recordPermission != .granted
@@ -120,16 +111,28 @@ struct ContentView: View {
     private func login() {
         Task {
             do {
-                let response = try await TowerApi.index()
-                schedule = response.openingHours.schedule
-                if response.openingHours.status == .closed {
+                let indexResponse = try await TowerApi.index()
+                schedule = indexResponse.openingHours.schedule
+                if indexResponse.openingHours.status == .closed {
                     isPresentingOpeningHours = true
                 }
+
+                // If we don't have an anonymous account yet, create one.
+                if UUID(uuidString: Settings.userIdPreference) == nil {
+                    Settings.userIdPreference = (try await TowerApi.registerUser()).userId.uuidString
+                }
+
                 isConnected = true
             }
             catch {
                 Task { @MainActor in
-                    isPresentingLoginSheet = true
+                    env.errorWrapper = ErrorWrapper(
+                        error: error,
+                        guidance: """
+                            Bitte überprüfe ob du die aktuelle Version der Tower-Fernassistenz-App installiert hast \
+                            und versuche es dann erneut. Wenn das Problem weiterhin autritt, wende dich an unseren \
+                            Support.
+                            """)
                 }
             }
         }

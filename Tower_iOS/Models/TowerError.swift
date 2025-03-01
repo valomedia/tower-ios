@@ -23,6 +23,10 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
     ///
     case missingCredentials
 
+    /// The server responded with a 400-response.
+    ///
+    case badRequest
+
     /// The credentials are wrong.
     ///
     case badCredentials
@@ -35,7 +39,7 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
     ///
     case serverError
 
-    /// The server responded with a status code other than 200, 401, 404, or 5XX for whatever reason.
+    /// The server responded with a status code other than 200, 400, 401, 404, or 5XX for whatever reason.
     ///
     case unexpectedError
 
@@ -45,6 +49,8 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
             return "Server-URL invalid"
         case .missingCredentials:
             return "Credentials are missing"
+        case .badRequest:
+            return "Client error"
         case .badCredentials:
             return "Credentials are invalid"
         case .notFound:
@@ -62,6 +68,8 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
             return "Server-URL ungültig"
         case .missingCredentials:
             return "Zugangsdaten fehlen"
+        case .badRequest:
+            return "Clientfehler"
         case .badCredentials:
             return "Zugangsdaten falsch"
         case .notFound:

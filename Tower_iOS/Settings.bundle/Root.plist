@@ -26,32 +26,6 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Benutzername</string>
-			<key>Key</key>
-			<string>username_preference</string>
-			<key>DefaultValue</key>
-			<string></string>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Passwort</string>
-			<key>Key</key>
-			<string>password_preference</string>
-			<key>IsSecure</key>
-			<true/>
-			<key>DefaultValue</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>BENUTZERPROFIL</string>
@@ -135,6 +109,22 @@
 			<string></string>
 			<key>KeyboardType</key>
 			<string>EmailAddress</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>DEBUG INFO</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Nutzer-ID</string>
+			<key>Key</key>
+			<string>user_id_preference</string>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>

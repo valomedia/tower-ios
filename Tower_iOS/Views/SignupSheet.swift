@@ -24,15 +24,21 @@ struct SignupSheet: View {
                 Section {
                     HStack {
                         Text("Vorname")
-                        TextField("", text: $firstName)
+                        TextField(text: $firstName, prompt: Text("Erforderlich")) {
+                            Text("Vorname")
+                        }
                     }
                     HStack {
                         Text("Nachname")
-                        TextField("", text: $lastName)
+                        TextField(text: $lastName, prompt: Text("Optional")) {
+                            Text("Nachname")
+                        }
                     }
                     HStack {
                         Text("e-Mail")
-                        TextField("", text: $email)
+                        TextField(text: $email, prompt: Text("Optional")) {
+                            Text("E-Mail-Adresse")
+                        }
                             .keyboardType(.emailAddress)
                     }
                 }

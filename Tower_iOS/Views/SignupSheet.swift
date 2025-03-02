@@ -20,18 +20,25 @@ struct SignupSheet: View {
     var body: some View {
         NavigationView {
             Form {
+                Text("Verrate uns bitte deinen Namen, damit wir dich bei Anrufen besser ansprechen können.")
                 Section {
                     HStack {
                         Text("Vorname")
-                        TextField("", text: $firstName)
+                        TextField(text: $firstName, prompt: Text("Erforderlich")) {
+                            Text("Vorname")
+                        }
                     }
                     HStack {
                         Text("Nachname")
-                        TextField("", text: $lastName)
+                        TextField(text: $lastName, prompt: Text("Optional")) {
+                            Text("Nachname")
+                        }
                     }
                     HStack {
                         Text("e-Mail")
-                        TextField("", text: $email)
+                        TextField(text: $email, prompt: Text("Optional")) {
+                            Text("E-Mail-Adresse")
+                        }
                             .keyboardType(.emailAddress)
                     }
                 }
@@ -43,20 +50,16 @@ struct SignupSheet: View {
                     Button(action: handleSignup, label: {
                         HStack {
                             Spacer()
-                            Label("Registrieren", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                            Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
                             Spacer()
                         }
                     })
+                        .disabled(firstName.isEmpty)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                         .foregroundColor(.white)
                 }
             }
-                .navigationTitle("Registrierung")
-                .toolbar {
-                    Button("Überspringen") {
-                        dismiss()
-                    }
-                }
+                .navigationTitle("Angaben zu dir")
         }
             .dynamicTypeSize(...DynamicTypeSize.accessibility4)
     }

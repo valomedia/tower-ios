@@ -67,6 +67,7 @@ struct ContentView: View {
                 }
                 .sheet(isPresented: $isPresentingSignupSheet) {
                     SignupSheet()
+                        .interactiveDismissDisabled()
                 }
                 .sheet(isPresented: $isPresentingOpeningHours) {
                     OpeningHoursSheet(schedule: schedule)

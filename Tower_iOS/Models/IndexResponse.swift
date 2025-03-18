@@ -43,7 +43,7 @@ struct IndexResponse: Codable {
 struct OpeningHoursInfo: Codable {
 
     enum CodingKeys: String, CodingKey {
-        case time, status, schedule
+        case time, status, schedule, description
     }
 
     // MARK: - Static properties
@@ -57,10 +57,11 @@ struct OpeningHoursInfo: Codable {
 
     // MARK: - Life cycle methods
 
-    init(time: String, status: ServiceStatus, schedule: [(Date, String?)]) {
+    init(time: String, status: ServiceStatus, schedule: [(Date, String?)], description: String) {
         self.time = time
         self.status = status
         self.schedule = schedule
+        self.description = description
     }
 
     init(from decoder: any Decoder) throws {
@@ -79,7 +80,8 @@ struct OpeningHoursInfo: Codable {
                     }
                     return (date, serviceHours != "" ? serviceHours : nil)
                 }
-                .sorted(by: \.0))
+                .sorted(by: \.0),
+            description: try container.decode(String.self, forKey: .description))
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -91,6 +93,7 @@ struct OpeningHoursInfo: Codable {
                 (OpeningHoursInfo.codingFormatter.string(from: $0.0), $0.1 ?? "") 
             }),
             forKey: .schedule)
+        try container.encode(description, forKey: .description)
     }
 
     // MARK: - Properties
@@ -109,6 +112,10 @@ struct OpeningHoursInfo: Codable {
     /// human-readable String specifying the opening hours as provided by the API.
     ///
     var schedule: [(Date, String?)]
+
+    /// The human-readable description of the opening hours.
+    ///
+    var description: String
 
 }
 

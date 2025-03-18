@@ -15,54 +15,37 @@ import SwiftUI
 ///
 struct OpeningHoursSheet: View {
 
-    // MARK: - Static properties
+    // MARK: - Life cycle methods
 
-    private let dateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
-        return formatter
-    }()
+    init(_ openingHours: String) {
+        self.openingHours = openingHours
+    }
 
     // MARK: - Properties
 
-    /// The opening hours to display to the user.
+    /// The opening hours description string to display to the user.
     ///
-    let schedule: [(Date, String?)]
+    let openingHours: String
 
     var body: some View {
         NavigationView {
             NoContentView(
-                title: "Wir haben geschlossen",
-                headline: "Bitte versuche es zu einem späteren Zeitpunkt erneut",
+                image: Image(uiImage: Asset.Assets.logo.image),
+                title: "Wir haben gerade geschlossen",
+                headline: openingHours,
                 caption:
                     """
-                    Leider ist der TOWER-Assistenzservice gerade nicht verfügbar. Die Öffnungszeiten für die nächsten \
-                    Tage findest du unten. Wenn du einen Termin mit uns ausgemacht hast, kannst du diese Meldung \
-                    schließen, und trotzdem einen Anruf starten. 
+                    Wir arbeiten daran, diese Zeiten weiter auszubauen. Falls du einen Termin mit uns hast, kannst du \
+                    trotzdem einen Anruf mit uns starten.
                     """
             ) {
-                ForEach(schedule, id: \.0) { (date, hours) in
-                    HStack {
-                        switch (date) {
-                        case .today: Text("Heute")
-                        case .tomorrow: Text("Morgen")
-                        default: Text(dateFormatter.string(for: date) ?? "")
-                        }
-                        Spacer()
-                        Text(hours ?? "Geschlossen").accessibilityLabel(
-                            (hours ?? "Geschlossen")
-                                .replacing(/:0*/, with: " Uhr ")
-                                .replacing("-", with: " bis ")
-                                .replacing(", ", with: " und "))
-                    }
-                        .accessibilityElement(children: .combine)
+                Button {
+                    dismiss()
+                } label: {
+                    Label("Verstanden", systemImage: "checkmark").labelStyle(.trailingIcon)
                 }
+                    .buttonStyle(.borderedProminent)
             }
-                .toolbar {
-                    Button("Trotzdem anrufen") {
-                        dismiss()
-                    }
-                }
         }
     }
 
@@ -80,11 +63,7 @@ class OpeningHoursView_Previews: PreviewProvider {
     // MARK: - Static properties
 
     static var previews: some View {
-        OpeningHoursSheet(schedule: [
-            (.today, "08:00-12:00, 13:00-17:00"),
-            (.tomorrow, nil),
-            (Calendar.current.date(byAdding: .day, value: 1, to: .tomorrow)!, "12:00-16:00")
-        ])
+        OpeningHoursSheet("Montag bis Freitag von 8 bis 12 und von 13 bis 17 Uhr.")
     }
 
 }

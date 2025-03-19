@@ -70,7 +70,7 @@ struct ContentView: View {
                         .interactiveDismissDisabled()
                 }
                 .sheet(isPresented: $isPresentingOpeningHours) {
-                    OpeningHoursSheet(schedule: schedule)
+                    OpeningHoursSheet(openingHours)
                 }
                 .onChange(of: isPresentingOnboardingSheet) { isPresentingOnboardingSheet in
                     if !isPresentingOnboardingSheet { isPresentingSignupSheet = true }
@@ -102,7 +102,7 @@ struct ContentView: View {
 
     @State private var isPresentingOpeningHours = false
 
-    @State private var schedule: [(Date, String?)] = []
+    @State private var openingHours: String = ""
 
     @Environment(\.scenePhase)
     private var phase
@@ -113,7 +113,7 @@ struct ContentView: View {
         Task {
             do {
                 let indexResponse = try await TowerApi.index()
-                schedule = indexResponse.openingHours.schedule
+                openingHours = indexResponse.openingHours.description
                 if indexResponse.openingHours.status == .closed {
                     isPresentingOpeningHours = true
                 }

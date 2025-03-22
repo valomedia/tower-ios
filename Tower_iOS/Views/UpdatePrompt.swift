@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: UpdatePrompt
 
-///
+/// A screen telling the user they need to update their app to proceed.
 ///
 struct UpdatePrompt: View {
 

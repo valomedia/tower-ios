@@ -17,6 +17,7 @@
 		E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2602C9844B1004751CF /* call-end-tone.mp3 */; };
 		E154D2652C9844B1004751CF /* call-error-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2612C9844B1004751CF /* call-error-tone.mp3 */; };
 		E154D2662C9844B1004751CF /* call-ringback-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */; };
+		E1588FB92D8F4E5600501EFE /* UpdatePrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1588FB82D8F4E5600501EFE /* UpdatePrompt.swift */; };
 		E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490D2D41A0BA00C40146 /* UserProfile.swift */; };
@@ -149,6 +150,7 @@
 		E154D2602C9844B1004751CF /* call-end-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-end-tone.mp3"; sourceTree = "<group>"; };
 		E154D2612C9844B1004751CF /* call-error-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-error-tone.mp3"; sourceTree = "<group>"; };
 		E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-ringback-tone.mp3"; sourceTree = "<group>"; };
+		E1588FB82D8F4E5600501EFE /* UpdatePrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePrompt.swift; sourceTree = "<group>"; };
 		E15E8B962C6D497E00BC8B90 /* ACKNOWLEDGEMENTS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ACKNOWLEDGEMENTS.txt; sourceTree = "<group>"; };
 		E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityLevel.swift; sourceTree = "<group>"; };
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 				E1D96C402D64F926003F187E /* OpeningHoursSheet.swift */,
 				E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */,
 				E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */,
+				E1588FB82D8F4E5600501EFE /* UpdatePrompt.swift */,
 				E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */,
 				E9E97D7516F46B4EEA971AE7 /* View+if.swift */,
 				E9E97717C5D0FDCA28C0662B /* View+ifNotNil.swift */,
@@ -829,6 +832,7 @@
 				E9E9723D2463B5A09B3C2EEE /* LeadingIconLabelStyle.swift in Sources */,
 				E1CB1BD32C5A9B5C0078AF3A /* Image_Orientation+init.swift in Sources */,
 				E11F4A502D726AF300035168 /* RegisterUserResponse.swift in Sources */,
+				E1588FB92D8F4E5600501EFE /* UpdatePrompt.swift in Sources */,
 				E1A6F9452D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift in Sources */,
 				E1A6F94D2D1376F300A28CA4 /* Message.swift in Sources */,
 				E9E97947A6C162284CD55C77 /* TowerError.swift in Sources */,

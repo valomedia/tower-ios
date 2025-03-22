@@ -16,6 +16,7 @@ struct IndexResponse: Codable {
 
     enum CodingKeys: String, CodingKey {
         case message = "message"
+        case apiVersion = "apiVersion"
         case openingHours = "openingHours"
     }
 
@@ -26,6 +27,10 @@ struct IndexResponse: Codable {
     /// Currently this will always be "Success".
     ///
     var message: String
+
+    /// The major and minor version of the backend.
+    ///
+    var apiVersion: String
 
     /// The information about the opening hours of the service.
     ///

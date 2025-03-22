@@ -72,6 +72,9 @@ struct ContentView: View {
                 .sheet(isPresented: $isPresentingOpeningHours) {
                     OpeningHoursSheet(openingHours)
                 }
+                .sheet(isPresented: $isPresentingUpdatePrompt) {
+                    UpdatePrompt().interactiveDismissDisabled()
+                }
                 .onChange(of: isPresentingOnboardingSheet) { isPresentingOnboardingSheet in
                     if !isPresentingOnboardingSheet { isPresentingSignupSheet = true }
                 }
@@ -104,6 +107,8 @@ struct ContentView: View {
 
     @State private var openingHours: String = ""
 
+    @State private var isPresentingUpdatePrompt = false
+
     @Environment(\.scenePhase)
     private var phase
     
@@ -113,6 +118,12 @@ struct ContentView: View {
         Task {
             do {
                 let indexResponse = try await TowerApi.index()
+
+                let apiMajorVersion = indexResponse.apiVersion.split(separator: ".").first.flatMap { Int($0) }
+                let appMajorVersion = Settings.versionPreference.split(separator: ".").first.flatMap { Int($0) }
+                isPresentingUpdatePrompt = apiMajorVersion ?? Int.max > appMajorVersion ?? 0
+                guard !isPresentingUpdatePrompt else { return }
+
                 openingHours = indexResponse.openingHours.description
                 if indexResponse.openingHours.status == .closed {
                     isPresentingOpeningHours = true

@@ -84,6 +84,10 @@ class CallController: NSObject, ObservableObject {
     ///
     @Published fileprivate(set) var sessionState: AssistanceSessionState = .none
 
+    /// The zero-indexed position of the user in the queue, if known.
+    ///
+    @Published fileprivate(set) var queuePosition: Int?
+
     @Published fileprivate(set) var viewfinderImage: Image?
 
     fileprivate let cameraController = CameraController()
@@ -343,6 +347,7 @@ class CallController: NSObject, ObservableObject {
 
             self.onCallEnd?()
             self.onCallEnd = nil
+            self.queuePosition = nil
             self.sessionState = .disconnected
         }
     }
@@ -442,7 +447,7 @@ class CallController: NSObject, ObservableObject {
         repeat {
             do { try await Task.sleep(for: .seconds(keepaliveInterval)) } catch { return }
             do {
-                try await TowerApi.awaitAssistance()
+                queuePosition = (try await TowerApi.awaitAssistance()).position
             } catch {
                 // Got an error updating the request. This might be because the assistant has already the request
                 // and is in the process of picking up though, so give it a little time.
@@ -496,6 +501,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
         DispatchQueue.main.async { [weak self] in 
             guard let callController = self?.callController else { return }
             callController.sessionState = .connecting
+            callController.queuePosition = nil
             callController.stopCallTone()
             Task { await callController.answerIncomingCall(incomingCall) }
         }

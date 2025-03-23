@@ -26,7 +26,7 @@ struct CallSheet: View {
                     .padding()
                     .accessibility(hidden: true)
             Spacer()
-            Text(controller.sessionState.localizedDescription)
+            Text(statusMessage)
                     .font(.largeTitle)
                     .accessibility(hidden: true)
             Button(role: .destructive, action: controller.endSession, label: {
@@ -60,6 +60,13 @@ struct CallSheet: View {
                         controller.resumeVideo()
                     }
                 }
+                .onChange(of: controller.sessionState, perform: updateStatus)
+    }
+
+    @State private var statusMessage = "" {
+        didSet {
+            UIAccessibility.post(notification: .announcement, argument: statusMessage)
+        }
     }
 
     @StateObject private var controller = CallController()
@@ -71,6 +78,12 @@ struct CallSheet: View {
     private var phase
     
     @EnvironmentObject private var env: TowerEnvironment
+
+    // MARK: - Methods
+
+    private func updateStatus(_: Any) {
+        statusMessage = controller.sessionState.localizedDescription
+    }
 
 }
 

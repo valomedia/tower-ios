@@ -82,11 +82,7 @@ class CallController: NSObject, ObservableObject {
 
     /// The life-cycle state of the current session.
     ///
-    @Published fileprivate(set) var sessionState: AssistanceSessionState = .none {
-        didSet {
-            UIAccessibility.post(notification: .announcement, argument: sessionState.localizedDescription)
-        }
-    }
+    @Published fileprivate(set) var sessionState: AssistanceSessionState = .none
 
     @Published fileprivate(set) var viewfinderImage: Image?
 

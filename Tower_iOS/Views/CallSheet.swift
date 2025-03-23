@@ -61,6 +61,7 @@ struct CallSheet: View {
                     }
                 }
                 .onChange(of: controller.sessionState, perform: updateStatus)
+                .onChange(of: controller.queuePosition, perform: updateStatus)
     }
 
     @State private var statusMessage = "" {
@@ -82,7 +83,11 @@ struct CallSheet: View {
     // MARK: - Methods
 
     private func updateStatus(_: Any) {
-        statusMessage = controller.sessionState.localizedDescription
+        statusMessage = switch controller.queuePosition {
+            case nil: controller.sessionState.localizedDescription
+            case 0: "Wir sind gleich für dich da"
+            default: "\(controller.queuePosition!) Nutzer:innen sind vor dir dran"
+        }
     }
 
 }

@@ -71,11 +71,12 @@ class TowerApi {
     /// 
     /// - Throws:
     /// 
-    class func awaitAssistance() async throws -> Void {
+    class func awaitAssistance() async throws -> AwaitAssistanceResponse {
         try await request(
             "POST",
             "/awaitAssistance",
-            ["userId": Settings.userIdPreference])
+            ["userId": Settings.userIdPreference],
+            as: AwaitAssistanceResponse.self)
     }
 
     /// Signal to the backend, that the caller has given up on waiting.

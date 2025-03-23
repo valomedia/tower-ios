@@ -13,6 +13,7 @@
 		E11F4A502D726AF300035168 /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11F4A4F2D726AF300035168 /* RegisterUserResponse.swift */; };
 		E13F5A6C2D53C9B40067CDFD /* SignupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */; };
 		E13F5A702D53E3180067CDFD /* NewsletterApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */; };
+		E1409EC82D908F0100D2FA3D /* AwaitAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1409EC72D908F0100D2FA3D /* AwaitAssistanceResponse.swift */; };
 		E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D25F2C9844B1004751CF /* call-start-tone.mp3 */; };
 		E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2602C9844B1004751CF /* call-end-tone.mp3 */; };
 		E154D2652C9844B1004751CF /* call-error-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2612C9844B1004751CF /* call-error-tone.mp3 */; };
@@ -146,6 +147,7 @@
 		E11F4A4F2D726AF300035168 /* RegisterUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserResponse.swift; sourceTree = "<group>"; };
 		E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupSheet.swift; sourceTree = "<group>"; };
 		E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsletterApi.swift; sourceTree = "<group>"; };
+		E1409EC72D908F0100D2FA3D /* AwaitAssistanceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwaitAssistanceResponse.swift; sourceTree = "<group>"; };
 		E154D25F2C9844B1004751CF /* call-start-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-start-tone.mp3"; sourceTree = "<group>"; };
 		E154D2602C9844B1004751CF /* call-end-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-end-tone.mp3"; sourceTree = "<group>"; };
 		E154D2612C9844B1004751CF /* call-error-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "call-error-tone.mp3"; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 			children = (
 				E9E973F83FB2243F93C24577 /* Assets+Generated.swift */,
 				E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */,
+				E1409EC72D908F0100D2FA3D /* AwaitAssistanceResponse.swift */,
 				E1DF7A912CEA645C000498C0 /* CallQualityData.swift */,
 				E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */,
 				E1CB1BD62C5B87860078AF3A /* CameraError.swift */,
@@ -842,6 +845,7 @@
 				E1D96C432D653BED003F187E /* Sequence+sorted.swift in Sources */,
 				E9E9708D48B02103D0D3FDF3 /* JSONDecoder+shared.swift in Sources */,
 				E9E972AA45FF24396D4D2597 /* CallController.swift in Sources */,
+				E1409EC82D908F0100D2FA3D /* AwaitAssistanceResponse.swift in Sources */,
 				E1E32B312D08A42B00617B34 /* User.swift in Sources */,
 				E9E97ACA8F9ACDF0962A795A /* DataMessageTopic.swift in Sources */,
 				E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */,

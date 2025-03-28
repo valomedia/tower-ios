@@ -134,7 +134,6 @@ enum DataMessage: Message {
     ///   - verticalAccuracy: The estimated uncertainty for the altitude value, in meters.
     ///   - course: The direction in which the device is heading, in degrees relative to due north.
     ///   - courseAccuracy: The accuracy of the course value, in degrees.
-    ///   - timestamp: The time at which the location was determined.
     ///
     case locationEvent(
         coordinate: CLLocationCoordinate2D,

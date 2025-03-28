@@ -142,8 +142,7 @@ enum DataMessage: Message {
         horizontalAccuracy: CLLocationAccuracy?,
         verticalAccuracy: CLLocationAccuracy?,
         course: CLLocationDirection?,
-        courseAccuracy: CLLocationDirectionAccuracy?,
-        timestamp: Date)
+        courseAccuracy: CLLocationDirectionAccuracy?)
 
     /// An orientationEvent data message.
     ///
@@ -176,8 +175,7 @@ enum DataMessage: Message {
             horizontalAccuracy: location.horizontalAccuracy,
             verticalAccuracy: location.verticalAccuracy,
             course: location.course,
-            courseAccuracy: location.courseAccuracy,
-            timestamp: location.timestamp)
+            courseAccuracy: location.courseAccuracy)
     }
 
 }

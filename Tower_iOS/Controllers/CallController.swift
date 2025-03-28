@@ -797,7 +797,6 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
                         .encode(
                             DataMessage.photoDataEvent(
                                 imageData: "",
-                                imageSize: photoData.imageSize,
                                 chunkingInfo: DataMessage.ImageChunkingInfo(
                                     index: CallController.dataMessageMaxBurstCount,
                                     count: CallController.dataMessageMaxBurstCount,
@@ -816,7 +815,6 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
                     callController.sendMessageLossy(
                         DataMessage.photoDataEvent(
                             imageData: imageData,
-                            imageSize: photoData.imageSize,
                             chunkingInfo: DataMessage.ImageChunkingInfo(
                                 index: index,
                                 count: chunks.count,

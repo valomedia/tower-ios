@@ -115,12 +115,10 @@ enum DataMessage: Message {
     ///
     /// - Parameters
     ///   - imageData: The base64-encoded String of one chunk of the PhotoData.
-    ///   - imageSize: The width and height of the full image.
     ///   - chunkingInfo: The information needed to reassable the chunks into a complete image.
     ///
     case photoDataEvent(
         imageData: String,
-        imageSize: ImageSize,
         chunkingInfo: ImageChunkingInfo
     )
     

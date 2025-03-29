@@ -115,12 +115,10 @@ enum DataMessage: Message {
     ///
     /// - Parameters
     ///   - imageData: The base64-encoded String of one chunk of the PhotoData.
-    ///   - imageSize: The width and height of the full image.
     ///   - chunkingInfo: The information needed to reassable the chunks into a complete image.
     ///
     case photoDataEvent(
         imageData: String,
-        imageSize: ImageSize,
         chunkingInfo: ImageChunkingInfo
     )
     
@@ -136,7 +134,6 @@ enum DataMessage: Message {
     ///   - verticalAccuracy: The estimated uncertainty for the altitude value, in meters.
     ///   - course: The direction in which the device is heading, in degrees relative to due north.
     ///   - courseAccuracy: The accuracy of the course value, in degrees.
-    ///   - timestamp: The time at which the location was determined.
     ///
     case locationEvent(
         coordinate: CLLocationCoordinate2D,
@@ -144,8 +141,7 @@ enum DataMessage: Message {
         horizontalAccuracy: CLLocationAccuracy?,
         verticalAccuracy: CLLocationAccuracy?,
         course: CLLocationDirection?,
-        courseAccuracy: CLLocationDirectionAccuracy?,
-        timestamp: Date)
+        courseAccuracy: CLLocationDirectionAccuracy?)
 
     /// An orientationEvent data message.
     ///
@@ -178,8 +174,7 @@ enum DataMessage: Message {
             horizontalAccuracy: location.horizontalAccuracy,
             verticalAccuracy: location.verticalAccuracy,
             course: location.course,
-            courseAccuracy: location.courseAccuracy,
-            timestamp: location.timestamp)
+            courseAccuracy: location.courseAccuracy)
     }
 
 }

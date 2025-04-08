@@ -55,7 +55,7 @@ struct SignupSheet: View {
                             Spacer()
                         }
                     }
-                    .buttonStyle(AppButtonStyle())
+                    .buttonStyle(AppButtonStyle(layoutMode: .fullWidth))
                     .disabled(firstName.isEmpty)
                 }
             }

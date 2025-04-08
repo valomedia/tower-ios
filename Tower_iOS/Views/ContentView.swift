@@ -53,7 +53,7 @@ struct ContentView: View {
             Spacer()
         }
                 .padding()
-                .sheet(item: $env.errorWrapper, onDismiss: { env.errorWrapper = nil; login() }) { errorWrapper in
+                .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
                     ErrorView(errorWrapper: errorWrapper)
                 }
                 .sheet(isPresented: $isPresentingCallSheet) {
@@ -72,7 +72,7 @@ struct ContentView: View {
                     UpdatePrompt().interactiveDismissDisabled()
                 }
                 .onChange(of: phase) { phase in
-                    if (phase == .active) { login() }
+                    if (phase == .active && env.errorWrapper == nil) { login() }
                 }
                 .environmentObject(env)
     }

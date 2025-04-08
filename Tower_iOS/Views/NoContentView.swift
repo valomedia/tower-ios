@@ -99,7 +99,6 @@ struct NoContentView<Content: View>: View {
                     Text(headline)
                             .font(.headline)
                     Text(caption)
-                            .font(.caption)
                             .padding(.top)
                     content()
                             .padding()

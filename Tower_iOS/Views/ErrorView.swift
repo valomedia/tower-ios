@@ -32,7 +32,7 @@ struct ErrorView: View {
                 caption: errorWrapper.guidance
             ) {
                 Text("""
-                    Wenn das Problem weiterhin autritt, wende dich bitte an unseren Support. Im Folgenden findest du \
+                    Sollte das Problem weiterhin auftreten, wende dich bitte an unseren Support. Im Folgenden findest du \
                     Informationen, die unserem Team helfen können, den Fehler zu finden. Bitte kopiere den \
                     Fehlerbericht und schicke ihn uns per e-Mail.
                     """)

@@ -144,9 +144,9 @@ struct ContentView: View {
                     env.errorWrapper = ErrorWrapper(
                         error: error,
                         guidance: """
-                            Bitte überprüfe ob du die aktuelle Version der Tower-Fernassistenz-App installiert hast \
-                            und versuche es dann erneut. Wenn das Problem weiterhin autritt, wende dich an unseren \
-                            Support.
+                            Bitte überprüfe, ob du mit dem Internet verbunden bist. Wenn das Problem nicht an deiner \
+                            Internetverbindung liegt, gibt es möglicherweise ein vorrübergehendes Problem mit dem \
+                            Fernassistenz-Service. In diesem Fall versuche es bitte später noch einmal.
                             """)
                 }
             }

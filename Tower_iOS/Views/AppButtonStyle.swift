@@ -22,9 +22,7 @@ struct AppButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding()
-            .if(layoutMode == .fullWidth) { view in
-                view.frame(maxWidth: .infinity)
-            }
+            .modifier(ConditionalFrameModifier(applyFullWidth: layoutMode == .fullWidth))
             .background(accentColor)
             .foregroundColor(foregroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -37,5 +35,17 @@ struct AppButtonStyle: ButtonStyle {
 
     private var foregroundColor: Color {
         colorScheme == .dark ? .black : .white
+    }
+}
+
+private struct ConditionalFrameModifier: ViewModifier {
+    let applyFullWidth: Bool
+
+    func body(content: Content) -> some View {
+        if applyFullWidth {
+            content.frame(maxWidth: .infinity)
+        } else {
+            content
+        }
     }
 }

@@ -39,7 +39,7 @@ struct UpdatePrompt: View {
                 } label: {
                     Label("AppStore öffnen", systemImage: "arrow.right").labelStyle(.trailingIcon)
                 }
-                    .buttonStyle(.borderedProminent)
+                .buttonStyle(AppButtonStyle(layoutMode: .autoSize))
             }
         }
     }

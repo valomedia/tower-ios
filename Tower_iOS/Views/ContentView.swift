@@ -25,7 +25,6 @@ struct ContentView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .accessibility(hidden: true)
-           
             Text(
                     UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
                             ? "Verbinden…"
@@ -54,39 +53,26 @@ struct ContentView: View {
             Spacer()
         }
                 .padding()
-                .sheet(item: $env.errorWrapper, onDismiss: { env.errorWrapper = nil }) { errorWrapper in
+                .sheet(item: $env.errorWrapper, onDismiss: { env.errorWrapper = nil; login() }) { errorWrapper in
                     ErrorView(errorWrapper: errorWrapper)
                 }
                 .sheet(isPresented: $isPresentingCallSheet) {
-                    CallSheet()
-                            .interactiveDismissDisabled()
+                    CallSheet().interactiveDismissDisabled()
                 }
-                .sheet(isPresented: $isPresentingOnboardingSheet) {
-                    OnboardingSheet()
-                            .interactiveDismissDisabled()
+                .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
+                    OnboardingSheet().interactiveDismissDisabled()
                 }
-                .sheet(isPresented: $isPresentingSignupSheet) {
-                    SignupSheet()
-                        .interactiveDismissDisabled()
+                .sheet(isPresented: $isPresentingSignupSheet, onDismiss: login) {
+                    SignupSheet().interactiveDismissDisabled()
                 }
                 .sheet(isPresented: $isPresentingOpeningHours) {
                     OpeningHoursSheet(openingHours)
                 }
-                .sheet(isPresented: $isPresentingUpdatePrompt) {
+                .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
                     UpdatePrompt().interactiveDismissDisabled()
                 }
-                .onChange(of: isPresentingOnboardingSheet) { isPresentingOnboardingSheet in
-                    if !isPresentingOnboardingSheet { isPresentingSignupSheet = true }
-                }
-                .onChange(of: isPresentingSignupSheet) { isPresentingSignupSheet in
-                    if !isPresentingSignupSheet { login() }
-                }
                 .onChange(of: phase) { phase in
-                    isConnected = false
-                    if (phase == .active && !isPresentingOnboardingSheet && !isPresentingSignupSheet) {
-                        isPresentingOpeningHours = false
-                        login()
-                    }
+                    if (phase == .active) { login() }
                 }
                 .environmentObject(env)
     }
@@ -97,9 +83,7 @@ struct ContentView: View {
 
     @State private var isPresentingSignupSheet = false
 
-    @State private var isPresentingOnboardingSheet
-            = AVAudioSession.sharedInstance().recordPermission != .granted
-                    || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+    @State private var isPresentingOnboardingSheet = false
 
     @State private var isConnected = false
 
@@ -111,30 +95,49 @@ struct ContentView: View {
 
     @Environment(\.scenePhase)
     private var phase
-    
+
     // MARK: - Methods
-    
+
     private func login() {
         Task {
+            guard !isPresentingCallSheet 
+                && !isPresentingSignupSheet
+                && !isPresentingOnboardingSheet
+                && !isPresentingUpdatePrompt 
+            else { return }
+            isConnected = false
+            isPresentingOpeningHours = false
+
             do {
+                // First make sure we can talk to the server.
                 let indexResponse = try await TowerApi.index()
 
+                // We can talk to the server, check whether the user needs to update before making a call.
                 let apiMajorVersion = indexResponse.apiVersion.split(separator: ".").first.flatMap { Int($0) }
                 let appMajorVersion = Settings.versionPreference.split(separator: ".").first.flatMap { Int($0) }
                 isPresentingUpdatePrompt = apiMajorVersion ?? Int.max > appMajorVersion ?? 0
                 guard !isPresentingUpdatePrompt else { return }
 
-                openingHours = indexResponse.openingHours.description
-                if indexResponse.openingHours.status == .closed {
-                    isPresentingOpeningHours = true
-                }
-
-                // If we don't have an anonymous account yet, create one.
+                // If we don't have an anonymous account yet, create one, so it has time to propagate.
                 if UUID(uuidString: Settings.userIdPreference) == nil {
                     Settings.userIdPreference = (try await TowerApi.registerUser()).userId.uuidString
                 }
-
                 isConnected = true
+
+                // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
+                isPresentingOnboardingSheet
+                    = AVAudioSession.sharedInstance().recordPermission != .granted 
+                        || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+                guard !isPresentingOnboardingSheet else { return }
+
+                // If we don't know the name of the user prompt them to sign up (first name is the only required field).
+                isPresentingSignupSheet = Settings.firstNamePreference.isEmpty
+                guard !isPresentingSignupSheet else { return }
+
+                // We have everything we need to make a call, check to see if the service is actually open.
+                openingHours = indexResponse.openingHours.description
+                isPresentingOpeningHours = indexResponse.openingHours.status == .closed
+                guard !isPresentingOpeningHours else { return }
             }
             catch {
                 Task { @MainActor in

@@ -8,13 +8,23 @@
 
 import SwiftUI
 
+// Layout modes: full-width (form-style) or auto-size (minimal buttons)
+enum AppButtonLayoutMode {
+    case fullWidth
+    case autoSize
+}
+
 struct AppButtonStyle: ButtonStyle {
     @Environment(\.colorScheme) private var colorScheme
+
+    var layoutMode: AppButtonLayoutMode = .fullWidth
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding()
-            .frame(maxWidth: .infinity)
+            .if(layoutMode == .fullWidth) { view in
+                view.frame(maxWidth: .infinity)
+            }
             .background(accentColor)
             .foregroundColor(foregroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -22,12 +32,10 @@ struct AppButtonStyle: ButtonStyle {
     }
 
     private var accentColor: Color {
-        // Use SwiftGen's color if needed
         Color(uiColor: Asset.Assets.accentColor.color)
     }
 
     private var foregroundColor: Color {
-        // In dark mode, if your accent color is light, switch to black text
         colorScheme == .dark ? .black : .white
     }
 }

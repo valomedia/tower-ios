@@ -27,22 +27,47 @@ struct ErrorView: View {
     var body: some View {
         NavigationView {
             NoContentView(
-                    title: "Es ist ein Fehler aufgetreten!",
-                    headline: errorWrapper.error.localizedDescription,
-                    caption: errorWrapper.guidance)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Schließen") {
-                                dismiss()
-                            }
+                title: "Es ist ein Fehler aufgetreten!",
+                headline: errorWrapper.error.localizedDescription,
+                caption: errorWrapper.guidance
+            ) {
+                Text("""
+                    Sollte das Problem weiterhin auftreten, wende dich bitte an unseren Support. Im Folgenden findest du \
+                    Informationen, die unserem Team helfen können, den Fehler zu finden. Bitte kopiere den \
+                    Fehlerbericht und schicke ihn uns per e-Mail.
+                    """)
+                Button {
+                    UIPasteboard.general.string = String(reflecting: errorWrapper.error)
+                    hasCopiedErrorReport = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        hasCopiedErrorReport = false
+                    }
+                } label: {
+                    Label("Bericht kopieren", systemImage: hasCopiedErrorReport ? "checkmark" : "document.on.clipboard")
+                }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(hasCopiedErrorReport)
+                Text("Fehlerbericht").bold()
+                Text(String(reflecting: errorWrapper.error))
+                    .font(.system(.body, design: .monospaced))
+                    .multilineTextAlignment(.leading)
+                    .background(.thinMaterial)
+            }
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Schließen") {
+                            dismiss()
                         }
                     }
+                }
         }
     }
 
     @Environment(\.dismiss)
     private var dismiss
+
+    @State private var hasCopiedErrorReport = false
 
 }
 

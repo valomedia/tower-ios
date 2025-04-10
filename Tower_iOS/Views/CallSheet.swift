@@ -48,7 +48,11 @@ struct CallSheet: View {
                             Task { @MainActor in
                                 env.errorWrapper = ErrorWrapper(
                                     error: error,
-                                    guidance: "Bitte versuche es später erneut")
+                                    guidance: """
+                                        Bitte versuche es noch einmal. Meistens tritt dieses Problem bei einer \
+                                        schlechten Netzwerkverbindung auf. Eventuell musst du in ein anderes \
+                                        Netzwerk wechseln, oder an einen Ort gehen, wo der Empfang besser ist.
+                                        """)
                             }
                         }
                     )

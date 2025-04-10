@@ -47,16 +47,13 @@ struct SignupSheet: View {
                         .disabled(email.isEmpty)
                 }
                 Section {
-                    Button(action: handleSignup, label: {
-                        HStack {
-                            Spacer()
+                    Button(action: handleSignup) {
                             Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
-                            Spacer()
+                                .frame(maxWidth: .infinity)
                         }
-                    })
+                        .buttonStyle(.invertedProminent)
                         .disabled(firstName.isEmpty)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
-                        .foregroundColor(.white)
                 }
             }
                 .navigationTitle("Angaben zu dir")

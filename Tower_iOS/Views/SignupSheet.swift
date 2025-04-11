@@ -56,6 +56,7 @@ struct SignupSheet: View {
                     })
                         .disabled(firstName.isEmpty)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
+                        .invertedForegroundColor()
                         .foregroundColor(.white)
                 }
             }

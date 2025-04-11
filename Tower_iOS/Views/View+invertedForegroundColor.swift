@@ -1,5 +1,5 @@
 //
-//  InvertedProminentButtonStyle.swift
+//  View+invertedForegroundColor.swift
 //  Tower_iOS
 //
 //  Created by Arne Engelland on 10.04.25.

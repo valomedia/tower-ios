@@ -44,7 +44,9 @@ struct OpeningHoursSheet: View {
                 } label: {
                     Label("Verstanden", systemImage: "checkmark").labelStyle(.trailingIcon)
                 }
-                    .buttonStyle(.invertedProminent)
+                    .buttonStyle(.borderedProminent)
+                    .invertedForegroundColor()
+
             }
         }
     }

@@ -51,7 +51,8 @@ struct SignupSheet: View {
                             Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
                                 .frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(.invertedProminent)
+                        .buttonStyle(.borderedProminent)
+                        .invertedForegroundColor()
                         .disabled(firstName.isEmpty)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                 }

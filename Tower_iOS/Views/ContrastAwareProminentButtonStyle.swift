@@ -20,7 +20,7 @@ struct ContrastAwareProminentButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == ContrastAwareProminentButtonStyle {
-    static var darkmodeAwareProminent: ContrastAwareProminentButtonStyle {
+    static var darkModeAwareProminent: ContrastAwareProminentButtonStyle {
         ContrastAwareProminentButtonStyle()
     }
 }

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14CB46382DA94F5200136227 /* SignupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB46372DA94F5200136227 /* SignupSheet.swift */; };
-		14CF25592DA7CA9E006B5C16 /* View+invertedForegroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF25582DA7CA99006B5C16 /* View+invertedForegroundColor.swift */; };
+		14CF25592DA7CA9E006B5C16 /* ContrastAwareProminentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF25582DA7CA99006B5C16 /* ContrastAwareProminentButtonStyle.swift */; };
 		79BBFF54BDAF562C38A27D7D /* Pods_Tower_iOS_Tower_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */; };
 		7A633F105F3FC525B55AAB9A /* Pods_Tower_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */; };
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
@@ -137,7 +137,7 @@
 /* Begin PBXFileReference section */
 		12951A18D2A6A277AC687368 /* Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; sourceTree = "<group>"; };
 		14CB46372DA94F5200136227 /* SignupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupSheet.swift; sourceTree = "<group>"; };
-		14CF25582DA7CA99006B5C16 /* View+invertedForegroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+invertedForegroundColor.swift"; sourceTree = "<group>"; };
+		14CF25582DA7CA99006B5C16 /* ContrastAwareProminentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastAwareProminentButtonStyle.swift; sourceTree = "<group>"; };
 		4B2E95B1078D44113E343532 /* Pods-Tower_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tower_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7032F01BE637D423A1144679 /* Pods-Tower_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS.debug.xcconfig"; path = "Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -333,7 +333,7 @@
 		E9E97433B81F994F7E441AE3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				14CF25582DA7CA99006B5C16 /* View+invertedForegroundColor.swift */,
+				14CF25582DA7CA99006B5C16 /* ContrastAwareProminentButtonStyle.swift */,
 				E9E97EFA3591C2A194430BD3 /* CallSheet.swift */,
 				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
 				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
@@ -811,7 +811,7 @@
 				E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */,
 				E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */,
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
-				14CF25592DA7CA9E006B5C16 /* View+invertedForegroundColor.swift in Sources */,
+				14CF25592DA7CA9E006B5C16 /* ContrastAwareProminentButtonStyle.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E1B5A6A22D2B38A00021D8CE /* ClientInfo.swift in Sources */,
 				E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */,

@@ -8,19 +8,23 @@
 
 import SwiftUI
 
-/// A button style based on `.borderedProminent` that ensures readable text in dark mode
-///
-struct ContrastAwareProminentButtonStyle: ButtonStyle {
+/// A ButtonStyle that wraps the system's BorderedProminentButtonStyle
+/// but forces black text when in dark mode.
+/// 
+struct DarkModeAwareProminentButtonStyle: PrimitiveButtonStyle {
     @Environment(\.colorScheme) private var colorScheme
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .buttonStyle(.borderedProminent)
-            .foregroundColor(colorScheme == .dark ? .black : .white)
+        // Use the built-in borderedProminent style for all other visual traits
+        let baseStyle = BorderedProminentButtonStyle()
+        // Generate the styled button body, then override the foreground color
+        return baseStyle
+            .makeBody(configuration: configuration)
+            .foregroundColor(colorScheme == .dark ? .black : nil)
     }
 }
 
-extension ButtonStyle where Self == ContrastAwareProminentButtonStyle {
-    static var darkModeAwareProminent: ContrastAwareProminentButtonStyle {
-        ContrastAwareProminentButtonStyle()
+extension PrimitiveButtonStyle where Self == DarkModeAwareProminentButtonStyle {
+    static var darkModeAwareProminent: DarkModeAwareProminentButtonStyle {
+        DarkModeAwareProminentButtonStyle()
     }
 }

@@ -333,9 +333,9 @@
 		E9E97433B81F994F7E441AE3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				14CF25582DA7CA99006B5C16 /* darkModeAwareProminentButtonStyle.swift */,
 				E9E97EFA3591C2A194430BD3 /* CallSheet.swift */,
 				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
+				14CF25582DA7CA99006B5C16 /* darkModeAwareProminentButtonStyle.swift */,
 				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
 				E9E9739414376D953A5C2437 /* Font+tower.swift */,
 				E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */,

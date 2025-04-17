@@ -32,7 +32,7 @@ struct CallSheet: View {
             Button(role: .destructive, action: controller.endSession, label: {
                 Label("Auflegen", systemImage: "phone.down.fill")
             })
-                    .buttonStyle(.borderedProminent)
+                .buttonStyle(.darkModeAwareProminent)
         }
                 .dynamicTypeSize(...DynamicTypeSize.accessibility4)
                 .onAppear {

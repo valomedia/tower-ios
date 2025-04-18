@@ -17,6 +17,8 @@ struct SignupSheet: View {
 
     // MARK: - Properties
 
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         NavigationView {
             Form {
@@ -56,7 +58,7 @@ struct SignupSheet: View {
                     })
                         .disabled(firstName.isEmpty)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
-                        .foregroundColor(.white)
+                        .foregroundColor(colorScheme == .dark ? .black : .white)
                 }
             }
                 .navigationTitle("Angaben zu dir")
@@ -92,8 +94,6 @@ struct SignupSheet: View {
 
 class SignupSheet_Previews: PreviewProvider {
 
-    // Mark: - Static properties
-
     static var previews: some View {
         VStack {
             EmptyView()
@@ -102,5 +102,4 @@ class SignupSheet_Previews: PreviewProvider {
     }
 
     @State static private var isPresented = true
-
 }

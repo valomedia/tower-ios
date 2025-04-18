@@ -94,6 +94,8 @@ struct SignupSheet: View {
 
 class SignupSheet_Previews: PreviewProvider {
 
+    // Mark: - Static properties
+
     static var previews: some View {
         VStack {
             EmptyView()
@@ -102,4 +104,5 @@ class SignupSheet_Previews: PreviewProvider {
     }
 
     @State static private var isPresented = true
+
 }

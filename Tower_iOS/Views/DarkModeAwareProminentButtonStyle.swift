@@ -1,5 +1,5 @@
 //
-//  darkModeAwareProminentButtonStyle.swift
+//  DarkModeAwareProminentButtonStyle.swift
 //  Tower_iOS
 //
 //  Created by Arne Engelland on 10.04.25.
@@ -8,9 +8,8 @@
 
 import SwiftUI
 
-/// A ButtonStyle that wraps the system's BorderedProminentButtonStyle
-/// but forces black text when in dark mode.
-/// 
+/// A ButtonStyle based on .borderedProminent that forces black text when in dark mode.
+///
 struct DarkModeAwareProminentButtonStyle: PrimitiveButtonStyle {
     @Environment(\.colorScheme) private var colorScheme
     func makeBody(configuration: Configuration) -> some View {
@@ -23,6 +22,8 @@ struct DarkModeAwareProminentButtonStyle: PrimitiveButtonStyle {
     }
 }
 
+/// An extension that allows the use of the darkModeAwareProminent button style (forces black text in dark mode)
+///
 extension PrimitiveButtonStyle where Self == DarkModeAwareProminentButtonStyle {
     static var darkModeAwareProminent: DarkModeAwareProminentButtonStyle {
         DarkModeAwareProminentButtonStyle()

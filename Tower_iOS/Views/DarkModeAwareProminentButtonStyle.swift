@@ -29,12 +29,11 @@ struct DarkModeAwareProminentButtonStyle: PrimitiveButtonStyle {
 
 }
 
-// MARK: - Extension
+// MARK: - PrimitiveButtonStyle
 
-/// An extension that allows the use of the darkModeAwareProminent button style (forces black text in dark mode)
-///
 extension PrimitiveButtonStyle where Self == DarkModeAwareProminentButtonStyle {
 
+    /// Dark mode aware prominent button style that forces black text in dark mode.
     static var darkModeAwareProminent: DarkModeAwareProminentButtonStyle {
         DarkModeAwareProminentButtonStyle()
     }

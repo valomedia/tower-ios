@@ -37,7 +37,7 @@ struct ContentView: View {
             } label: {
                 Label("Jetzt anrufen", systemImage: "phone.fill")
             }
-            .buttonStyle(.darkModeAwareProminent)
+                    .buttonStyle(.darkModeAwareProminent)
                     .disabled(!isConnected)
                     .accessibilityHidden(!isConnected)
                     .padding()

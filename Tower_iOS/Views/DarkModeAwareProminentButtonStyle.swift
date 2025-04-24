@@ -2,7 +2,7 @@
 //  DarkModeAwareProminentButtonStyle.swift
 //  Tower_iOS
 //
-//  Created by Arne Engelland on 10.04.25.
+//  Created by Arne Engelland on 2025-04-10.
 //  Copyright © 2025 valo.media GmbH. All rights reserved.
 //
 

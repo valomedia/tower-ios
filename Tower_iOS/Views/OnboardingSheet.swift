@@ -49,7 +49,7 @@ struct OnboardingSheet: View {
                 } label: {
                     Label("Weiter", systemImage: "arrow.right").labelStyle(.trailingIcon)
                 }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.darkModeAwareProminent)
             }
         } else {
             NoContentView(
@@ -71,7 +71,8 @@ struct OnboardingSheet: View {
                 } label: {
                     Label("Einstellungen", systemImage: "gear").labelStyle(.trailingIcon)
                 }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.darkModeAwareProminent)
+
             }
         }
     }

@@ -42,7 +42,7 @@ struct OpeningHoursSheet: View {
                 Button {
                     dismiss()
                 } label: {
-                    Label("Verstanden", systemImage: "checkmark").labelStyle(.trailingIcon)
+                    Label("Weiter", systemImage: "arrow.right").labelStyle(.trailingIcon)
                 }
                     .buttonStyle(.borderedProminent)
             }

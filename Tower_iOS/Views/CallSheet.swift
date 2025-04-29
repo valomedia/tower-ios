@@ -90,7 +90,8 @@ struct CallSheet: View {
         statusMessage = switch controller.queuePosition {
             case nil: controller.sessionState.localizedDescription
             case 0: "Wir sind gleich für dich da"
-            default: "\(controller.queuePosition!) Nutzer:innen sind vor dir dran"
+            case 1: "Eine Person vor dir"
+            default: "\(controller.queuePosition!) Personen vor dir"
         }
     }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1420B18B2DC3BE3C00FA491B /* ContactSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420B18A2DC3BE3400FA491B /* ContactSheet.swift */; };
 		14CF25592DA7CA9E006B5C16 /* DarkModeAwareProminentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */; };
 		79BBFF54BDAF562C38A27D7D /* Pods_Tower_iOS_Tower_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */; };
 		7A633F105F3FC525B55AAB9A /* Pods_Tower_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */; };
@@ -136,6 +137,7 @@
 
 /* Begin PBXFileReference section */
 		12951A18D2A6A277AC687368 /* Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; sourceTree = "<group>"; };
+		1420B18A2DC3BE3400FA491B /* ContactSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSheet.swift; sourceTree = "<group>"; };
 		14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeAwareProminentButtonStyle.swift; sourceTree = "<group>"; };
 		4B2E95B1078D44113E343532 /* Pods-Tower_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tower_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -335,6 +337,7 @@
 			children = (
 				E9E97EFA3591C2A194430BD3 /* CallSheet.swift */,
 				E9E976D0CDD10DBCEC1EE97F /* ContentView.swift */,
+				1420B18A2DC3BE3400FA491B /* ContactSheet.swift */,
 				14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */,
 				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
 				E9E9739414376D953A5C2437 /* Font+tower.swift */,
@@ -805,6 +808,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1420B18B2DC3BE3C00FA491B /* ContactSheet.swift in Sources */,
 				E1CB1BDD2C5FEEEA0078AF3A /* ImageSize.swift in Sources */,
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
 				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,

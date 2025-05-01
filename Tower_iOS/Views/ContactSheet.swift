@@ -8,7 +8,13 @@
 
 import SwiftUI
 
+// MARK: ContactSheet
+
+/// A sheet presenting contact information and imprint details.
+///
 struct ContactSheet: View {
+
+    // MARK: - Properties
 
     @Environment(\.dismiss) private var dismiss
 
@@ -29,7 +35,8 @@ struct ContactSheet: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
 
-                    Divider().padding(.vertical, 8)
+                    Divider()
+                        .padding(.vertical, 8)
 
                     VStack(spacing: 4) {
                         Text("Tower Fernassistanz ist ein Angebot von:")
@@ -59,8 +66,14 @@ struct ContactSheet: View {
     }
 }
 
-struct ContactSheet_Previews: PreviewProvider {
+// MARK: ContactSheet_Previews
+
+class ContactSheet_Previews: PreviewProvider {
+
+    // MARK: - Static properties
+
     static var previews: some View {
         ContactSheet()
     }
+
 }

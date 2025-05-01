@@ -42,6 +42,8 @@ struct SignupSheet: View {
                             Text("E-Mail-Adresse")
                         }
                             .keyboardType(.emailAddress)
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
                     }
                 }
                 Section {

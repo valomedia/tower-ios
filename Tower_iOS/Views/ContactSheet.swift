@@ -20,11 +20,7 @@ struct ContactSheet: View {
 
     var body: some View {
         NavigationView {
-            NoContentView(
-                title: "Kontakt",
-                headline: "",
-                caption: ""
-            ) {
+            ScrollView {
                 VStack(spacing: 16) {
                     Text(
                         """
@@ -54,6 +50,7 @@ struct ContactSheet: View {
                 }
                 .padding()
             }
+            .navigationTitle("Kontakt")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

@@ -133,27 +133,25 @@ class CallController: NSObject, ObservableObject {
     /// endpoint and wait for an incoming call from an assistant.
     ///
     func startSession(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
-        
         do {
-                try audioSession.setCategory(
-                    .playAndRecord,
-                    mode: .voiceChat,
-                    options: [.defaultToSpeaker, .allowBluetooth]
-                )
-                try audioSession.setActive(true)
+            try audioSession.setCategory(
+                .playAndRecord,
+                mode: .videoChat,
+                options: [.defaultToSpeaker, .allowBluetooth]
+            )
+            try audioSession.setActive(true)
 
-                // Only switch to speaker if no external output is attached
-                let hasOnlyBuiltIns = audioSession
-                    .currentRoute
-                    .outputs
-                    .allSatisfy { $0.portType == .builtInReceiver || $0.portType == .builtInSpeaker }
-                if hasOnlyBuiltIns {
-                    try audioSession.overrideOutputAudioPort(.speaker)
-                }
-            } catch {
-                print("Failed to route audio to loudspeaker:", error)
+            // Only switch to speaker if no external output is attached
+            let hasOnlyBuiltIns = audioSession
+                .currentRoute
+                .outputs
+                .allSatisfy { $0.portType == .builtInReceiver || $0.portType == .builtInSpeaker }
+            if hasOnlyBuiltIns {
+                try audioSession.overrideOutputAudioPort(.speaker)
             }
-        
+        } catch {
+            print("Failed to route audio to loudspeaker:", error)
+        }
         playCallTone(AVPlayerItem.callRingbackTone, repeating: true)
         sessionState = .initializing
 

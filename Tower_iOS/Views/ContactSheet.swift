@@ -34,22 +34,18 @@ struct ContactSheet: View {
                         [tower-assist.de](https://tower-assist.de/).
                         """
                     )
-                    .font(.body)
 
                     Divider()
 
                     VStack {
                         Text("Tower Fernassistanz ist ein Angebot von:")
                             .bold()
-                            .font(.body)
                         Text("Bathildisheim e.V.")
                         Text("Bathildisstraße 7")
                         Text("34454 Bad Arolsen")
                     }
-                    .font(.body)
                 }
                 .padding()
-                .frame(maxWidth: .infinity)
             }
             .environment(\.multilineTextAlignment, .center)
             .navigationTitle("Kontakt")

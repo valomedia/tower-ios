@@ -15,6 +15,12 @@ import CoreLocation
 ///
 protocol Message: Codable {}
 
+struct CapturePhotoRequestPayload: Codable {
+    let uploadUrl: String
+    let key: String
+    let expiresOn: String
+}
+
 // MARK: DataMessage
 
 /// A data channel Message that is sent during normal operation.
@@ -55,16 +61,16 @@ enum DataMessage: Message {
     /// When this is received, the app will take a photo and respond with several photoDataEvents and a
     /// capturePhotoResponse.
     ///
-    case capturePhotoRequest
+    case capturePhotoRequest(CapturePhotoRequestPayload)
 
     /// A response indicating the successful capture of a photo.
     ///
     /// This is sent to the assistant, after all the chunks of photo data have been sent out.
     ///
     /// - Parameters:
-    ///   - uuid: The uuid used in the ImageChunkingInfo for the photoDataEvents for the photo this response is for.
+    ///   - key
     ///
-    case capturePhotoResponse(uuid: UUID)
+    case capturePhotoResponse(key: String)
 
     /// A request for the app to switch cameras.
     ///

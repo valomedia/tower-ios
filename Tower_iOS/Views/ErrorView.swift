@@ -33,8 +33,8 @@ struct ErrorView: View {
             ) {
                 Text("""
                     Sollte das Problem weiterhin auftreten, wende dich bitte an unseren Support. Im Folgenden findest du \
-                    Informationen, die unserem Team helfen können, den Fehler zu finden. Bitte kopiere den \
-                    Fehlerbericht und schicke ihn uns per e-Mail.
+                    Informationen, die unserem Team helfen können, den Fehler zu finden. Bitte kopiere den Fehlerbericht und \
+                    schicke ihn uns per E-Mail an [feedback@tower-assist.de](mailto:feedback@tower-assist.de).
                     """)
                 Button {
                     UIPasteboard.general.string = String(reflecting: errorWrapper.error)

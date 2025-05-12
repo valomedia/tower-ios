@@ -58,7 +58,7 @@ enum DataMessage: Message {
 
     /// A request for the app to take a photo.
     ///
-    /// When this is received, the app will take a photo and respond with several photoDataEvents and a
+    /// When this is received, the app will take a photo and upload it via HTTP and send a
     /// capturePhotoResponse.
     ///
     case capturePhotoRequest(CapturePhotoRequestPayload)
@@ -68,7 +68,7 @@ enum DataMessage: Message {
     /// This is sent to the assistant, after all the chunks of photo data have been sent out.
     ///
     /// - Parameters:
-    ///   - key (the key that can be used to retrieve the image from the backend)
+    ///   - key: The key that can be used to retrieve the image from the backend
     ///
     case capturePhotoResponse(key: String)
 

@@ -743,19 +743,40 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
     ) {
         // Make sure that we have data and that the data is a DataMessage. The tower-staff app currently doesn't send
         // ErrorMessages, but if it does, we wanna ignore them here.
-        guard
-            let data = dataChannelReceiver.receiveMessage()?.data,
-            let message = try? JSONDecoder.shared.decode(DataMessage.self, from: data)
-        else { return }
-
+        guard let rawData = dataChannelReceiver.receiveMessage()?.data else { return }
+        
+        // Quick decode for HTTP-upload requests because it's less error prone
+        if let wrapper = try? JSONDecoder().decode([String: CapturePhotoRequestPayload].self, from: rawData),
+           let payload = wrapper["capturePhotoRequest"] {
+            handleCapturePhotoRequest(
+                uploadUrl: payload.uploadUrl,
+                key:       payload.key,
+                expiresOn: payload.expiresOn
+            )
+            return
+        }
+        
+        // Fallback to enum decode
+        let decoder = JSONDecoder()
+        do {
+            let message = try decoder.decode(DataMessage.self, from: rawData)
         switch message {
+        case let .capturePhotoRequest(payload):
+            handleCapturePhotoRequest(
+                uploadUrl: payload.uploadUrl,
+                key:       payload.key,
+                expiresOn: payload.expiresOn
+            )
         case .switchCameraRequest: handleSwitchCameraRequest()
         case .toggleTorchRequest: handleToggleTorchRequest()
         case .locationRequest: handleLocationRequest()
-        case .capturePhotoRequest: handleCapturePhotoRequest()
         case .holdEvent: handleHoldEvent()
         case .resumeEvent: handleResumeEvent()
-        default: ()
+        default:
+            break
+            }
+        } catch {
+            // ignore messages we can’t decode
         }
     }
 
@@ -782,46 +803,33 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
         }
     }
 
-    private func handleCapturePhotoRequest() {
+    private func handleCapturePhotoRequest(
+        uploadUrl: String,
+        key:       String,
+        expiresOn: String
+    ) {
         Task {
             guard let callController else { return }
             do {
-                let photoData = try await callController.cameraController.takePhoto()
-                print("Captured photo with a filesize of \(photoData.imageData.count / 1024) kB")
-
-                let uuid = UUID()
-                let encodedData = photoData.imageData.base64EncodedString()
-                let chunkSize = try CallController.dataMessageMaxSize
-                    - JSONEncoder
-                        .shared
-                        .encode(
-                            DataMessage.photoDataEvent(
-                                imageData: "",
-                                chunkingInfo: DataMessage.ImageChunkingInfo(
-                                    index: CallController.dataMessageMaxBurstCount,
-                                    count: CallController.dataMessageMaxBurstCount,
-                                    uuid: uuid)))
-                        .count
-                let chunks = stride(from: 0, to: encodedData.count, by: chunkSize).map {
-                    let start = encodedData.index(encodedData.startIndex, offsetBy: $0)
-                    let end = encodedData.index(start, offsetBy: chunkSize, limitedBy: encodedData.endIndex)
-                        ?? encodedData.endIndex
-                    return String(encodedData[start..<end])
+                // Capture photo
+                let photo = try await callController.cameraController.takePhoto()
+                print("Captured photo with a filesize of \(photo.imageData.count / 1024) kB")
+                
+                // Upload via HTTP PUT
+                guard let url = URL(string: uploadUrl) else {
+                    throw CameraError.unexpectedError
                 }
-                for (index, imageData) in chunks.enumerated() {
-                    // For now, just blast the messages out via the lossy channel with no retransmission mechanism. The
-                    // way this is implemented in ACS right now, it's not lossy anyways, but if it were, in the worst
-                    // case, the assistant will not get the photo and just have to hit the button again.
-                    callController.sendMessageLossy(
-                        DataMessage.photoDataEvent(
-                            imageData: imageData,
-                            chunkingInfo: DataMessage.ImageChunkingInfo(
-                                index: index,
-                                count: chunks.count,
-                                uuid: uuid)))
-                    try await Task.sleep(for: .seconds(CallController.lossyDataChannelChunkedMessageDelay))
+                var request = URLRequest(url: url)
+                request.httpMethod = "PUT"
+                request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+                request.httpBody = photo.imageData
+                let (_, response) = try await URLSession.shared.data(for: request)
+                guard let http = response as? HTTPURLResponse, 200..<300 ~= http.statusCode else {
+                    throw CameraError.unexpectedError
                 }
-                callController.sendMessage(DataMessage.capturePhotoResponse(uuid: uuid))
+                
+                // Notify assistant
+                callController.sendMessage(DataMessage.capturePhotoResponse(key: key))
             } catch {
                 print("Photo capture failed: \(error)")
                 callController.sendMessage(ErrorMessage.capturePhotoResponse(error: "\(error)"))

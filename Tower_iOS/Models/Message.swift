@@ -15,12 +15,6 @@ import CoreLocation
 ///
 protocol Message: Codable {}
 
-struct CapturePhotoRequestPayload: Codable {
-    let uploadUrl: String
-    let key: String
-    let expiresOn: String
-}
-
 // MARK: DataMessage
 
 /// A data channel Message that is sent during normal operation.
@@ -61,7 +55,7 @@ enum DataMessage: Message {
     /// When this is received, the app will take a photo and upload it via HTTP and send a
     /// capturePhotoResponse.
     ///
-    case capturePhotoRequest(CapturePhotoRequestPayload)
+    case capturePhotoRequest(uploadUrl: URL, key: String)
 
     /// A response indicating the successful capture of a photo.
     ///

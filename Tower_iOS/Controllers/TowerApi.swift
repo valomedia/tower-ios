@@ -78,6 +78,30 @@ class TowerApi {
             ["userId": Settings.userIdPreference],
             as: AwaitAssistanceResponse.self)
     }
+    
+    /// Upload raw JPEG data to a signed URL via HTTP PUT.
+    ///
+    /// - Parameters:
+    ///   - data: JPEG image bytes.
+    ///   - uploadUrl: Pre-signed URL to PUT data to.
+    /// - Throws: URLError on transport failure, TowerError.unexpectedError on non-2xx response.
+    ///
+    class func uploadPhotoData(
+        _ data: Data,
+        to uploadUrl: URL
+    ) async throws {
+        var request = URLRequest(url: uploadUrl)
+        request.httpMethod = "PUT"
+        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        request.httpBody = data
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse,
+              200..<300 ~= http.statusCode
+        else {
+            throw TowerError.unexpectedError
+        }
+    }
 
     /// Signal to the backend, that the caller has given up on waiting.
     /// 

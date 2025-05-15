@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14574E092DD610C9000BB638 /* camera-switch-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 14574E082DD610C9000BB638 /* camera-switch-tone.mp3 */; };
+		14574E0B2DD61218000BB638 /* AVPlayerItem+cameraSwitchTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14574E0A2DD611F2000BB638 /* AVPlayerItem+cameraSwitchTone.swift */; };
 		1420B18B2DC3BE3C00FA491B /* ContactSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420B18A2DC3BE3400FA491B /* ContactSheet.swift */; };
 		14CF25592DA7CA9E006B5C16 /* DarkModeAwareProminentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */; };
 		79BBFF54BDAF562C38A27D7D /* Pods_Tower_iOS_Tower_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */; };
@@ -137,6 +139,8 @@
 
 /* Begin PBXFileReference section */
 		12951A18D2A6A277AC687368 /* Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; sourceTree = "<group>"; };
+		14574E082DD610C9000BB638 /* camera-switch-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "camera-switch-tone.mp3"; sourceTree = "<group>"; };
+		14574E0A2DD611F2000BB638 /* AVPlayerItem+cameraSwitchTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerItem+cameraSwitchTone.swift"; sourceTree = "<group>"; };
 		1420B18A2DC3BE3400FA491B /* ContactSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSheet.swift; sourceTree = "<group>"; };
 		14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeAwareProminentButtonStyle.swift; sourceTree = "<group>"; };
 		4B2E95B1078D44113E343532 /* Pods-Tower_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS/Pods-Tower_iOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -465,6 +469,7 @@
 				E1B5A69A2D2B0E700021D8CE /* AVPlayerItem+callErrorTone.swift */,
 				E1B5A69B2D2B0E700021D8CE /* AVPlayerItem+callRingbackTone.swift */,
 				E1B5A69C2D2B0E700021D8CE /* AVPlayerItem+callStartTone.swift */,
+				14574E0A2DD611F2000BB638 /* AVPlayerItem+cameraSwitchTone.swift */,
 				E9E97E5A9111D126202C0CB4 /* Bool+else.swift */,
 				E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */,
 				E1CB1BD02C5A9A170078AF3A /* CIImage+image.swift */,
@@ -499,6 +504,7 @@
 				E154D2612C9844B1004751CF /* call-error-tone.mp3 */,
 				E154D2622C9844B1004751CF /* call-ringback-tone.mp3 */,
 				E154D25F2C9844B1004751CF /* call-start-tone.mp3 */,
+				14574E082DD610C9000BB638 /* camera-switch-tone.mp3 */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -640,6 +646,7 @@
 				E154D2662C9844B1004751CF /* call-ringback-tone.mp3 in Resources */,
 				E9E979589AE0CB1D1ECD8E98 /* Assets.xcassets in Resources */,
 				E9E97F39E2ED8B908232E0A3 /* Preview Assets.xcassets in Resources */,
+				14574E092DD610C9000BB638 /* camera-switch-tone.mp3 in Resources */,
 				E1D03DAA29DDE2510061E831 /* Settings.bundle in Resources */,
 				E9E97DC5146A1DC309049ABA /* Assets.stencil in Resources */,
 				E9E976F42D1E4BAA7BAAF7BE /* Settings.stencil in Resources */,
@@ -830,6 +837,7 @@
 				E1CB1BD72C5B87860078AF3A /* CameraError.swift in Sources */,
 				E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */,
 				E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */,
+				14574E0B2DD61218000BB638 /* AVPlayerItem+cameraSwitchTone.swift in Sources */,
 				E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */,
 				E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */,
 				E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */,

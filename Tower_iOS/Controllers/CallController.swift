@@ -727,6 +727,7 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
         guard let callController else { return }
         callController.cameraController.switchCamera()
         callController.sendMessage(DataMessage.switchCameraResponse)
+        callController.playCallTone(AVPlayerItem.cameraSwitchTone)
     }
 
     private func handleToggleTorchRequest() {

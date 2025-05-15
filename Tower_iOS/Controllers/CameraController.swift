@@ -293,10 +293,6 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             throw CameraError.codecUnavailable
         }
 
-        // Temporarily switch to the highest resolution
-        let captureDimensions = self.captureDimensions
-        self.captureDimensions = CallQualityLevel.veryHigh.resolution.dimensions
-
         captureQueue.async { [weak self] in
             guard let self else { return }
 
@@ -307,7 +303,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
                         AVVideoQualityKey: "0.5"
                     ]
                 ])
-            photoSettings.photoQualityPrioritization = .speed
+            photoSettings.maxPhotoDimensions = photoOutput.maxPhotoDimensions
 
             if let photoOutputVideoConnection = photoOutput.connection(with: .video) {
                 if  photoOutputVideoConnection.isVideoOrientationSupported,
@@ -318,9 +314,6 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             }
 
             photoOutput.capturePhoto(with: photoSettings, delegate: self)
-
-            // Turn the torch back on if necessary and switch back to the previous video format.
-            self.captureDimensions = captureDimensions
         }
 
         return try await withCheckedThrowingContinuation { continuation in photoOutputContinuations.append(continuation) }
@@ -459,56 +452,33 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             .formats
             .filter { format in 
                 format.formatDescription.mediaSubType == .init(rawValue: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
+                    && format.formatDescription.dimensions == captureDimensions
             }
-            .min { formatA, formatB in
-                closestDimensions(
-                    to: captureDimensions,
-                    dimensionsA: formatA.formatDescription.dimensions,
-                    dimensionsB: formatB.formatDescription.dimensions)
+            .max { formatA, formatB in
+                highestSupportedPhotoResolution(for: formatA) < highestSupportedPhotoResolution(for: formatB)
             }
 
-        if let chosenFormat = newAVFormat, chosenFormat != captureDevice.activeFormat {
+        if
+            let chosenFormat = newAVFormat, 
+            let photoDimensions = highestSupportedPhotoDimensions(for: chosenFormat),
+            chosenFormat != captureDevice.activeFormat
+        {
             print("Set resolution for capture device to \(chosenFormat.formatDescription.dimensions)")
+            print("Will capture photos at \(photoDimensions)")
             captureDevice.activeFormat = chosenFormat
+            photoOutput.maxPhotoDimensions = photoDimensions
         }
 
         return captureDevice.activeFormat.formatDescription.dimensions
     }
 
-    private func closestDimensions(
-        to dimensions: CMVideoDimensions,
-        dimensionsA: CMVideoDimensions,
-        dimensionsB: CMVideoDimensions
-    ) -> Bool {
-        let resolutionA = dimensionsA.width * dimensionsA.height
-        let resolutionB = dimensionsB.width * dimensionsB.height
-
-        if  dimensionsA.width >= dimensions.width,
-            dimensionsA.height >= dimensions.height,
-            dimensionsB.width >= dimensions.width,
-            dimensionsB.height >= dimensions.height
-        { return resolutionA < resolutionB }
-
-        if  dimensionsA.width >= dimensions.width,
-            dimensionsA.height >= dimensions.height
-        { return true }
-
-        if  dimensionsB.width >= dimensions.width,
-            dimensionsB.height >= dimensions.height
-        { return false }
-
-        let usableResolutionA = calculateUsableResolution(cropping: dimensionsA, to: dimensions)
-        let usableResolutionB = calculateUsableResolution(cropping: dimensionsB, to: dimensions)
-        if usableResolutionA != usableResolutionB {
-            return usableResolutionA > usableResolutionB
-        }
-
-        return resolutionA < resolutionB
+    private func highestSupportedPhotoDimensions(for format: AVCaptureDevice.Format) -> CMVideoDimensions? {
+        format.supportedMaxPhotoDimensions.max { $0.width * $0.height < $1.width * $1.height }
     }
 
-    private func calculateUsableResolution(cropping cameraDimensions: CMVideoDimensions, to streamDimensions: CMVideoDimensions) -> Int32 {
-        return min(cameraDimensions.width, Int32(Double(cameraDimensions.height) * streamDimensions.aspectRatio))
-            * min(cameraDimensions.height, Int32(Double(cameraDimensions.width) / streamDimensions.aspectRatio))
+    private func highestSupportedPhotoResolution(for format: AVCaptureDevice.Format) -> Int32 {
+        guard let highestSupportedPhotoDimensions = highestSupportedPhotoDimensions(for: format) else { return 0 }
+        return highestSupportedPhotoDimensions.width * highestSupportedPhotoDimensions.height
     }
 
     @discardableResult

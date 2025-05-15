@@ -135,10 +135,10 @@ class TowerApi {
         }
 
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse else {
+        guard let response = response as? HTTPURLResponse else {
             throw TowerError.invalidEndpoint
         }
-        try validateResponse(http)
+        try validateResponse(response)
         return try JSONDecoder.shared.decode(type, from: data)
     }
 
@@ -148,18 +148,12 @@ class TowerApi {
         ///
         private class func validateResponse(_ response: HTTPURLResponse) throws {
             switch response.statusCode {
-            case 200..<300:
-                return
-            case 400:
-                throw TowerError.badRequest
-            case 401:
-                throw TowerError.badCredentials
-            case 404:
-                throw TowerError.notFound
-            case 500...599:
-                throw TowerError.serverError
-            default:
-                throw TowerError.unexpectedError
+            case 200..<300:return
+            case 400:throw TowerError.badRequest
+            case 401:throw TowerError.badCredentials
+            case 404:throw TowerError.notFound
+            case 500...599:throw TowerError.serverError
+            default:throw TowerError.unexpectedError
             }
         }
 }

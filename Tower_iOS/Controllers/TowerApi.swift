@@ -84,7 +84,7 @@ class TowerApi {
     /// - Parameters:
     ///   - data: JPEG image bytes.
     ///   - uploadUrl: Pre-signed URL to PUT data to.
-    /// - Throws: URLError on transport failure, TowerError.unexpectedError on non-2xx response.
+    /// - Throws: `URLError` on network failure or `TowerError` on invalid endpoint or non-2xx response.
     ///
     class func uploadPhotoData(
         _ data: Data,
@@ -96,10 +96,10 @@ class TowerApi {
         request.httpBody = data
 
         let (_, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse else {
+        guard let response = response as? HTTPURLResponse else {
             throw TowerError.invalidEndpoint
         }
-        try validateResponse(http)
+        try validateResponse(response)
     }
 
     /// Signal to the backend, that the caller has given up on waiting.
@@ -142,18 +142,17 @@ class TowerApi {
         return try JSONDecoder.shared.decode(type, from: data)
     }
 
-    // MARK: - Private Helpers
-
-        /// Throws a specific TowerError based on HTTP status code.
-        ///
-        private class func validateResponse(_ response: HTTPURLResponse) throws {
-            switch response.statusCode {
-            case 200..<300:return
-            case 400:throw TowerError.badRequest
-            case 401:throw TowerError.badCredentials
-            case 404:throw TowerError.notFound
-            case 500...599:throw TowerError.serverError
-            default:throw TowerError.unexpectedError
-            }
+    /// Throws a specific TowerError based on HTTP status code.
+    ///
+    private class func validateResponse(_ response: HTTPURLResponse) throws {
+        switch response.statusCode {
+        case 200..<300:return
+        case 400:throw TowerError.badRequest
+        case 401:throw TowerError.badCredentials
+        case 404:throw TowerError.notFound
+        case 500...599:throw TowerError.serverError
+        default:throw TowerError.unexpectedError
         }
+    }
+    
 }

@@ -161,10 +161,6 @@ enum DataMessage: Message {
     ///     - userProfile: Information about the user making the call.
     ///
     case userHelloEvent(clientInfo: ClientInfo, userProfile: UserProfile)
-    
-    /// A “keepalive” / no-op message from tower-staff that can be ignored.
-    ///
-    case flushEvent
 
     // Mark: - Life cycle methods
 

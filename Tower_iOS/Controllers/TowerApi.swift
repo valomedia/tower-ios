@@ -96,11 +96,10 @@ class TowerApi {
         request.httpBody = data
 
         let (_, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse,
-              200..<300 ~= http.statusCode
-        else {
-            throw TowerError.unexpectedError
+        guard let http = response as? HTTPURLResponse else {
+            throw TowerError.invalidEndpoint
         }
+        try validateResponse(http)
     }
 
     /// Signal to the backend, that the caller has given up on waiting.
@@ -136,22 +135,31 @@ class TowerApi {
         }
 
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let response = response as? HTTPURLResponse else { throw TowerError.invalidEndpoint }
-
-        switch response.statusCode {
-        case 200:
-            return try JSONDecoder.shared.decode(type, from: data)
-        case 400:
-            throw TowerError.badRequest
-        case 401:
-            throw TowerError.badCredentials
-        case 404:
-            throw TowerError.notFound
-        case 500...599:
-            throw TowerError.serverError
-        default:
-            throw TowerError.unexpectedError
+        guard let http = response as? HTTPURLResponse else {
+            throw TowerError.invalidEndpoint
         }
+        try validateResponse(http)
+        return try JSONDecoder.shared.decode(type, from: data)
     }
 
+    // MARK: - Private Helpers
+
+        /// Throws a specific TowerError based on HTTP status code.
+        ///
+        private class func validateResponse(_ response: HTTPURLResponse) throws {
+            switch response.statusCode {
+            case 200..<300:
+                return
+            case 400:
+                throw TowerError.badRequest
+            case 401:
+                throw TowerError.badCredentials
+            case 404:
+                throw TowerError.notFound
+            case 500...599:
+                throw TowerError.serverError
+            default:
+                throw TowerError.unexpectedError
+            }
+        }
 }

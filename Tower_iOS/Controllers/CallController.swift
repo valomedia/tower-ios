@@ -747,7 +747,7 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
             let data = dataChannelReceiver.receiveMessage()?.data,
             let message = try? JSONDecoder.shared.decode(DataMessage.self, from: data)
         else { return }
-        
+
         switch message {
         case let .capturePhotoRequest(uploadUrl, key):
             handleCapturePhotoRequest(uploadUrl: uploadUrl, key: key)

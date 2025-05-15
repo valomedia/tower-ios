@@ -52,19 +52,19 @@ enum DataMessage: Message {
 
     /// A request for the app to take a photo.
     ///
-    /// When this is received, the app will take a photo and respond with several photoDataEvents and a
+    /// When this is received, the app will take a photo and upload it via HTTP and send a
     /// capturePhotoResponse.
     ///
-    case capturePhotoRequest
+    case capturePhotoRequest(uploadUrl: URL, key: String)
 
     /// A response indicating the successful capture of a photo.
     ///
     /// This is sent to the assistant, after all the chunks of photo data have been sent out.
     ///
     /// - Parameters:
-    ///   - uuid: The uuid used in the ImageChunkingInfo for the photoDataEvents for the photo this response is for.
+    ///   - key: The key that can be used to retrieve the image from the backend
     ///
-    case capturePhotoResponse(uuid: UUID)
+    case capturePhotoResponse(key: String)
 
     /// A request for the app to switch cameras.
     ///

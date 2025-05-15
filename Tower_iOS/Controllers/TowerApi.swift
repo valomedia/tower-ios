@@ -78,6 +78,29 @@ class TowerApi {
             ["userId": Settings.userIdPreference],
             as: AwaitAssistanceResponse.self)
     }
+    
+    /// Upload raw JPEG data to a signed URL via HTTP PUT.
+    ///
+    /// - Parameters:
+    ///   - data: JPEG image bytes.
+    ///   - uploadUrl: Pre-signed URL to PUT data to.
+    /// - Throws: `URLError` on network failure or `TowerError` on invalid endpoint or non-2xx response.
+    ///
+    class func uploadPhotoData(
+        _ data: Data,
+        to uploadUrl: URL
+    ) async throws {
+        var request = URLRequest(url: uploadUrl)
+        request.httpMethod = "PUT"
+        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        request.httpBody = data
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+        guard let response = response as? HTTPURLResponse else {
+            throw TowerError.invalidEndpoint
+        }
+        try validateResponse(response)
+    }
 
     /// Signal to the backend, that the caller has given up on waiting.
     /// 
@@ -112,22 +135,24 @@ class TowerApi {
         }
 
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let response = response as? HTTPURLResponse else { throw TowerError.invalidEndpoint }
-
-        switch response.statusCode {
-        case 200:
-            return try JSONDecoder.shared.decode(type, from: data)
-        case 400:
-            throw TowerError.badRequest
-        case 401:
-            throw TowerError.badCredentials
-        case 404:
-            throw TowerError.notFound
-        case 500...599:
-            throw TowerError.serverError
-        default:
-            throw TowerError.unexpectedError
+        guard let response = response as? HTTPURLResponse else {
+            throw TowerError.invalidEndpoint
         }
+        try validateResponse(response)
+        return try JSONDecoder.shared.decode(type, from: data)
     }
 
+    /// Throws a specific TowerError based on HTTP status code.
+    ///
+    private class func validateResponse(_ response: HTTPURLResponse) throws {
+        switch response.statusCode {
+        case 200..<300:return
+        case 400:throw TowerError.badRequest
+        case 401:throw TowerError.badCredentials
+        case 404:throw TowerError.notFound
+        case 500...599:throw TowerError.serverError
+        default:throw TowerError.unexpectedError
+        }
+    }
+    
 }

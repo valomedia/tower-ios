@@ -1,0 +1,74 @@
+//
+//  ContactSheet.swift
+//  Tower_iOS
+//
+//  Created by Arne Engelland on 2025-05-01.
+//  Copyright © 2025 valo.media GmbH. All rights reserved.
+//
+
+import SwiftUI
+
+// MARK: ContactSheet
+
+/// A sheet presenting contact information and imprint details.
+///
+struct ContactSheet: View {
+
+    // MARK: - Properties
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack {
+                    Text(
+                        """
+                        Wir freuen uns über deine Fragen und Anregungen. \
+                        Schreib uns jederzeit eine Mail an \
+                        [feedback@tower-assist.de](mailto:feedback@tower-assist.de). \
+                        Du kannst uns auch anrufen unter der Nummer \
+                        [0173 8406203](tel:01738406203). \
+                        Wir sind von Montag bis Freitag zwischen 9 und 17 Uhr erreichbar. \
+                        Weitere Infos findest du auf unserer Webseite unter \
+                        [tower-assist.de](https://tower-assist.de/).
+                        """
+                    )
+
+                    Divider()
+
+                    VStack {
+                        Text("Tower Fernassistanz ist ein Angebot von:")
+                            .bold()
+                        Text("Bathildisheim e.V.")
+                        Text("Bathildisstraße 7")
+                        Text("34454 Bad Arolsen")
+                    }
+                }
+                .padding()
+            }
+            .environment(\.multilineTextAlignment, .center)
+            .navigationTitle("Kontakt")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Schließen") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: ContactSheet_Previews
+
+class ContactSheet_Previews: PreviewProvider {
+
+    // MARK: - Static properties
+
+    static var previews: some View {
+        ContactSheet()
+    }
+
+}

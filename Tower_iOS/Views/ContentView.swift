@@ -50,6 +50,12 @@ struct ContentView: View {
             } label: {
                 Label("Einstellungen", systemImage: "gear")
             }
+            Button {
+                isPresentingContactSheet = true
+            } label: {
+                Label("Kontakt", systemImage: "envelope")
+            }
+
             Spacer()
         }
                 .padding()
@@ -70,6 +76,9 @@ struct ContentView: View {
                 }
                 .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
                     UpdatePrompt().interactiveDismissDisabled()
+                }
+                .sheet(isPresented: $isPresentingContactSheet) {
+                     ContactSheet()
                 }
                 .onChange(of: phase) { phase in
                     if (phase == .active && env.errorWrapper == nil) { login() }
@@ -92,6 +101,8 @@ struct ContentView: View {
     @State private var openingHours: String = ""
 
     @State private var isPresentingUpdatePrompt = false
+    
+    @State private var isPresentingContactSheet = false
 
     @Environment(\.scenePhase)
     private var phase

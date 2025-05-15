@@ -743,9 +743,11 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
     ) {
         // Make sure that we have data and that the data is a DataMessage. The tower-staff app currently doesn't send
         // ErrorMessages, but if it does, we wanna ignore them here.
-        guard let rawData = dataChannelReceiver.receiveMessage()?.data else { return }
-    // Decode all messages through the shared JSONDecoder
-    if let message = try? JSONDecoder.shared.decode(DataMessage.self, from: rawData) {
+        guard
+            let data = dataChannelReceiver.receiveMessage()?.data,
+            let message = try? JSONDecoder.shared.decode(DataMessage.self, from: data)
+        else { return }
+        
         switch message {
         case let .capturePhotoRequest(uploadUrl, key):
             handleCapturePhotoRequest(uploadUrl: uploadUrl, key: key)
@@ -754,9 +756,7 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
         case .locationRequest: handleLocationRequest()
         case .holdEvent: handleHoldEvent()
         case .resumeEvent: handleResumeEvent()
-        default:
-            break
-            }
+        default: ()
         }
     }
 
@@ -797,21 +797,9 @@ class DataHandler: NSObject, DataChannelCallFeatureDelegate, DataChannelReceiver
                 try await TowerApi.uploadPhotoData(photo.imageData, to: uploadUrl)
                 // 3. Notify assistant
                 callController.sendMessage(DataMessage.capturePhotoResponse(key: key))
-            } catch is DecodingError {
-                // JSON parsing or URL errors
-                callController.sendMessage(
-                    ErrorMessage.capturePhotoResponse(error: "Invalid upload parameters")
-                )
-            } catch is URLError {
-                // Network transport issues
-                callController.sendMessage(
-                    ErrorMessage.capturePhotoResponse(error: "Network error")
-                )
             } catch {
-                // Other errors: TowerError or CameraError
-                callController.sendMessage(
-                    ErrorMessage.capturePhotoResponse(error: "\(error)")
-                )
+                print("Photo capture failed: \(error)")
+                callController.sendMessage(ErrorMessage.capturePhotoResponse(error: "\(error)"))
             }
         }
     }

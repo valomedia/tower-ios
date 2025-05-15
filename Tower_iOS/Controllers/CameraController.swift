@@ -468,14 +468,8 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             }
 
         if let chosenFormat = newAVFormat, chosenFormat != captureDevice.activeFormat {
+            print("Set resolution for capture device to \(chosenFormat.formatDescription.dimensions)")
             captureDevice.activeFormat = chosenFormat
-        }
-        if captureDimensions != newAVFormat?.formatDescription.dimensions {
-            print(
-                """
-                Can't capture at \(captureDimensions), using \
-                \((newAVFormat ?? captureDevice.activeFormat).formatDescription.dimensions) instead.
-                """)
         }
 
         return captureDevice.activeFormat.formatDescription.dimensions
@@ -530,11 +524,9 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         let duration = CMTime(value: 1, timescale: Int32(timescale))
 
         if captureDevice.activeVideoMinFrameDuration != duration || captureDevice.activeVideoMaxFrameDuration != duration {
+            print("Set framerate for capture device to \(timescale) fps.")
             captureDevice.activeVideoMinFrameDuration = duration
             captureDevice.activeVideoMaxFrameDuration = duration
-        }
-        if timescale != captureFrameRate {
-            print("Can't capture at \(captureFrameRate) fps, using \(timescale) fps instead.")
         }
 
         return timescale

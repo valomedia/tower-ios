@@ -580,6 +580,10 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
         _ virtualOutgoingVideoStream: VirtualOutgoingVideoStream,
         didChangeFormat args: VideoStreamFormatChangedEventArgs
     ) {
+        print("Video stream did change format: "
+            + virtualOutgoingVideoStream.format.resolution.dimensions.description
+            + "@"
+            + virtualOutgoingVideoStream.format.framesPerSecond.description)
         handleFrameRateChanged(virtualOutgoingVideoStream)
         handleDimensionsChanged(virtualOutgoingVideoStream)
     }
@@ -617,10 +621,12 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
 
     private func handleVideoStreamAvailable(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        print("Video stream became available.")
         callController?.cameraController.delegate = self
     }
 
     private func handleVideoStreamStarted(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        print("Video stream has started.")
         callController?.cameraController.start { [weak self] error in
             Task {
                 guard let self else { return }
@@ -631,6 +637,7 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
 
     private func handleVideoStreamStopped() {
+        print("Video stream has stopped.")
         callController?.cameraController.stop()
     }
 

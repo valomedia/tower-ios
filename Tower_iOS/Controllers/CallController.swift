@@ -32,31 +32,15 @@ class CallController: NSObject, ObservableObject {
 
     /// The id for the data channel everything except photos is transmitted over.
     ///
-    static let durableDataChannelId: Int32 = 1000;
-
-    /// The id for the data channel the photos are transmitted over.
-    ///
-    static let lossyDataChannelId: Int32 = 1010;
+    static let dataChannelId: Int32 = 1000;
 
     /// The bandwith for the data channel everything except photos is transmitted over.
     ///
-    static let durableDataChannelBandwidthKbps: Int32 = 32;
-
-    /// The bandwidth for the data channel the photos are transmitted over.
-    ///
-    static let lossyDataChannelBandwidthKbps: Int32 = 512;
-
-    /// The delay between large messages on the lossy data channel in seconds.
-    ///
-    /// In theory this should be calculatable from `dataMessageMaxSize` and `lossyDataChannelBandwidthKbps`, which
-    /// would result in a delay of half a second, but for some reason this results in bandwidth exceeded exceptions,
-    /// so it's just fixed at one second for now.
-    ///
-    static let lossyDataChannelChunkedMessageDelay: Double = 1.0;
+    static let dataChannelBandwidthKbps: Int32 = 32;
 
     /// How long to wait before resending a message that failed to send.
     ///
-    /// We will only retry sending messages on the durable data channel. Those will be resent on a loop until it
+    /// We will retry sending messages on the data channel. Those will be resent on a loop until it
     /// finally works. Since the messages are too small, it's unlikely the resends would ever accumulate to the point
     /// where that becomes a problem, and if it does, other issues have rendered the call unrecoverably broken before
     /// then anyways.
@@ -70,7 +54,7 @@ class CallController: NSObject, ObservableObject {
     ///
     static let dataChannelEstablishDelay: Double = 1.0;
 
-    /// How long to wait between messages when sending multiple messages through the durable data channel.
+    /// How long to wait between messages when sending multiple messages through the data channel.
     ///
     /// When the data channel is established, multiple messages are sent out immediately. Because the data channel
     /// implementation on iOS is a little bit brittle, we add a small delay between messages, to reduce the likelyhood
@@ -94,7 +78,6 @@ class CallController: NSObject, ObservableObject {
     fileprivate let locationManager = CLLocationManager()
 
     fileprivate var dataChannelSender: DataChannelSender? = nil
-    fileprivate var dataChannelSenderLossy: DataChannelSender? = nil
     fileprivate var rawOutgoingVideoStream: VirtualOutgoingVideoStream?
 
     private let audioSession = AVAudioSession.sharedInstance()
@@ -229,7 +212,7 @@ class CallController: NSObject, ObservableObject {
     ///
     /// - Parameters:
     ///   - message: The Message to send.
-    ///   - dataChannelSender: The DataChannelSender to use, defaults to using the durable data channel.
+    ///   - dataChannelSender: The DataChannelSender to use, defaults to using the  data channel.
     ///   - retryOnFailure: Whether to retry if sending fails, defaults to true.
     ///
     func sendMessage(_ message: Message, dataChannelSender: DataChannelSender? = nil, retryOnFailure: Bool = true) {
@@ -254,7 +237,7 @@ class CallController: NSObject, ObservableObject {
     ///
     /// - Parameters:
     ///   - data: The Data to send.
-    ///   - dataChannelSender: The DataChannelSender to use, defaults to using the durable data channel.
+    ///   - dataChannelSender: The DataChannelSender to use, defaults to using the data channel.
     ///   - retryOnFailure: Whether to retry if sending fails, defaults to true.
     ///
     func sendMessage(_ data: Data, dataChannelSender: DataChannelSender? = nil, retryOnFailure: Bool = true) {
@@ -272,14 +255,6 @@ class CallController: NSObject, ObservableObject {
                 }
             }
         }
-    }
-
-    /// Send a Message through the lossy data channel.
-    ///
-    /// This will send a given message through the lossy data channel. It will not retry if sending fails.
-    ///
-    func sendMessageLossy(_ message: Message) {
-        sendMessage(message, dataChannelSender: dataChannelSenderLossy, retryOnFailure: false)
     }
 
     fileprivate func answerIncomingCall(_ incomingCall: IncomingCall) async {
@@ -339,7 +314,6 @@ class CallController: NSObject, ObservableObject {
             self.rawOutgoingVideoStream = nil
             self.dataChannelCallFeature = nil
             self.dataChannelSender = nil
-            self.dataChannelSenderLossy = nil
             self.callHandler = nil
             self.videoHandler = nil
             self.locationHandler = nil
@@ -384,28 +358,17 @@ class CallController: NSObject, ObservableObject {
         dataChannelCallFeature.delegate = self.dataHandler
         self.dataChannelCallFeature = dataChannelCallFeature
 
-        let durableDataChannelSenderOptions = DataChannelSenderOptions()
-        durableDataChannelSenderOptions.channelId = CallController.durableDataChannelId
-        durableDataChannelSenderOptions.bitrateInKbps = CallController.durableDataChannelBandwidthKbps
-        durableDataChannelSenderOptions.priority = .high
-        durableDataChannelSenderOptions.reliability = .durable
+        let dataChannelSenderOptions = DataChannelSenderOptions()
+        dataChannelSenderOptions.channelId = CallController.dataChannelId
+        dataChannelSenderOptions.bitrateInKbps = CallController.dataChannelBandwidthKbps
+        dataChannelSenderOptions.priority = .high
+        dataChannelSenderOptions.reliability = .durable
 
         let dataChannelSender
-            = dataChannelCallFeature.getDataChannelSender(options: durableDataChannelSenderOptions)
+            = dataChannelCallFeature.getDataChannelSender(options: dataChannelSenderOptions)
         dataChannelSender.setParticipants(participants: call.remoteParticipants.map(\.identifier))
 
-        let lossyDataChannelSenderOptions = DataChannelSenderOptions()
-        lossyDataChannelSenderOptions.channelId = CallController.lossyDataChannelId
-        lossyDataChannelSenderOptions.bitrateInKbps = CallController.lossyDataChannelBandwidthKbps
-        lossyDataChannelSenderOptions.priority = .normal
-        lossyDataChannelSenderOptions.reliability = .lossy
-
-        let dataChannelSenderLossy
-            = dataChannelCallFeature.getDataChannelSender(options: lossyDataChannelSenderOptions)
-        dataChannelSenderLossy.setParticipants(participants: call.remoteParticipants.map(\.identifier))
-
         self.dataChannelSender = dataChannelSender
-        self.dataChannelSenderLossy = dataChannelSenderLossy
 
         DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelMessageBurstDelay) { [weak self] in
             self?.videoHandler?.updateOrientation()

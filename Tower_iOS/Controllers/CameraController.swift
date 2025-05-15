@@ -53,30 +53,26 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         return supportedResolutions.dropFirst().reduce(supportedResolutions.first) { $0?.intersection($1) } ?? []
     }()
 
-    /// The currently used resolution.
+    /// The desired resolution.
     ///
-    var captureDimensions: CMVideoDimensions {
-        get {
-            _captureDimensions
-        }
-        set {
-            captureQueue.async { [weak self] in 
-                self?._captureDimensions = self?.updateDeviceCaptureFormat(newValue) ?? newValue
-            }
+    /// This is the resolution that has been set, the resolution of the frames actually produced can be different, if
+    /// the camera cannot produce the desired resolution (but in practice, this will only be set to resolutions the
+    /// camera can actually produce).
+    ///
+    var captureDimensions: CMVideoDimensions = CallQualityLevel.veryLow.resolution.dimensions {
+        didSet {
+            captureQueue.async { [weak self] in self?.updateDeviceCaptureFormat() }
         }
     }
-    private var _captureDimensions: CMVideoDimensions = CallQualityLevel.veryLow.resolution.dimensions
 
     /// The currently used frame rate.
     ///
-    var captureFrameRate: Float64 {
-        get {
-            _captureFrameRate
-        }
-        set {
-            captureQueue.async { [weak self] in 
-                self?._captureFrameRate = self?.updateVideoFrameRate(newValue) ?? newValue
-            }
+    /// This is the desired frame rate that has been set. For technical reasons, the rate at which the frames are
+    /// actually produced may differ.
+    ///
+    var captureFrameRate: Float64 = CallQualityLevel.veryLow.frameRate {
+        didSet {
+            captureQueue.async { [weak self] in self?.updateVideoFrameRate() }
         }
     }
     private var _captureFrameRate: Float64 = CallQualityLevel.veryLow.frameRate
@@ -369,8 +365,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
         self.deviceInput = deviceInput
 
-        self._captureDimensions = updateDeviceCaptureFormat(captureDimensions) ?? captureDimensions
-        self._captureFrameRate = updateVideoFrameRate(captureFrameRate) ?? captureFrameRate
+        updateDeviceCaptureFormat()
         updateVideoOutputConnection()
 
         isCaptureSessionConfigured = true
@@ -428,7 +423,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             captureSession.addInput(deviceInput)
         }
 
-        _captureDimensions = updateDeviceCaptureFormat(captureDimensions) ?? captureDimensions
+        updateDeviceCaptureFormat()
         updateVideoOutputConnection()
     }
     
@@ -451,12 +446,13 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     }
 
     @discardableResult
-    private func updateDeviceCaptureFormat(_ dimensions: CMVideoDimensions) -> CMVideoDimensions? {
+    private func updateDeviceCaptureFormat() -> CMVideoDimensions? {
         guard let captureDevice else { return nil }
         try? captureDevice.lockForConfiguration()
         defer { 
             if torchAvailable && torchEnabled { captureDevice.torchMode = .on }
             captureDevice.unlockForConfiguration()
+            updateVideoFrameRate()
         }
 
         let newAVFormat = captureDevice
@@ -466,17 +462,20 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             }
             .min { formatA, formatB in
                 closestDimensions(
-                    to: dimensions,
+                    to: captureDimensions,
                     dimensionsA: formatA.formatDescription.dimensions,
                     dimensionsB: formatB.formatDescription.dimensions)
             }
 
         if let chosenFormat = newAVFormat, chosenFormat != captureDevice.activeFormat {
             captureDevice.activeFormat = chosenFormat
-            _captureFrameRate = updateVideoFrameRate(captureFrameRate) ?? captureFrameRate
         }
-        if dimensions != captureDevice.activeFormat.formatDescription.dimensions {
-            print("Can't capture at \(dimensions), using \(captureDevice.activeFormat.formatDescription.dimensions) instead.")
+        if captureDimensions != newAVFormat?.formatDescription.dimensions {
+            print(
+                """
+                Can't capture at \(captureDimensions), using \
+                \((newAVFormat ?? captureDevice.activeFormat).formatDescription.dimensions) instead.
+                """)
         }
 
         return captureDevice.activeFormat.formatDescription.dimensions
@@ -519,7 +518,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     }
 
     @discardableResult
-    private func updateVideoFrameRate(_ frameRate: Float64) -> Float64? {
+    private func updateVideoFrameRate() -> Float64? {
         guard let captureDevice else { return nil }
         try? captureDevice.lockForConfiguration()
         defer {
@@ -527,15 +526,15 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             captureDevice.unlockForConfiguration() 
         }
 
-        let timescale = closestFramerate(to: frameRate, in: captureDevice.activeFormat.videoSupportedFrameRateRanges)
+        let timescale = closestFramerate(to: captureFrameRate, in: captureDevice.activeFormat.videoSupportedFrameRateRanges)
         let duration = CMTime(value: 1, timescale: Int32(timescale))
 
         if captureDevice.activeVideoMinFrameDuration != duration || captureDevice.activeVideoMaxFrameDuration != duration {
             captureDevice.activeVideoMinFrameDuration = duration
             captureDevice.activeVideoMaxFrameDuration = duration
         }
-        if timescale != frameRate {
-            print("Can't capture at \(frameRate) fps, using \(timescale) fps instead.")
+        if timescale != captureFrameRate {
+            print("Can't capture at \(captureFrameRate) fps, using \(timescale) fps instead.")
         }
 
         return timescale

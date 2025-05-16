@@ -326,17 +326,6 @@ class CallController: NSObject, ObservableObject {
             try? await incomingCall.reject()
             handleSessionError(error)
         }
-
-        // If no external devices are attached, switch to the loudspeaker.
-        if (
-            audioSession
-                .currentRoute
-                .outputs
-                .filter { $0.portType != .builtInReceiver && $0.portType != .builtInSpeaker }
-                .isEmpty
-        ) {
-            try? audioSession.overrideOutputAudioPort(.speaker)
-        }
     }
 
     fileprivate func handleSessionError(_ error: Error) {

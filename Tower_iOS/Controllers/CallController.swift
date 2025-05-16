@@ -543,6 +543,10 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
         _ virtualOutgoingVideoStream: VirtualOutgoingVideoStream,
         didChangeFormat args: VideoStreamFormatChangedEventArgs
     ) {
+        print("Video stream did change format: "
+            + virtualOutgoingVideoStream.format.resolution.dimensions.description
+            + "@"
+            + virtualOutgoingVideoStream.format.framesPerSecond.description)
         handleFrameRateChanged(virtualOutgoingVideoStream)
         handleDimensionsChanged(virtualOutgoingVideoStream)
     }
@@ -566,7 +570,7 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
         // Show frame in preview
         callController.viewfinderImage = CIImage(cvImageBuffer: imageBuffer)
-            .oriented(cgImagePropertyOrientation(for: UIDevice.current.orientation))
+            .oriented(cgImagePropertyOrientation(for: UIDevice.current.orientation, usingFrontCamera: callController.cameraController.isUsingFrontCamera))
             .image
     }
 
@@ -580,10 +584,12 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
 
     private func handleVideoStreamAvailable(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        print("Video stream became available.")
         callController?.cameraController.delegate = self
     }
 
     private func handleVideoStreamStarted(_ virtualOutgoingVideoStream: VirtualOutgoingVideoStream) {
+        print("Video stream has started.")
         callController?.cameraController.start { [weak self] error in
             Task {
                 guard let self else { return }
@@ -594,6 +600,7 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
     }
 
     private func handleVideoStreamStopped() {
+        print("Video stream has stopped.")
         callController?.cameraController.stop()
     }
 
@@ -617,13 +624,16 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
         }
     }
 
-    private func cgImagePropertyOrientation(for deviceOrientation: UIDeviceOrientation) -> CGImagePropertyOrientation {
+    private func cgImagePropertyOrientation(
+        for deviceOrientation: UIDeviceOrientation, 
+        usingFrontCamera: Bool
+    ) -> CGImagePropertyOrientation {
         switch deviceOrientation {
-        case .portrait: return .right
-        case .portraitUpsideDown: return .left
-        case .landscapeLeft: return .up
-        case .landscapeRight: return .down
-        default: return .right
+        case .portrait: return usingFrontCamera ? .leftMirrored : .right
+        case .portraitUpsideDown: return usingFrontCamera ? .rightMirrored : .left
+        case .landscapeLeft: return usingFrontCamera ? .upMirrored : .up
+        case .landscapeRight: return usingFrontCamera ? .downMirrored : .down
+        default: return usingFrontCamera ? .leftMirrored : .right
         }
     }
 

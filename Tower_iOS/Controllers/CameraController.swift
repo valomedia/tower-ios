@@ -29,6 +29,11 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
         ]
         captureDevice = captureDevices.first
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(deviceOrientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil)
     }
     
     deinit {
@@ -38,6 +43,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         if isRunning {
             captureSession.stopRunning()
         }
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Properties
@@ -53,31 +59,29 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         return supportedResolutions.dropFirst().reduce(supportedResolutions.first) { $0?.intersection($1) } ?? []
     }()
 
-    /// The currently used resolution.
+    /// The desired resolution.
     ///
-    var captureDimensions: CMVideoDimensions? {
-        get {
-            (captureDevice != nil && isRunning) .!! _captureDimensions
-        }
-        set {
-            guard let newValue, captureDevice != nil, isRunning else { return }
-            captureQueue.async { [weak self] in self?._captureDimensions = self?.updateDeviceCaptureFormat(newValue) }
+    /// This is the resolution that has been set, the resolution of the frames actually produced can be different, if
+    /// the camera cannot produce the desired resolution (but in practice, this will only be set to resolutions the
+    /// camera can actually produce).
+    ///
+    var captureDimensions: CMVideoDimensions = CallQualityLevel.veryLow.resolution.dimensions {
+        didSet {
+            captureQueue.async { [weak self] in self?.updateDeviceCaptureFormat() }
         }
     }
-    private var _captureDimensions: CMVideoDimensions?
 
     /// The currently used frame rate.
     ///
-    var captureFrameRate: Float64? {
-        get {
-            (captureDevice != nil && isRunning) .!! _captureFrameRate
-        }
-        set {
-            guard let newValue, captureDevice != nil, isRunning else { return }
-            captureQueue.async { [weak self] in self?._captureFrameRate = self?.updateVideoFrameRate(newValue) }
+    /// This is the desired frame rate that has been set. For technical reasons, the rate at which the frames are
+    /// actually produced may differ.
+    ///
+    var captureFrameRate: Float64 = CallQualityLevel.veryLow.frameRate {
+        didSet {
+            captureQueue.async { [weak self] in self?.updateVideoFrameRate() }
         }
     }
-    private var _captureFrameRate: Float64?
+    private var _captureFrameRate: Float64 = CallQualityLevel.veryLow.frameRate
 
     /// Whether the capture session is currently running.
     ///
@@ -270,7 +274,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        guard let captureDevice, captureDevice.activeFormat.formatDescription.dimensions == _captureDimensions else {
+        guard let captureDevice, captureDevice.activeFormat.formatDescription.dimensions == captureDimensions else {
             delegate?.captureOutput?(output, didDrop: sampleBuffer, from: connection)
             return
         }
@@ -295,10 +299,6 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             throw CameraError.codecUnavailable
         }
 
-        // Temporarily switch to the highest resolution
-        let captureDimensions = self.captureDimensions
-        self.captureDimensions = CallQualityLevel.veryHigh.resolution.dimensions
-
         captureQueue.async { [weak self] in
             guard let self else { return }
 
@@ -309,7 +309,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
                         AVVideoQualityKey: "0.5"
                     ]
                 ])
-            photoSettings.photoQualityPrioritization = .speed
+            photoSettings.maxPhotoDimensions = photoOutput.maxPhotoDimensions
 
             if let photoOutputVideoConnection = photoOutput.connection(with: .video) {
                 if  photoOutputVideoConnection.isVideoOrientationSupported,
@@ -320,12 +320,13 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             }
 
             photoOutput.capturePhoto(with: photoSettings, delegate: self)
-
-            // Turn the torch back on if necessary and switch back to the previous video format.
-            self.captureDimensions = captureDimensions
         }
 
         return try await withCheckedThrowingContinuation { continuation in photoOutputContinuations.append(continuation) }
+    }
+
+    @objc func deviceOrientationDidChange(notification: NSNotification) {
+        updateVideoOutputConnection()
     }
 
     private func configureCaptureSession(completionHandler: (_ success: Bool) -> Void) {
@@ -367,11 +368,10 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
         self.deviceInput = deviceInput
 
-        self._captureDimensions = updateDeviceCaptureFormat(CallQualityLevel.veryHigh.resolution.dimensions)
-        self._captureFrameRate = updateVideoFrameRate(CallQualityLevel.veryHigh.frameRate)
-        updateVideoOutputConnection()
-
         isCaptureSessionConfigured = true
+
+        updateDeviceCaptureFormat()
+        updateVideoOutputConnection()
 
         success = true
     }
@@ -426,16 +426,19 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             captureSession.addInput(deviceInput)
         }
 
-        _captureDimensions = _captureDimensions.flatMap(updateDeviceCaptureFormat)
+        updateDeviceCaptureFormat()
         updateVideoOutputConnection()
     }
     
     private func updateVideoOutputConnection() {
         guard let videoOutputConnection = videoOutput.connection(with: .video) else { return }
-        videoOutputConnection.videoOrientation =  AVCaptureVideoOrientation.landscapeRight
-        if videoOutputConnection.isVideoMirroringSupported {
-            videoOutputConnection.isVideoMirrored = isUsingFrontCamera
-        }
+
+        // We want to be able to rotate the video right-side-up later on by just checking the device orientation. For
+        // this to work, we need to flip the video if we are in portrait mode (or flat) while using the front camera.
+        // Without this, we'd have to rotate clockwise for the world-facing camera and counter-clockwise for the user
+        // facing camera, which would be confusing.
+        videoOutputConnection.videoOrientation = (UIDevice.current.orientation.isLandscape || !isUsingFrontCamera)
+            ? AVCaptureVideoOrientation.landscapeRight : AVCaptureVideoOrientation.landscapeLeft
     }
 
     private func videoOrientationFor(_ deviceOrientation: UIDeviceOrientation) -> AVCaptureVideoOrientation? {
@@ -449,73 +452,53 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     }
 
     @discardableResult
-    private func updateDeviceCaptureFormat(_ dimensions: CMVideoDimensions) -> CMVideoDimensions? {
+    private func updateDeviceCaptureFormat() -> CMVideoDimensions? {
         guard let captureDevice else { return nil }
         try? captureDevice.lockForConfiguration()
         defer { 
             if torchAvailable && torchEnabled { captureDevice.torchMode = .on }
             captureDevice.unlockForConfiguration()
+            updateVideoFrameRate()
         }
 
         let newAVFormat = captureDevice
             .formats
             .filter { format in 
                 format.formatDescription.mediaSubType == .init(rawValue: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
+                    && format.formatDescription.dimensions == captureDimensions
             }
-            .min { formatA, formatB in
-                closestDimensions(
-                    to: dimensions,
-                    dimensionsA: formatA.formatDescription.dimensions,
-                    dimensionsB: formatB.formatDescription.dimensions)
+            .max { formatA, formatB in
+                highestSupportedPhotoResolution(for: formatA) < highestSupportedPhotoResolution(for: formatB)
             }
 
-        if let chosenFormat = newAVFormat, chosenFormat != captureDevice.activeFormat {
-            print("Set resolution for capture device to \(chosenFormat.formatDescription.dimensions).")
+        if
+            let chosenFormat = newAVFormat, 
+            let photoDimensions = highestSupportedPhotoDimensions(for: chosenFormat),
+            chosenFormat != captureDevice.activeFormat
+        {
+            print("Set resolution for capture device to \(chosenFormat.formatDescription.dimensions)")
             captureDevice.activeFormat = chosenFormat
-            _captureFrameRate = _captureFrameRate.flatMap(updateVideoFrameRate)
+
+            if (isCaptureSessionConfigured) {
+                print("Will capture photos at \(photoDimensions)")
+                photoOutput.maxPhotoDimensions = photoDimensions
+            }
         }
 
         return captureDevice.activeFormat.formatDescription.dimensions
     }
 
-    private func closestDimensions(
-        to dimensions: CMVideoDimensions,
-        dimensionsA: CMVideoDimensions,
-        dimensionsB: CMVideoDimensions
-    ) -> Bool {
-        let resolutionA = dimensionsA.width * dimensionsA.height
-        let resolutionB = dimensionsB.width * dimensionsB.height
-
-        if  dimensionsA.width >= dimensions.width,
-            dimensionsA.height >= dimensions.height,
-            dimensionsB.width >= dimensions.width,
-            dimensionsB.height >= dimensions.height
-        { return resolutionA < resolutionB }
-
-        if  dimensionsA.width >= dimensions.width,
-            dimensionsA.height >= dimensions.height
-        { return true }
-
-        if  dimensionsB.width >= dimensions.width,
-            dimensionsB.height >= dimensions.height
-        { return false }
-
-        let usableResolutionA = calculateUsableResolution(cropping: dimensionsA, to: dimensions)
-        let usableResolutionB = calculateUsableResolution(cropping: dimensionsB, to: dimensions)
-        if usableResolutionA != usableResolutionB {
-            return usableResolutionA > usableResolutionB
-        }
-
-        return resolutionA < resolutionB
+    private func highestSupportedPhotoDimensions(for format: AVCaptureDevice.Format) -> CMVideoDimensions? {
+        format.supportedMaxPhotoDimensions.max { $0.width * $0.height < $1.width * $1.height }
     }
 
-    private func calculateUsableResolution(cropping cameraDimensions: CMVideoDimensions, to streamDimensions: CMVideoDimensions) -> Int32 {
-        return min(cameraDimensions.width, Int32(Double(cameraDimensions.height) * streamDimensions.aspectRatio))
-            * min(cameraDimensions.height, Int32(Double(cameraDimensions.width) / streamDimensions.aspectRatio))
+    private func highestSupportedPhotoResolution(for format: AVCaptureDevice.Format) -> Int32 {
+        guard let highestSupportedPhotoDimensions = highestSupportedPhotoDimensions(for: format) else { return 0 }
+        return highestSupportedPhotoDimensions.width * highestSupportedPhotoDimensions.height
     }
 
     @discardableResult
-    private func updateVideoFrameRate(_ frameRate: Float64) -> Float64? {
+    private func updateVideoFrameRate() -> Float64? {
         guard let captureDevice else { return nil }
         try? captureDevice.lockForConfiguration()
         defer {
@@ -523,7 +506,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             captureDevice.unlockForConfiguration() 
         }
 
-        let timescale = closestFramerate(to: frameRate, in: captureDevice.activeFormat.videoSupportedFrameRateRanges)
+        let timescale = closestFramerate(to: captureFrameRate, in: captureDevice.activeFormat.videoSupportedFrameRateRanges)
         let duration = CMTime(value: 1, timescale: Int32(timescale))
 
         if captureDevice.activeVideoMinFrameDuration != duration || captureDevice.activeVideoMaxFrameDuration != duration {

@@ -570,7 +570,7 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
 
         // Show frame in preview
         callController.viewfinderImage = CIImage(cvImageBuffer: imageBuffer)
-            .oriented(cgImagePropertyOrientation(for: UIDevice.current.orientation))
+            .oriented(cgImagePropertyOrientation(for: UIDevice.current.orientation, usingFrontCamera: callController.cameraController.isUsingFrontCamera))
             .image
     }
 
@@ -624,13 +624,16 @@ class VideoHandler: NSObject, VirtualOutgoingVideoStreamDelegate, AVCaptureVideo
         }
     }
 
-    private func cgImagePropertyOrientation(for deviceOrientation: UIDeviceOrientation) -> CGImagePropertyOrientation {
+    private func cgImagePropertyOrientation(
+        for deviceOrientation: UIDeviceOrientation, 
+        usingFrontCamera: Bool
+    ) -> CGImagePropertyOrientation {
         switch deviceOrientation {
-        case .portrait: return .right
-        case .portraitUpsideDown: return .left
-        case .landscapeLeft: return .up
-        case .landscapeRight: return .down
-        default: return .right
+        case .portrait: return usingFrontCamera ? .leftMirrored : .right
+        case .portraitUpsideDown: return usingFrontCamera ? .rightMirrored : .left
+        case .landscapeLeft: return usingFrontCamera ? .upMirrored : .up
+        case .landscapeRight: return usingFrontCamera ? .downMirrored : .down
+        default: return usingFrontCamera ? .leftMirrored : .right
         }
     }
 

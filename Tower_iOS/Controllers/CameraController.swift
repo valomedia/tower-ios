@@ -358,10 +358,10 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
 
         self.deviceInput = deviceInput
 
+        isCaptureSessionConfigured = true
+
         updateDeviceCaptureFormat()
         updateVideoOutputConnection()
-
-        isCaptureSessionConfigured = true
 
         success = true
     }
@@ -464,9 +464,12 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             chosenFormat != captureDevice.activeFormat
         {
             print("Set resolution for capture device to \(chosenFormat.formatDescription.dimensions)")
-            print("Will capture photos at \(photoDimensions)")
             captureDevice.activeFormat = chosenFormat
-            photoOutput.maxPhotoDimensions = photoDimensions
+
+            if (isCaptureSessionConfigured) {
+                print("Will capture photos at \(photoDimensions)")
+                photoOutput.maxPhotoDimensions = photoDimensions
+            }
         }
 
         return captureDevice.activeFormat.formatDescription.dimensions

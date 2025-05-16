@@ -29,6 +29,11 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
         ]
         captureDevice = captureDevices.first
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(deviceOrientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil)
     }
     
     deinit {
@@ -38,6 +43,7 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         if isRunning {
             captureSession.stopRunning()
         }
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Properties
@@ -319,6 +325,10 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
         return try await withCheckedThrowingContinuation { continuation in photoOutputContinuations.append(continuation) }
     }
 
+    @objc func deviceOrientationDidChange(notification: NSNotification) {
+        updateVideoOutputConnection()
+    }
+
     private func configureCaptureSession(completionHandler: (_ success: Bool) -> Void) {
         var success = false
 
@@ -422,10 +432,13 @@ class CameraController: NSObject, AVCapturePhotoCaptureDelegate, AVCaptureVideoD
     
     private func updateVideoOutputConnection() {
         guard let videoOutputConnection = videoOutput.connection(with: .video) else { return }
-        videoOutputConnection.videoOrientation =  AVCaptureVideoOrientation.landscapeRight
-        if videoOutputConnection.isVideoMirroringSupported {
-            videoOutputConnection.isVideoMirrored = isUsingFrontCamera
-        }
+
+        // We want to be able to rotate the video right-side-up later on by just checking the device orientation. For
+        // this to work, we need to flip the video if we are in portrait mode (or flat) while using the front camera.
+        // Without this, we'd have to rotate clockwise for the world-facing camera and counter-clockwise for the user
+        // facing camera, which would be confusing.
+        videoOutputConnection.videoOrientation = (UIDevice.current.orientation.isLandscape || !isUsingFrontCamera)
+            ? AVCaptureVideoOrientation.landscapeRight : AVCaptureVideoOrientation.landscapeLeft
     }
 
     private func videoOrientationFor(_ deviceOrientation: UIDeviceOrientation) -> AVCaptureVideoOrientation? {

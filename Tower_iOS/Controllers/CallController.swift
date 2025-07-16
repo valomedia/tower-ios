@@ -462,6 +462,62 @@ class CallController: NSObject, ObservableObject {
 
         return callAgent
     }
+    
+    // Method to handle the audio notification
+    @objc private func handleAudioInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+
+        switch type {
+        case .began:
+            print("Audio session interruption began.")
+            pauseVideo()
+            DispatchQueue.main.async {
+                self.sessionState = .onHold
+            }
+
+        case .ended:
+            print("Audio session interruption ended.")
+            guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt,
+                  AVAudioSession.InterruptionOptions(rawValue: optionsValue).contains(.shouldResume) else {
+                return
+            }
+            
+            do {
+                try AVAudioSession.sharedInstance().setActive(true)
+                print("Audio session reactivated successfully.")
+            } catch {
+                print("Error reactivating audio session: \(error)")
+                handleSessionError(error)
+                return
+            }
+
+            // Use hold/resume for a full media stream reset.
+            Task {
+                do {
+                    // Place the call on hold to suspend media.
+                    try await self.call?.hold()
+                    // Immediately resume the call to re-establish media.
+                    try await self.call?.resume()
+                    print("ACS call held and resumed to fully reset media streams.")
+                    // Now that the media engine is reset resume the video.
+                    self.resumeVideo()
+                    DispatchQueue.main.async {
+                        self.sessionState = .connected
+                    }
+                } catch {
+                    print("Failed to hold/resume call after interruption: \(error)")
+                    self.handleSessionError(error)
+                }
+            }
+
+        @unknown default:
+            break
+        }
+    }
 
 }
 

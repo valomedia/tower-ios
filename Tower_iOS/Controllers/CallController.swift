@@ -91,6 +91,28 @@ class CallController: NSObject, ObservableObject {
     private var videoHandler: VideoHandler?
     private var locationHandler: LocationHandler?
     private var dataHandler: DataHandler?
+    
+    // MARK: - Life cycle methods
+
+    override init() {
+        super.init()
+        // Add the observer for audio interruptions
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAudioInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance()
+        )
+    }
+
+    deinit {
+        // Remove the observer to prevent memory leaks
+        NotificationCenter.default.removeObserver(
+            self,
+            name: AVAudioSession.interruptionNotification,
+            object: nil
+        )
+    }
 
     // MARK: - Methods
 

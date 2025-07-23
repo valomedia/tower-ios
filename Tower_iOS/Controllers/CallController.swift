@@ -91,6 +91,28 @@ class CallController: NSObject, ObservableObject {
     private var videoHandler: VideoHandler?
     private var locationHandler: LocationHandler?
     private var dataHandler: DataHandler?
+    
+    // MARK: - Life cycle methods
+
+    override init() {
+        super.init()
+        // Add the observer for audio interruptions
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAudioInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance()
+        )
+    }
+
+    deinit {
+        // Remove the observer to prevent memory leaks
+        NotificationCenter.default.removeObserver(
+            self,
+            name: AVAudioSession.interruptionNotification,
+            object: nil
+        )
+    }
 
     // MARK: - Methods
 
@@ -439,6 +461,62 @@ class CallController: NSObject, ObservableObject {
         self.callAgent = callAgent
 
         return callAgent
+    }
+    
+    // Method to handle the audio notification
+    @objc private func handleAudioInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+
+        switch type {
+        case .began:
+            print("Audio session interruption began.")
+            pauseVideo()
+            DispatchQueue.main.async {
+                self.sessionState = .onHold
+            }
+
+        case .ended:
+            print("Audio session interruption ended.")
+            guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt,
+                  AVAudioSession.InterruptionOptions(rawValue: optionsValue).contains(.shouldResume) else {
+                return
+            }
+            
+            do {
+                try AVAudioSession.sharedInstance().setActive(true)
+                print("Audio session reactivated successfully.")
+            } catch {
+                print("Error reactivating audio session: \(error)")
+                handleSessionError(error)
+                return
+            }
+
+            // Use hold/resume for a full media stream reset.
+            Task {
+                do {
+                    // Place the call on hold to suspend media.
+                    try await self.call?.hold()
+                    // Immediately resume the call to re-establish media.
+                    try await self.call?.resume()
+                    print("ACS call held and resumed to fully reset media streams.")
+                    // Now that the media engine is reset resume the video.
+                    self.resumeVideo()
+                    DispatchQueue.main.async {
+                        self.sessionState = .connected
+                    }
+                } catch {
+                    print("Failed to hold/resume call after interruption: \(error)")
+                    self.handleSessionError(error)
+                }
+            }
+
+        @unknown default:
+            break
+        }
     }
 
 }

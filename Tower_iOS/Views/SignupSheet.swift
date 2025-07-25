@@ -38,7 +38,7 @@ struct SignupSheet: View {
                     }
                     HStack {
                         Text("e-Mail")
-                        TextField(text: $email, prompt: Text("Optional")) {
+                        TextField(text: $email, prompt: Text("Erforderlich")) {
                             Text("E-Mail-Adresse")
                         }
                             .keyboardType(.emailAddress)
@@ -48,7 +48,7 @@ struct SignupSheet: View {
                 }
                 Section {
                     Toggle("Ich möchte euren monatlichen Newsletter erhalten", isOn: $wantsNewsletter)
-                        .disabled(email.isEmpty)
+                        .disabled(isEmailProvided)
                 }
                 Section {
                     Button(action: handleSignup, label: {
@@ -58,7 +58,7 @@ struct SignupSheet: View {
                             Spacer()
                         }
                     })
-                        .disabled(firstName.isEmpty)
+                        .disabled(firstName.isEmpty || !isEmailProvided)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                         .foregroundColor(colorScheme == .dark ? .black : .white)
                 }
@@ -72,6 +72,10 @@ struct SignupSheet: View {
     @State private var lastName = Settings.lastNamePreference
     @State private var email = Settings.emailPreference
     @State private var wantsNewsletter = false
+    
+    private var isEmailProvided: Bool {
+        !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     @Environment(\.dismiss)
     private var dismiss
@@ -83,9 +87,22 @@ struct SignupSheet: View {
         Settings.lastNamePreference = lastName
         Settings.emailPreference = email
         dismiss()
-        if wantsNewsletter {
-            Task {
-                await NewsletterApi.signup(firstName: firstName, lastName: lastName, email: email)
+        // Send to the correct endpoint based on newsletter toggle
+        Task {
+            if wantsNewsletter {
+                // Subscribe to the newsletter
+                await NewsletterApi.signup(
+                    firstName: firstName,
+                    lastName:  lastName,
+                    email:     email
+                )
+            } else {
+                // Just store contact without newsletter
+                await NewsletterApi.storeContact(
+                    firstName: firstName,
+                    lastName:  lastName,
+                    email:     email
+                )
             }
         }
     }

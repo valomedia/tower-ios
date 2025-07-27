@@ -40,30 +40,8 @@ class NewsletterApi {
     ///   - email: The e-mail adress of the user signing up to the newsletter.
     ///
     static func signup(firstName: String, lastName: String, email: String) async -> Void {
-        let url = URL(string: endpoint)!
-
-        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-        urlComponents.queryItems = [
-            URLQueryItem(name: "VORNAME", value: firstName),
-            URLQueryItem(name: "NACHNAME", value: lastName),
-            URLQueryItem(name: "EMAIL", value: email)
-        ]
-
-        // Workaround for Apple being “technically correct” (the best kind of correct) in their implementation of
-        // `percentEncodedQuery` (see https://stackoverflow.com/a/27724627/1271826).
-        let body = urlComponents.percentEncodedQuery!.replacingOccurrences(of: "+", with: "%2B")
-
-        var request = URLRequest(url: URL(string: endpoint)!)
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        request.httpBody = Data(body.utf8)
-
-        _ = try? await URLSession.shared.data(for: request)
+        await sendRequest(to: endpoint, firstName: firstName, lastName: lastName, email: email)
     }
-
-}
-
-extension NewsletterApi {
 
     /// Store a contact without subscribing to the newsletter.
     ///
@@ -72,7 +50,11 @@ extension NewsletterApi {
     ///   - lastName: The surname of the user.
     ///   - email: The e-mail address of the user.
     static func storeContact(firstName: String, lastName: String, email: String) async -> Void {
-        let url = URL(string: contactEndpoint)!
+        await sendRequest(to: contactEndpoint, firstName: firstName, lastName: lastName, email: email)
+    }
+    
+    private static func sendRequest(to urlString: String, firstName: String, lastName: String, email: String) async -> Void {
+        let url = URL(string: urlString)!
         
         var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         urlComponents.queryItems = [
@@ -81,7 +63,8 @@ extension NewsletterApi {
             URLQueryItem(name: "EMAIL", value: email)
         ]
         
-        // Workaround for Apple’s percentEncodedQuery
+        // Workaround for Apple being “technically correct” (the best kind of correct) in their implementation of
+        // `percentEncodedQuery` (see https://stackoverflow.com/a/27724627/1271826).
         let body = urlComponents.percentEncodedQuery!.replacingOccurrences(of: "+", with: "%2B")
         var request = URLRequest(url: url)
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")

@@ -29,30 +29,31 @@ class NewsletterApi {
     
     // MARK: - Static methods
 
-    /// Sign a user up for the newsletter.
+    /// Subscribe or just store contact, based on `wantsNewsletter`.
     ///
     /// Brevo doesn't give us a good indication of whether this worked, returning the same 302 pretty much no matter
     /// what, so this just returns Void.
     ///
     /// - Parameters:
-    ///   - firstName: The given name of the user signing up to the newsletter, empty if unknown.
-    ///   - lastName: The surname of the user signing up to the newsletter, empty if unknown.
-    ///   - email: The e-mail adress of the user signing up to the newsletter.
-    ///
-    static func signup(firstName: String, lastName: String, email: String) async -> Void {
-        await sendRequest(to: endpoint, firstName: firstName, lastName: lastName, email: email)
+    ///   - firstName: The given name.
+    ///   - lastName: The surname.
+    ///   - email: The e-mail address.
+    ///   - wantsNewsletter: `true` to subscribe; `false` to just store.
+    static func signup(
+        firstName: String,
+        lastName: String,
+        email: String,
+        wantsNewsletter: Bool
+    ) async -> Void {
+        let urlString = wantsNewsletter ? endpoint : contactEndpoint
+        await sendRequest(
+            to:      urlString,
+            firstName: firstName,
+            lastName:  lastName,
+            email:     email
+        )
     }
 
-    /// Store a contact without subscribing to the newsletter.
-    ///
-    /// - Parameters:
-    ///   - firstName: The given name of the user.
-    ///   - lastName: The surname of the user.
-    ///   - email: The e-mail address of the user.
-    static func storeContact(firstName: String, lastName: String, email: String) async -> Void {
-        await sendRequest(to: contactEndpoint, firstName: firstName, lastName: lastName, email: email)
-    }
-    
     private static func sendRequest(to urlString: String, firstName: String, lastName: String, email: String) async -> Void {
         let url = URL(string: urlString)!
         

@@ -87,23 +87,13 @@ struct SignupSheet: View {
         Settings.lastNamePreference = lastName
         Settings.emailPreference = email
         dismiss()
-        // Send to the correct endpoint based on newsletter toggle
         Task {
-            if wantsNewsletter {
-                // Subscribe to the newsletter
-                await NewsletterApi.signup(
-                    firstName: firstName,
-                    lastName:  lastName,
-                    email:     email
-                )
-            } else {
-                // Just store contact without newsletter
-                await NewsletterApi.storeContact(
-                    firstName: firstName,
-                    lastName:  lastName,
-                    email:     email
-                )
-            }
+            await NewsletterApi.signup(
+                firstName:       firstName,
+                lastName:        lastName,
+                email:           email,
+                wantsNewsletter: wantsNewsletter
+            )
         }
     }
 

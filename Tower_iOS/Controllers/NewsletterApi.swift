@@ -47,15 +47,6 @@ class NewsletterApi {
         wantsNewsletter: Bool
     ) async -> Void {
         let urlString = wantsNewsletter ? endpoint : contactEndpoint
-        await sendRequest(
-            to: urlString,
-            firstName: firstName,
-            lastName: lastName,
-            email: email
-        )
-    }
-
-    private static func sendRequest(to urlString: String, firstName: String, lastName: String, email: String) async -> Void {
         let url = URL(string: urlString)!
         
         var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!

@@ -89,9 +89,9 @@ struct SignupSheet: View {
         dismiss()
         Task {
             await NewsletterApi.signup(
-                firstName:       firstName,
-                lastName:        lastName,
-                email:           email,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
                 wantsNewsletter: wantsNewsletter
             )
         }

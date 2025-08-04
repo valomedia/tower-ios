@@ -39,6 +39,7 @@ class NewsletterApi {
     ///   - lastName: The surname.
     ///   - email: The e-mail address.
     ///   - wantsNewsletter: `true` to subscribe; `false` to just store.
+    ///
     static func signup(
         firstName: String,
         lastName: String,
@@ -47,10 +48,10 @@ class NewsletterApi {
     ) async -> Void {
         let urlString = wantsNewsletter ? endpoint : contactEndpoint
         await sendRequest(
-            to:      urlString,
+            to: urlString,
             firstName: firstName,
-            lastName:  lastName,
-            email:     email
+            lastName: lastName,
+            email: email
         )
     }
 
@@ -63,7 +64,6 @@ class NewsletterApi {
             URLQueryItem(name: "NACHNAME", value: lastName),
             URLQueryItem(name: "EMAIL", value: email)
         ]
-        
         // Workaround for Apple being “technically correct” (the best kind of correct) in their implementation of
         // `percentEncodedQuery` (see https://stackoverflow.com/a/27724627/1271826).
         let body = urlComponents.percentEncodedQuery!.replacingOccurrences(of: "+", with: "%2B")
@@ -71,8 +71,8 @@ class NewsletterApi {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         request.httpBody = Data(body.utf8)
-        
+
         _ = try? await URLSession.shared.data(for: request)
     }
-    
+
 }

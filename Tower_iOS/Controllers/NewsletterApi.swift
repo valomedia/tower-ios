@@ -64,6 +64,7 @@ class NewsletterApi {
             URLQueryItem(name: "NACHNAME", value: lastName),
             URLQueryItem(name: "EMAIL", value: email)
         ]
+
         // Workaround for Apple being “technically correct” (the best kind of correct) in their implementation of
         // `percentEncodedQuery` (see https://stackoverflow.com/a/27724627/1271826).
         let body = urlComponents.percentEncodedQuery!.replacingOccurrences(of: "+", with: "%2B")

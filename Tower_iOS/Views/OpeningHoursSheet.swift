@@ -104,7 +104,7 @@ class OpeningHoursView_Previews: PreviewProvider {
     // MARK: - Static properties
 
     static var previews: some View {
-        OpeningHoursSheet("Du erreichst uns momentan von Dienstag bis Donnerstag von 12 bis 16 Uhr.")
+        OpeningHoursSheet("Spontan erreichst du uns Dienstag bis Donnerstag von 12 bis 16 Uhr.")
     }
 
 }

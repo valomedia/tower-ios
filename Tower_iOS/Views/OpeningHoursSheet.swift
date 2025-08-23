@@ -44,52 +44,31 @@ struct OpeningHoursSheet: View {
     // MARK: - View
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            Color(UIColor.systemGray6)
-                .edgesIgnoringSafeArea(.all)
-
-            VStack(spacing: 24) {
-                Spacer(minLength: 0)
-
-                Image(uiImage: Asset.Assets.logo.image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: 180)
-                    .accessibilityHidden(true)
-
-                Text("Willkommen bei Tower!")
-                    .font(.title3).bold()
-                    .multilineTextAlignment(.center)
-
-                Text(openingHours)
-                    .font(.callout).bold()
-                    .multilineTextAlignment(.center)
-
-                Text("""
-Wir arbeiten daran, diese Zeiten weiter auszubauen. Wenn du jetzt einen Termin mit uns hast, gehe auf Weiter. Ansonsten kannst du hier direkt deinen persönlichen Termin vereinbaren.
-""")
-                    .font(.callout)
-                    .multilineTextAlignment(.center)
-
-                Button {
-                    openURL(appointmentURL)
-                } label: {
-                    Text("Jetzt Termin vereinbaren")
-                        .frame(maxWidth: .infinity)
+        NavigationView {
+            NoContentView(
+                image: Image(uiImage: Asset.Assets.logo.image),
+                title: "Willkommen bei Tower!",
+                headline: openingHours,
+                caption: "Wir arbeiten daran, diese Zeiten weiter auszubauen. Wenn du jetzt einen Termin mit uns hast, gehe auf Weiter. Ansonsten kannst du hier direkt deinen persönlichen Termin vereinbaren."
+            ) {
+                VStack(spacing: 16) {
+                    Button {
+                        openURL(appointmentURL)
+                    } label: {
+                        Text("Jetzt Termin vereinbaren")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.darkModeAwareProminent)
                 }
-                .buttonStyle(.darkModeAwareProminent)
-                .padding(.horizontal)
-
-                Spacer(minLength: 0)
             }
-            .padding()
-
-            Button(action: { dismiss() }) {
-                Text("Weiter").bold()
+            .environment(\.multilineTextAlignment, .center)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Weiter") { dismiss() }
+                        .accessibilitySortPriority(-1)
+                }
             }
-            .padding(.top, 16)
-            .padding(.trailing, 16)
-            .accessibilitySortPriority(-1)
         }
     }
 

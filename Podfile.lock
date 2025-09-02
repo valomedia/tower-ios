@@ -1,7 +1,7 @@
 PODS:
   - AzureCommunicationCalling (2.15.1):
     - AzureCommunicationCommon (~> 1.0)
-  - AzureCommunicationCommon (1.2.0)
+  - AzureCommunicationCommon (1.3.0)
 
 DEPENDENCIES:
   - AzureCommunicationCalling (~> 2.0)
@@ -13,7 +13,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AzureCommunicationCalling: a374d99e6c6c6f4589c61eeb59ca193aea48727e
-  AzureCommunicationCommon: 130a21be2be889f83dc4adbf994af6285f962de8
+  AzureCommunicationCommon: 945d9b93a4b52f64e8aacdc992fc8d4a80973d9f
 
 PODFILE CHECKSUM: 405419498b42a43f41910db769502bacb49ae818
 

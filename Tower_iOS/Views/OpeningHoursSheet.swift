@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: OpeningHoursView
 
-/// A view telling the user when the service is available, shown if the user opens the app outside of service hours.
+/// A view informing the user the service is currently closed and guiding them to book an appointment.
 ///
 struct OpeningHoursSheet: View {
 
@@ -27,31 +27,50 @@ struct OpeningHoursSheet: View {
     ///
     let openingHours: String
 
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
+
+    private var appointmentURL: URL {
+        var components = URLComponents(string: "https://tower-assist.de/terminvereinbarung/")!
+        var items: [URLQueryItem] = []
+        let first = Settings.firstNamePreference
+        let mail  = Settings.emailPreference
+        if !first.isEmpty { items.append(URLQueryItem(name: "firstname", value: first)) }
+        if !mail.isEmpty  { items.append(URLQueryItem(name: "email",     value: mail)) }
+        if !items.isEmpty { components.queryItems = items }
+        return components.url!
+    }
+
+    // MARK: - View
+
     var body: some View {
         NavigationView {
             NoContentView(
                 image: Image(uiImage: Asset.Assets.logo.image),
-                title: "Wir haben gerade geschlossen",
+                title: "Willkommen bei Tower!",
                 headline: openingHours,
-                caption:
-                    """
-                    Wir arbeiten daran, diese Zeiten weiter auszubauen. Falls du einen Termin mit uns hast, kannst du \
-                    trotzdem einen Anruf mit uns starten.
-                    """
+                caption: "Wir arbeiten daran, diese Zeiten weiter auszubauen. Wenn du jetzt einen Termin mit uns hast, gehe auf Weiter. Ansonsten kannst du hier direkt deinen persönlichen Termin vereinbaren."
             ) {
-                Button {
-                    dismiss()
-                } label: {
-                    Label("Weiter", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                VStack(spacing: 16) {
+                    Button {
+                        openURL(appointmentURL)
+                    } label: {
+                        Text("Jetzt Termin vereinbaren")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.darkModeAwareProminent)
                 }
-                        .buttonStyle(.darkModeAwareProminent)
-
+            }
+            .environment(\.multilineTextAlignment, .center)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Weiter") { dismiss() }
+                        .accessibilitySortPriority(-1)
+                }
             }
         }
     }
-
-    @Environment(\.dismiss)
-    private var dismiss
 
 }
 
@@ -64,7 +83,7 @@ class OpeningHoursView_Previews: PreviewProvider {
     // MARK: - Static properties
 
     static var previews: some View {
-        OpeningHoursSheet("Montag bis Freitag von 8 bis 12 und von 13 bis 17 Uhr.")
+        OpeningHoursSheet("Spontan erreichst du uns Dienstag bis Donnerstag von 12 bis 16 Uhr.")
     }
 
 }

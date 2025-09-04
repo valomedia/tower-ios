@@ -141,8 +141,9 @@ struct ContentView: View {
                         || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
                 guard !isPresentingOnboardingSheet else { return }
 
-                // If we don't know the name of the user prompt them to sign up (first name is the only required field).
-                isPresentingSignupSheet = Settings.firstNamePreference.isEmpty
+                // If we don't know the name or e-mail of the user prompt them to sign up (first name and e-mail are
+                // only required fields).
+                isPresentingSignupSheet = Settings.firstNamePreference.isEmpty || Settings.emailPreference.isEmpty
                 guard !isPresentingSignupSheet else { return }
 
                 // We have everything we need to make a call, check to see if the service is actually open.

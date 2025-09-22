@@ -25,15 +25,38 @@ struct ContactSheet: View {
                     Text(
                         """
                         Wir freuen uns über deine Fragen und Anregungen. \
-                        Schreib uns jederzeit eine Mail an \
-                        [feedback@tower-assist.de](mailto:feedback@tower-assist.de). \
-                        Du kannst uns auch anrufen unter der Nummer \
-                        [0173 8406203](tel:01738406203). \
+                        Schreib uns jederzeit eine Mail oder ruf uns an. \
                         Wir sind von Montag bis Freitag zwischen 9 und 17 Uhr erreichbar. \
-                        Weitere Infos findest du auf unserer Webseite unter \
-                        [tower-assist.de](https://tower-assist.de/).
+                        Weitere Infos findest du auf unserer Webseite.
                         """
                     )
+
+                    // Contact items as individually focusable links
+                    VStack(spacing: 8) {
+                        HStack(spacing: 6) {
+                            Text("Mail:").bold()
+                            Link("feedback@tower-assist.de",
+                                 destination: URL(string: "mailto:feedback@tower-assist.de")!)
+                                .accessibilityLabel("E-Mail an feedback@tower-assist.de")
+                                .accessibilityHint("E-Mail verfassen")
+                        }
+
+                        HStack(spacing: 6) {
+                            Text("Telefon:").bold()
+                            Link("0173 8406203",
+                                 destination: URL(string: "tel:01738406203")!)
+                                .accessibilityLabel("Telefonnummer 0173 8406203 anrufen")
+                                .accessibilityHint("Anruf starten")
+                        }
+
+                        HStack(spacing: 6) {
+                            Text("Web:").bold()
+                            Link("tower-assist.de",
+                                 destination: URL(string: "https://tower-assist.de/")!)
+                                .accessibilityLabel("Webseite tower-assist.de öffnen")
+                        }
+                    }
+                    .padding(.top, 12)
 
                     Divider()
 
@@ -41,8 +64,11 @@ struct ContactSheet: View {
                         Text("Tower Fernassistanz ist ein Angebot von:")
                             .bold()
                         Text("Bathildisheim e.V.")
-                        Text("Bathildisstraße 7")
-                        Text("34454 Bad Arolsen")
+                        let mapsQuery = "https://maps.apple.com/?q=Bathildisheim%20e.V.%20Bathildisstraße%207,%2034454%20Bad%20Arolsen"
+                        Link("Bathildisstraße 7",
+                             destination: URL(string: mapsQuery)!)
+                        Link("34454 Bad Arolsen",
+                             destination: URL(string: mapsQuery)!)
                     }
                 }
                 .padding()

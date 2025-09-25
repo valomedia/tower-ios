@@ -32,8 +32,8 @@ struct ContactSheet: View {
                     )
 
                     // Contact items as individually focusable links
-                    VStack(spacing: 8) {
-                        HStack(spacing: 6) {
+                    VStack {
+                        HStack {
                             Text("Mail:").bold()
                             Link("feedback@tower-assist.de",
                                  destination: URL(string: "mailto:feedback@tower-assist.de")!)
@@ -41,7 +41,7 @@ struct ContactSheet: View {
                                 .accessibilityHint("E-Mail verfassen")
                         }
 
-                        HStack(spacing: 6) {
+                        HStack {
                             Text("Telefon:").bold()
                             Link("0173 8406203",
                                  destination: URL(string: "tel:01738406203")!)
@@ -49,26 +49,31 @@ struct ContactSheet: View {
                                 .accessibilityHint("Anruf starten")
                         }
 
-                        HStack(spacing: 6) {
+                        HStack {
                             Text("Web:").bold()
                             Link("tower-assist.de",
                                  destination: URL(string: "https://tower-assist.de/")!)
                                 .accessibilityLabel("Webseite tower-assist.de öffnen")
                         }
                     }
-                    .padding(.top, 12)
+                    .padding(.top)
 
                     Divider()
 
                     VStack {
                         Text("Tower Fernassistanz ist ein Angebot von:")
                             .bold()
-                        Text("Bathildisheim e.V.")
                         let mapsQuery = "https://maps.apple.com/?q=Bathildisheim%20e.V.%20Bathildisstraße%207,%2034454%20Bad%20Arolsen"
-                        Link("Bathildisstraße 7",
-                             destination: URL(string: mapsQuery)!)
-                        Link("34454 Bad Arolsen",
-                             destination: URL(string: mapsQuery)!)
+                        Link(destination: URL(string: mapsQuery)!) {
+                            VStack {
+                                Text("Bathildisheim e.V.")
+                                Text("Bathildisstraße 7")
+                                Text("34454 Bad Arolsen")
+                            }
+                            .accessibilityElement(children: .combine)
+                        }
+                        .accessibilityLabel("Bathildisheim e.V., Bathildisstraße 7, 34454 Bad Arolsen. In Karten öffnen.")
+                        .accessibilityHint("Adresse in Apple Karten anzeigen")
                     }
                 }
                 .padding()

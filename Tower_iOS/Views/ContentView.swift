@@ -42,18 +42,9 @@ struct ContentView: View {
                     .padding()
             Spacer()
             Button {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    DispatchQueue.main.async {
-                        UIApplication.shared.open(url)
-                    }
-                }
+                isPresentingMenuSheet = true
             } label: {
-                Label("Einstellungen", systemImage: "gear")
-            }
-            Button {
-                isPresentingContactSheet = true
-            } label: {
-                Label("Kontakt", systemImage: "envelope")
+                Label("Menü", systemImage: "line.3.horizontal")
             }
 
             Spacer()
@@ -77,8 +68,8 @@ struct ContentView: View {
                 .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
                     UpdatePrompt().interactiveDismissDisabled()
                 }
-                .sheet(isPresented: $isPresentingContactSheet) {
-                     ContactSheet()
+                .sheet(isPresented: $isPresentingMenuSheet, onDismiss: login) {
+                     MenuSheet()
                 }
                 .onChange(of: phase) { phase in
                     if (phase == .active && env.errorWrapper == nil) { login() }
@@ -102,7 +93,7 @@ struct ContentView: View {
 
     @State private var isPresentingUpdatePrompt = false
     
-    @State private var isPresentingContactSheet = false
+    @State private var isPresentingMenuSheet = false
 
     @Environment(\.scenePhase)
     private var phase
@@ -114,7 +105,8 @@ struct ContentView: View {
             guard !isPresentingCallSheet 
                 && !isPresentingSignupSheet
                 && !isPresentingOnboardingSheet
-                && !isPresentingUpdatePrompt 
+                && !isPresentingUpdatePrompt
+                && !isPresentingMenuSheet
             else { return }
             isConnected = false
             isPresentingOpeningHours = false

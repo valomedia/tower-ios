@@ -1,5 +1,5 @@
 //
-//  MenuSheet.swift
+//  MenuView.swift
 //  Tower_iOS
 //
 //  Created by Arne Engelland on 2026-04-17.
@@ -8,26 +8,26 @@
 import Foundation
 import SwiftUI
 
-// MARK: MenuSheet
+// MARK: MenuView
 
-/// A sheet collecting secondary actions from the home screen.
+/// A view collecting secondary actions from the home screen.
 ///
-struct MenuSheet: View {
+struct MenuView: View {
 
     // MARK: - Properties
 
-    @Environment(\.dismiss)
-    private var dismiss
+    @AppStorage("first_name_preference")
+    private var firstNamePreference = ""
 
-    @State private var isPresentingProfileSheet = false
-    @State private var isPresentingContactSheet = false
+    @AppStorage("last_name_preference")
+    private var lastNamePreference = ""
 
     var body: some View {
         NavigationView {
             Form {
                 Section {
-                    Button {
-                        isPresentingProfileSheet = true
+                    NavigationLink {
+                        ProfileEditView()
                     } label: {
                         MenuRow(
                             title: "Benutzerprofil",
@@ -35,8 +35,8 @@ struct MenuSheet: View {
                             systemImage: "person.crop.circle"
                         )
                     }
-                    Button {
-                        isPresentingContactSheet = true
+                    NavigationLink {
+                        ContactView()
                     } label: {
                         MenuRow(
                             title: "Kontakt",
@@ -57,31 +57,20 @@ struct MenuSheet: View {
                         MenuRow(
                             title: "iOS-Einstellungen öffnen",
                             subtitle: "Server, App-Info und Berechtigungen",
-                            systemImage: "gear"
+                            systemImage: "gear",
+                            trailingSystemImage: "arrow.up.forward.app"
                         )
                     }
                 }
             }
             .navigationTitle("Menü")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Schließen") {
-                        dismiss()
-                    }
-                }
-            }
-            .sheet(isPresented: $isPresentingProfileSheet) {
-                ProfileEditSheet()
-            }
-            .sheet(isPresented: $isPresentingContactSheet) {
-                ContactSheet()
-            }
         }
+        .navigationViewStyle(.stack)
     }
 
     private var profileSummary: String {
-        let fullName = [Settings.firstNamePreference, Settings.lastNamePreference]
+        let fullName = [firstNamePreference, lastNamePreference]
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
             .joined(separator: " ")
@@ -100,6 +89,7 @@ private struct MenuRow: View {
     let title: String
     let subtitle: String
     let systemImage: String
+    var trailingSystemImage: String? = nil
 
     var body: some View {
         HStack(spacing: 12) {
@@ -117,23 +107,25 @@ private struct MenuRow: View {
 
             Spacer()
 
-            Image(systemName: "chevron.right")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+            if let trailingSystemImage {
+                Image(systemName: trailingSystemImage)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
         }
         .contentShape(Rectangle())
     }
 
 }
 
-// MARK: MenuSheet_Previews
+// MARK: MenuView_Previews
 
-class MenuSheet_Previews: PreviewProvider {
+class MenuView_Previews: PreviewProvider {
 
     // MARK: - Static properties
 
     static var previews: some View {
-        MenuSheet()
+        MenuView()
     }
 
 }

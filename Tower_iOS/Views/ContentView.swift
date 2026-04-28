@@ -18,38 +18,41 @@ struct ContentView: View {
     // MARK: - Properties
 
     var body: some View {
-        VStack {
-            Spacer()
-            Image(uiImage: Asset.Assets.logo.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
-                    .accessibility(hidden: true)
-            Text(
-                    UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
-                            ? "Verbinden…"
-                            : "Verbindung wird hergestellt…")
-                    .opacity(isConnected ? 0 : 1)
-                    .accessibilityHidden(isConnected)
-            Button {
-                isPresentingCallSheet = true
-            } label: {
-                Label("Jetzt anrufen", systemImage: "phone.fill")
+        TabView {
+            VStack {
+                Spacer()
+                Image(uiImage: Asset.Assets.logo.image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                        .accessibility(hidden: true)
+                Text(
+                        UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
+                                ? "Verbinden…"
+                                : "Verbindung wird hergestellt…")
+                        .opacity(isConnected ? 0 : 1)
+                        .accessibilityHidden(isConnected)
+                Button {
+                    isPresentingCallSheet = true
+                } label: {
+                    Label("Jetzt anrufen", systemImage: "phone.fill")
+                }
+                        .buttonStyle(.darkModeAwareProminent)
+                        .disabled(!isConnected)
+                        .accessibilityHidden(!isConnected)
+                        .padding()
+                Spacer()
             }
-                    .buttonStyle(.darkModeAwareProminent)
-                    .disabled(!isConnected)
-                    .accessibilityHidden(!isConnected)
                     .padding()
-            Spacer()
-            Button {
-                isPresentingMenuSheet = true
-            } label: {
-                Label("Menü", systemImage: "line.3.horizontal")
-            }
+                .tabItem {
+                    Label("Start", systemImage: "house")
+                }
 
-            Spacer()
+            MenuView()
+                .tabItem {
+                    Label("Menü", systemImage: "line.3.horizontal.circle")
+                }
         }
-                .padding()
                 .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
                     ErrorView(errorWrapper: errorWrapper)
                 }
@@ -67,9 +70,6 @@ struct ContentView: View {
                 }
                 .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
                     UpdatePrompt().interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $isPresentingMenuSheet, onDismiss: login) {
-                     MenuSheet()
                 }
                 .onChange(of: phase) { phase in
                     if (phase == .active && env.errorWrapper == nil) { login() }
@@ -92,8 +92,6 @@ struct ContentView: View {
     @State private var openingHours: String = ""
 
     @State private var isPresentingUpdatePrompt = false
-    
-    @State private var isPresentingMenuSheet = false
 
     @Environment(\.scenePhase)
     private var phase
@@ -106,7 +104,6 @@ struct ContentView: View {
                 && !isPresentingSignupSheet
                 && !isPresentingOnboardingSheet
                 && !isPresentingUpdatePrompt
-                && !isPresentingMenuSheet
             else { return }
             isConnected = false
             isPresentingOpeningHours = false

@@ -17,6 +17,8 @@ struct ContentView: View {
 
     // MARK: - Properties
 
+    @EnvironmentObject private var launchOfferStore: LaunchOfferStore
+
     var body: some View {
         VStack {
             Spacer()
@@ -32,12 +34,12 @@ struct ContentView: View {
                     .opacity(isConnected ? 0 : 1)
                     .accessibilityHidden(isConnected)
             Button {
-                isPresentingCallSheet = true
+                startCall()
             } label: {
                 Label("Jetzt anrufen", systemImage: "phone.fill")
             }
                     .buttonStyle(.darkModeAwareProminent)
-                    .disabled(!isConnected)
+                    .disabled(!isConnected || isCheckingAccess)
                     .accessibilityHidden(!isConnected)
                     .padding()
             Spacer()
@@ -71,6 +73,9 @@ struct ContentView: View {
                 .sheet(isPresented: $isPresentingSignupSheet, onDismiss: login) {
                     SignupSheet().interactiveDismissDisabled()
                 }
+                .sheet(isPresented: $isPresentingPaywallSheet, onDismiss: handlePaywallDismiss) {
+                    PaywallSheet()
+                }
                 .sheet(isPresented: $isPresentingOpeningHours) {
                     OpeningHoursSheet(openingHours)
                 }
@@ -92,6 +97,8 @@ struct ContentView: View {
 
     @State private var isPresentingSignupSheet = false
 
+    @State private var isPresentingPaywallSheet = false
+
     @State private var isPresentingOnboardingSheet = false
 
     @State private var isConnected = false
@@ -104,6 +111,12 @@ struct ContentView: View {
     
     @State private var isPresentingContactSheet = false
 
+    @State private var isCheckingAccess = false
+
+    @State private var hasHandledLaunchPaywall = false
+
+    @State private var shouldResumeLoginAfterPaywallDismiss = false
+
     @Environment(\.scenePhase)
     private var phase
 
@@ -111,10 +124,11 @@ struct ContentView: View {
 
     private func login() {
         Task {
-            guard !isPresentingCallSheet 
+            guard !isPresentingCallSheet
                 && !isPresentingSignupSheet
+                && !isPresentingPaywallSheet
                 && !isPresentingOnboardingSheet
-                && !isPresentingUpdatePrompt 
+                && !isPresentingUpdatePrompt
             else { return }
             isConnected = false
             isPresentingOpeningHours = false
@@ -137,7 +151,7 @@ struct ContentView: View {
 
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
-                    = AVAudioSession.sharedInstance().recordPermission != .granted 
+                    = AVAudioSession.sharedInstance().recordPermission != .granted
                         || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
                 guard !isPresentingOnboardingSheet else { return }
 
@@ -145,6 +159,17 @@ struct ContentView: View {
                 // only required fields).
                 isPresentingSignupSheet = Settings.firstNamePreference.isEmpty || Settings.emailPreference.isEmpty
                 guard !isPresentingSignupSheet else { return }
+
+                if !hasHandledLaunchPaywall {
+                    hasHandledLaunchPaywall = true
+                    await launchOfferStore.refresh()
+
+                    guard launchOfferStore.hasAccess else {
+                        shouldResumeLoginAfterPaywallDismiss = true
+                        isPresentingPaywallSheet = true
+                        return
+                    }
+                }
 
                 // We have everything we need to make a call, check to see if the service is actually open.
                 openingHours = indexResponse.openingHours.description
@@ -165,6 +190,36 @@ struct ContentView: View {
         }
     }
 
+    private func startCall() {
+        Task {
+            guard isConnected, !isCheckingAccess else { return }
+
+            isCheckingAccess = true
+            defer { isCheckingAccess = false }
+
+            if await LaunchOfferStore.hasActiveAccess() {
+                isPresentingCallSheet = true
+            }
+            else {
+                shouldResumeLoginAfterPaywallDismiss = false
+                isPresentingPaywallSheet = true
+            }
+        }
+    }
+
+    private func handlePaywallDismiss() {
+        let shouldResumeLogin = shouldResumeLoginAfterPaywallDismiss
+        shouldResumeLoginAfterPaywallDismiss = false
+
+        Task {
+            let hasActiveAccess = await LaunchOfferStore.hasActiveAccess()
+
+            if shouldResumeLogin || hasActiveAccess {
+                login()
+            }
+        }
+    }
+
 }
 
 // MARK: ContentView_Previews
@@ -175,6 +230,7 @@ class ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
         ContentView()
+            .environmentObject(LaunchOfferStore())
     }
 
 }

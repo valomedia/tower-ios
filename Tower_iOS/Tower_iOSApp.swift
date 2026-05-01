@@ -15,6 +15,8 @@ import AVFoundation
 
 @main struct Tower_iOSApp: App {
 
+    @StateObject private var launchOfferStore = LaunchOfferStore()
+
     // MARK: - Life cycle methods
 
     /// Constructor.
@@ -45,6 +47,7 @@ import AVFoundation
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(launchOfferStore)
         }
     }
 

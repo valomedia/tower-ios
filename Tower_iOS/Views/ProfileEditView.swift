@@ -22,12 +22,12 @@ struct ProfileEditView: View {
     @Environment(\.dismiss)
     private var dismiss
 
-    @State private var firstName = Settings.firstNamePreference
-    @State private var lastName = Settings.lastNamePreference
-    @State private var gender = Settings.genderPreference
-    @State private var birthdate = Settings.birthdatePreference
-    @State private var phone = Settings.phonePreference
-    @State private var email = Settings.emailPreference
+    @State private var firstName = ""
+    @State private var lastName = ""
+    @State private var gender = ""
+    @State private var birthdate = ""
+    @State private var phone = ""
+    @State private var email = ""
 
     var body: some View {
         Form {

@@ -22,28 +22,28 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Image(uiImage: Asset.Assets.logo.image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding()
-                        .accessibility(hidden: true)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding()
+                    .accessibility(hidden: true)
                 Text(
-                        UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
-                                ? "Verbinden…"
-                                : "Verbindung wird hergestellt…")
-                        .opacity(isConnected ? 0 : 1)
-                        .accessibilityHidden(isConnected)
+                    UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
+                        ? "Verbinden…"
+                        : "Verbindung wird hergestellt…")
+                    .opacity(isConnected ? 0 : 1)
+                    .accessibilityHidden(isConnected)
                 Button {
                     isPresentingCallSheet = true
                 } label: {
                     Label("Jetzt anrufen", systemImage: "phone.fill")
                 }
-                        .buttonStyle(.darkModeAwareProminent)
-                        .disabled(!isConnected)
-                        .accessibilityHidden(!isConnected)
-                        .padding()
+                    .buttonStyle(.darkModeAwareProminent)
+                    .disabled(!isConnected)
+                    .accessibilityHidden(!isConnected)
+                    .padding()
                 Spacer()
             }
-                    .padding()
+                .padding()
                 .tabItem {
                     Label("Start", systemImage: "house")
                 }
@@ -53,28 +53,28 @@ struct ContentView: View {
                     Label("Menü", systemImage: "line.3.horizontal.circle")
                 }
         }
-                .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
-                    ErrorView(errorWrapper: errorWrapper)
-                }
-                .sheet(isPresented: $isPresentingCallSheet) {
-                    CallSheet().interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
-                    OnboardingSheet().interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $isPresentingSignupSheet, onDismiss: login) {
-                    SignupSheet().interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $isPresentingOpeningHours) {
-                    OpeningHoursSheet(openingHours)
-                }
-                .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
-                    UpdatePrompt().interactiveDismissDisabled()
-                }
-                .onChange(of: phase) { phase in
-                    if (phase == .active && env.errorWrapper == nil) { login() }
-                }
-                .environmentObject(env)
+            .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
+                ErrorView(errorWrapper: errorWrapper)
+            }
+            .sheet(isPresented: $isPresentingCallSheet) {
+                CallSheet().interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
+                OnboardingSheet().interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingSignupSheet, onDismiss: login) {
+                SignupSheet().interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingOpeningHours) {
+                OpeningHoursSheet(openingHours)
+            }
+            .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
+                UpdatePrompt().interactiveDismissDisabled()
+            }
+            .onChange(of: phase) { phase in
+                if (phase == .active && env.errorWrapper == nil) { login() }
+            }
+            .environmentObject(env)
     }
 
     @StateObject private var env = TowerEnvironment()

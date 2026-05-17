@@ -14,6 +14,21 @@ import Foundation
 ///
 struct UserProfile: Codable {
 
+    private static let preferenceBirthdateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        formatter.isLenient = false
+        formatter.locale = Locale(identifier: "de_DE")
+        return formatter
+    }()
+
+    private static let apiBirthdateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+
     enum CodingKeys: String, CodingKey {
         case firstName = "firstName"
         case lastName = "lastName"
@@ -29,13 +44,14 @@ struct UserProfile: Codable {
         firstName = (Settings.firstNamePreference != "") .!! Settings.firstNamePreference
         lastName = (Settings.lastNamePreference != "") .!! Settings.lastNamePreference
         gender = Gender.init(rawValue: Settings.genderPreference)
-        birthdate = try? (Settings.birthdatePreference =~ /^\d\d\.\d\d\.\d{4}$/)
-            .!! Settings.birthdatePreference.split(separator: ".").reversed().joined(separator: "-")
+        birthdate = Self.apiBirthdate(fromPreference: Settings.birthdatePreference)
         phone = (Settings.phonePreference != "") .!! Settings.phonePreference
         email = (Settings.emailPreference != "") .!! Settings.emailPreference
 
         // If the birthdate is not valid, unset it.
-        if birthdate == nil { Settings.birthdatePreference = "" }
+        if birthdate == nil && !Settings.birthdatePreference.isEmpty {
+            Settings.birthdatePreference = ""
+        }
     }
 
     // MARK: - Properties
@@ -63,5 +79,22 @@ struct UserProfile: Codable {
     /// The preferred e-mail address for contacting the user, if known.
     ///
     var email: String?
+
+    // MARK: - Methods
+
+    static func date(fromPreference value: String) -> Date? {
+        let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedValue.isEmpty else { return nil }
+        return preferenceBirthdateFormatter.date(from: trimmedValue)
+    }
+
+    static func preferenceBirthdate(from date: Date) -> String {
+        preferenceBirthdateFormatter.string(from: date)
+    }
+
+    static func apiBirthdate(fromPreference value: String) -> String? {
+        guard let date = date(fromPreference: value) else { return nil }
+        return apiBirthdateFormatter.string(from: date)
+    }
 
 }

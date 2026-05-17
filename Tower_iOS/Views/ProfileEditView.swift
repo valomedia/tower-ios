@@ -116,23 +116,17 @@ struct ProfileEditView: View {
         !trimmedFirstName.isEmpty && !trimmedEmail.isEmpty && isBirthdateValid
     }
 
-    private var isBirthdateValid: Bool {
-        let value = birthdate.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !value.isEmpty else { return true }
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        formatter.isLenient = false
-        formatter.locale = Locale(identifier: "de_DE")
-        return formatter.date(from: value) != nil
-    }
-
     private var trimmedFirstName: String {
         firstName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private var trimmedEmail: String {
         email.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var isBirthdateValid: Bool {
+        let value = birthdate.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value.isEmpty || UserProfile.date(fromPreference: value) != nil
     }
 
     // MARK: - Methods

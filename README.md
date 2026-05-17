@@ -4,8 +4,7 @@ iOS app for Tower.
 
 ## Build dependencies
 
-In order to build this App, you will need to have [swiftgen](https://github.com/swiftgen/swiftgen) and
-[cocoapods](https://cocoapods.org) installed in your PATH.
+To build this App, you will need to have [cocoapods](https://cocoapods.org) installed in your PATH.
 
 ## Building
 

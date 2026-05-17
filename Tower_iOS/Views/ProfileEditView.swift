@@ -19,15 +19,13 @@ struct ProfileEditView: View {
     @Environment(\.colorScheme)
     private var colorScheme
 
-    @Environment(\.dismiss)
-    private var dismiss
-
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var gender = ""
     @State private var birthdate = ""
     @State private var phone = ""
     @State private var email = ""
+    @State private var hasSaved = false
 
     var body: some View {
         Form {
@@ -97,16 +95,35 @@ struct ProfileEditView: View {
                 Button(action: saveProfile) {
                     HStack {
                         Spacer()
-                        Label("Sichern", systemImage: "checkmark").labelStyle(.trailingIcon)
+                        Label(
+                            hasSaved ? "Gesichert" : "Sichern",
+                            systemImage: hasSaved ? "checkmark.circle" : "checkmark"
+                        ).labelStyle(.trailingIcon)
                         Spacer()
                     }
                 }
-                .disabled(!canSave)
+                .disabled(!canSave || hasSaved)
                 .listRowBackground(Color(Asset.Assets.accentColor.color))
                 .foregroundColor(colorScheme == .dark ? .black : .white)
             }
+
+            Section("Weitere Einstellungen") {
+                Button {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                } label: {
+                    HStack {
+                        Label("iOS-Einstellungen öffnen", systemImage: "gear")
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.app")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
         }
-        .navigationTitle("Benutzerprofil")
+        .navigationTitle("Profil")
         .navigationBarTitleDisplayMode(.inline)
         .dynamicTypeSize(...DynamicTypeSize.accessibility4)
         .onAppear(perform: loadProfile)
@@ -148,7 +165,10 @@ struct ProfileEditView: View {
         Settings.phonePreference = phone.trimmingCharacters(in: .whitespacesAndNewlines)
         Settings.emailPreference = trimmedEmail
 
-        dismiss()
+        hasSaved = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            hasSaved = false
+        }
     }
 
 }

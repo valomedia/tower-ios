@@ -133,6 +133,8 @@ import Foundation
 {% endmacro %}
 {% macro stringBlock key name default -%}
 
+    {{ accessModifier }} static let {{ name }}Key = "{{ key }}"
+
     {{ accessModifier }} static var {{ name }}: String {
         get {
             _{{ name }} ?? "{{ default }}"
@@ -143,10 +145,10 @@ import Foundation
     }
     private static var _{{ name }}: String? {
         get {
-            UserDefaults.standard.string(forKey: "{{ key }}")
+            UserDefaults.standard.string(forKey: {{ name }}Key)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "{{ key }}")
+            UserDefaults.standard.set(newValue, forKey: {{ name }}Key)
         }
     }
 

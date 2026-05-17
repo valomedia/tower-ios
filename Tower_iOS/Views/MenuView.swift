@@ -16,10 +16,10 @@ struct MenuView: View {
 
     // MARK: - Properties
 
-    @AppStorage("first_name_preference")
+    @AppStorage(Settings.firstNamePreferenceKey)
     private var firstNamePreference = ""
 
-    @AppStorage("last_name_preference")
+    @AppStorage(Settings.lastNamePreferenceKey)
     private var lastNamePreference = ""
 
     var body: some View {

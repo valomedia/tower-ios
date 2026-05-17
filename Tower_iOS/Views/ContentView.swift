@@ -48,9 +48,20 @@ struct ContentView: View {
                     Label("Start", systemImage: "house")
                 }
 
-            MenuView()
+            NavigationView {
+                ProfileEditView()
+            }
+                .navigationViewStyle(.stack)
                 .tabItem {
-                    Label("Menü", systemImage: "line.3.horizontal.circle")
+                    Label("Profil", systemImage: "person.crop.circle")
+                }
+
+            NavigationView {
+                ContactView()
+            }
+                .navigationViewStyle(.stack)
+                .tabItem {
+                    Label("Kontakt", systemImage: "envelope")
                 }
         }
             .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in

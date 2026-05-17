@@ -17,7 +17,6 @@
 		E11F4A502D726AF300035168 /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11F4A4F2D726AF300035168 /* RegisterUserResponse.swift */; };
 		E13F5A6C2D53C9B40067CDFD /* SignupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */; };
 		E13F5A702D53E3180067CDFD /* NewsletterApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */; };
-		E17A00022E00000100000001 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A00012E00000100000001 /* MenuView.swift */; };
 		E17A00042E00000100000001 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A00032E00000100000001 /* ProfileEditView.swift */; };
 		E1409EC82D908F0100D2FA3D /* AwaitAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1409EC72D908F0100D2FA3D /* AwaitAssistanceResponse.swift */; };
 		E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D25F2C9844B1004751CF /* call-start-tone.mp3 */; };
@@ -166,7 +165,6 @@
 		E15E8B962C6D497E00BC8B90 /* ACKNOWLEDGEMENTS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ACKNOWLEDGEMENTS.txt; sourceTree = "<group>"; };
 		E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityLevel.swift; sourceTree = "<group>"; };
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
-		E17A00012E00000100000001 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		E17A00032E00000100000001 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E1896BD12D18A45100BBB943 /* Tower_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tower_iOS.entitlements; sourceTree = "<group>"; };
@@ -350,7 +348,6 @@
 				E9E97D9BDC1AF314FB168996 /* ErrorView.swift */,
 				E9E9739414376D953A5C2437 /* Font+tower.swift */,
 				E9E97CC102CAF905C77A7414 /* LeadingIconLabelStyle.swift */,
-				E17A00012E00000100000001 /* MenuView.swift */,
 				E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */,
 				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
@@ -829,7 +826,6 @@
 				E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */,
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
 				14CF25592DA7CA9E006B5C16 /* DarkModeAwareProminentButtonStyle.swift in Sources */,
-				E17A00022E00000100000001 /* MenuView.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E17A00042E00000100000001 /* ProfileEditView.swift in Sources */,
 				E1B5A6A22D2B38A00021D8CE /* ClientInfo.swift in Sources */,

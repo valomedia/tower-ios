@@ -11,6 +11,8 @@
 		14574E092DD610C9000BB638 /* camera-switch-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 14574E082DD610C9000BB638 /* camera-switch-tone.mp3 */; };
 		14574E0B2DD61218000BB638 /* AVPlayerItem+cameraSwitchTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14574E0A2DD611F2000BB638 /* AVPlayerItem+cameraSwitchTone.swift */; };
 		14CF25592DA7CA9E006B5C16 /* DarkModeAwareProminentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */; };
+		E20000012EAE000000000001 /* PaywallSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000032EAE000000000001 /* PaywallSheet.swift */; };
+		E20000022EAE000000000001 /* LaunchOfferStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20000042EAE000000000001 /* LaunchOfferStore.swift */; };
 		79BBFF54BDAF562C38A27D7D /* Pods_Tower_iOS_Tower_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */; };
 		7A633F105F3FC525B55AAB9A /* Pods_Tower_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */; };
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
@@ -170,6 +172,8 @@
 		E18C490F2D41A0EA00C40146 /* Gender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gender.swift; sourceTree = "<group>"; };
 		E18C49112D41A94C00C40146 /* Regex+matches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Regex+matches.swift"; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
+		E20000032EAE000000000001 /* PaywallSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallSheet.swift; sourceTree = "<group>"; };
+		E20000042EAE000000000001 /* LaunchOfferStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOfferStore.swift; sourceTree = "<group>"; };
 		E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+aspectRatio.swift"; sourceTree = "<group>"; };
 		E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoStreamResolution+dimensions.swift"; sourceTree = "<group>"; };
 		E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+Hashable.swift"; sourceTree = "<group>"; };
@@ -320,6 +324,7 @@
 			children = (
 				E9E9787B1722DC8C49605991 /* CallController.swift */,
 				E1638CB72C48FC5A003A8A1B /* CameraController.swift */,
+				E20000042EAE000000000001 /* LaunchOfferStore.swift */,
 				E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */,
 				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 				E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */,
@@ -350,6 +355,7 @@
 				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
 				E1D96C402D64F926003F187E /* OpeningHoursSheet.swift */,
+				E20000032EAE000000000001 /* PaywallSheet.swift */,
 				E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */,
 				E9E97D6548DE190EC3DAD6CD /* TrailingIconLabelStyle.swift */,
 				E1588FB82D8F4E5600501EFE /* UpdatePrompt.swift */,
@@ -819,6 +825,7 @@
 				E1CB1BDD2C5FEEEA0078AF3A /* ImageSize.swift in Sources */,
 				E9E976708DDB581904D3D353 /* Tower_iOSApp.swift in Sources */,
 				E9E97AD55211643704B83C6C /* ContentView.swift in Sources */,
+				E20000012EAE000000000001 /* PaywallSheet.swift in Sources */,
 				E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */,
 				E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */,
 				E9E974D189DE37E8BD13DC81 /* ErrorWrapper.swift in Sources */,
@@ -840,6 +847,7 @@
 				14574E0B2DD61218000BB638 /* AVPlayerItem+cameraSwitchTone.swift in Sources */,
 				E9E971EA7EED860BC42B0029 /* PreviewProvider+env.swift in Sources */,
 				E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */,
+				E20000022EAE000000000001 /* LaunchOfferStore.swift in Sources */,
 				E9E97BCF1EC8421C7FFFD918 /* CallSheet.swift in Sources */,
 				E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */,
 				E1A6F9432D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift in Sources */,

@@ -88,10 +88,6 @@ struct UserProfile: Codable {
         return preferenceBirthdateFormatter.date(from: trimmedValue)
     }
 
-    static func preferenceBirthdate(from date: Date) -> String {
-        preferenceBirthdateFormatter.string(from: date)
-    }
-
     static func apiBirthdate(fromPreference value: String) -> String? {
         guard let date = date(fromPreference: value) else { return nil }
         return apiBirthdateFormatter.string(from: date)

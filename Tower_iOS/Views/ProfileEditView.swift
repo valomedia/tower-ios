@@ -26,6 +26,7 @@ struct ProfileEditView: View {
     @State private var phone = ""
     @State private var email = ""
     @State private var hasSaved = false
+    @State private var savedSnapshot: [String] = []
 
     var body: some View {
         Form {
@@ -96,13 +97,13 @@ struct ProfileEditView: View {
                     HStack {
                         Spacer()
                         Label(
-                            hasSaved ? "Gesichert" : "Sichern",
-                            systemImage: hasSaved ? "checkmark.circle" : "checkmark"
+                            hasSaved && !hasUnsavedChanges ? "Gesichert" : "Sichern",
+                            systemImage: hasSaved && !hasUnsavedChanges ? "checkmark.circle" : "checkmark"
                         ).labelStyle(.trailingIcon)
                         Spacer()
                     }
                 }
-                .disabled(!canSave || hasSaved)
+                .disabled(!canSave || !hasUnsavedChanges)
                 .listRowBackground(Color(Asset.Assets.accentColor.color))
                 .foregroundColor(colorScheme == .dark ? .black : .white)
             }
@@ -133,6 +134,21 @@ struct ProfileEditView: View {
         !trimmedFirstName.isEmpty && !trimmedEmail.isEmpty && isBirthdateValid
     }
 
+    private var formSnapshot: [String] {
+        [
+            trimmedFirstName,
+            lastName.trimmingCharacters(in: .whitespacesAndNewlines),
+            gender,
+            birthdate.trimmingCharacters(in: .whitespacesAndNewlines),
+            phone.trimmingCharacters(in: .whitespacesAndNewlines),
+            trimmedEmail,
+        ]
+    }
+
+    private var hasUnsavedChanges: Bool {
+        formSnapshot != savedSnapshot
+    }
+
     private var trimmedFirstName: String {
         firstName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -155,6 +171,8 @@ struct ProfileEditView: View {
         birthdate = Settings.birthdatePreference
         phone = Settings.phonePreference
         email = Settings.emailPreference
+        savedSnapshot = formSnapshot
+        hasSaved = false
     }
 
     private func saveProfile() {
@@ -165,10 +183,8 @@ struct ProfileEditView: View {
         Settings.phonePreference = phone.trimmingCharacters(in: .whitespacesAndNewlines)
         Settings.emailPreference = trimmedEmail
 
+        savedSnapshot = formSnapshot
         hasSaved = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            hasSaved = false
-        }
     }
 
 }

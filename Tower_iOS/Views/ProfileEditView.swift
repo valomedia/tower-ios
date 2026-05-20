@@ -62,6 +62,7 @@ struct ProfileEditView: View {
                         Text("Geburtsdatum")
                     }
                     .keyboardType(.numbersAndPunctuation)
+                    .accessibilityHint("Im Format Tag.Monat.Jahr")
                 }
             } header: {
                 Text("Persönliche Angaben")

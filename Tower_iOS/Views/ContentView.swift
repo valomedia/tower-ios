@@ -18,72 +18,74 @@ struct ContentView: View {
     // MARK: - Properties
 
     var body: some View {
-        VStack {
-            Spacer()
-            Image(uiImage: Asset.Assets.logo.image)
+        TabView {
+            VStack {
+                Spacer()
+                Image(uiImage: Asset.Assets.logo.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding()
                     .accessibility(hidden: true)
-            Text(
+                Text(
                     UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
-                            ? "Verbinden…"
-                            : "Verbindung wird hergestellt…")
+                        ? "Verbinden…"
+                        : "Verbindung wird hergestellt…")
                     .opacity(isConnected ? 0 : 1)
                     .accessibilityHidden(isConnected)
-            Button {
-                isPresentingCallSheet = true
-            } label: {
-                Label("Jetzt anrufen", systemImage: "phone.fill")
-            }
+                Button {
+                    isPresentingCallSheet = true
+                } label: {
+                    Label("Jetzt anrufen", systemImage: "phone.fill")
+                }
                     .buttonStyle(.darkModeAwareProminent)
                     .disabled(!isConnected)
                     .accessibilityHidden(!isConnected)
                     .padding()
-            Spacer()
-            Button {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    DispatchQueue.main.async {
-                        UIApplication.shared.open(url)
-                    }
-                }
-            } label: {
-                Label("Einstellungen", systemImage: "gear")
+                Spacer()
             }
-            Button {
-                isPresentingContactSheet = true
-            } label: {
-                Label("Kontakt", systemImage: "envelope")
-            }
-
-            Spacer()
-        }
                 .padding()
-                .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
-                    ErrorView(errorWrapper: errorWrapper)
+                .tabItem {
+                    Label("Start", systemImage: "house")
                 }
-                .sheet(isPresented: $isPresentingCallSheet) {
-                    CallSheet().interactiveDismissDisabled()
+
+            NavigationView {
+                ProfileEditView()
+            }
+                .navigationViewStyle(.stack)
+                .tabItem {
+                    Label("Profil", systemImage: "person.crop.circle")
                 }
-                .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
-                    OnboardingSheet().interactiveDismissDisabled()
+
+            NavigationView {
+                ContactView()
+            }
+                .navigationViewStyle(.stack)
+                .tabItem {
+                    Label("Kontakt", systemImage: "envelope")
                 }
-                .sheet(isPresented: $isPresentingSignupSheet, onDismiss: login) {
-                    SignupSheet().interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $isPresentingOpeningHours) {
-                    OpeningHoursSheet(openingHours)
-                }
-                .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
-                    UpdatePrompt().interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $isPresentingContactSheet) {
-                     ContactSheet()
-                }
-                .onChange(of: phase) { phase in
-                    if (phase == .active && env.errorWrapper == nil) { login() }
-                }
-                .environmentObject(env)
+        }
+            .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
+                ErrorView(errorWrapper: errorWrapper)
+            }
+            .sheet(isPresented: $isPresentingCallSheet) {
+                CallSheet().interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
+                OnboardingSheet().interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingSignupSheet, onDismiss: login) {
+                SignupSheet().interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingOpeningHours) {
+                OpeningHoursSheet(openingHours)
+            }
+            .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
+                UpdatePrompt().interactiveDismissDisabled()
+            }
+            .onChange(of: phase) { phase in
+                if (phase == .active && env.errorWrapper == nil) { login() }
+            }
+            .environmentObject(env)
     }
 
     @StateObject private var env = TowerEnvironment()
@@ -101,8 +103,6 @@ struct ContentView: View {
     @State private var openingHours: String = ""
 
     @State private var isPresentingUpdatePrompt = false
-    
-    @State private var isPresentingContactSheet = false
 
     @Environment(\.scenePhase)
     private var phase
@@ -114,7 +114,7 @@ struct ContentView: View {
             guard !isPresentingCallSheet 
                 && !isPresentingSignupSheet
                 && !isPresentingOnboardingSheet
-                && !isPresentingUpdatePrompt 
+                && !isPresentingUpdatePrompt
             else { return }
             isConnected = false
             isPresentingOpeningHours = false

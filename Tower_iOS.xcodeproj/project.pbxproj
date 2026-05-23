@@ -106,6 +106,8 @@
 		E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */; };
 		E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */; };
 		F5248DC9A685BCCA9B722229 /* Pods_Tower_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20B5F403853749BA57CCF88 /* Pods_Tower_iOSTests.framework */; };
+		25B0A84B7113D116436F7463 /* WhatsNewEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */; };
+		25CDCDCD4199164B85D10294 /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1270353A5A25954DBD14923E /* WhatsNewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -256,6 +258,8 @@
 		E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+hidden.swift"; sourceTree = "<group>"; };
 		E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingSheet.swift; sourceTree = "<group>"; };
+		DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewEntry.swift; sourceTree = "<group>"; };
+		1270353A5A25954DBD14923E /* WhatsNewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -359,6 +363,7 @@
 				E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */,
 				E9E97D7516F46B4EEA971AE7 /* View+if.swift */,
 				E9E97717C5D0FDCA28C0662B /* View+ifNotNil.swift */,
+				1270353A5A25954DBD14923E /* WhatsNewView.swift */,
 				E9E979C360B6E8A4C2F1D458 /* Wrapper.swift */,
 			);
 			path = Views;
@@ -399,6 +404,7 @@
 				E1E32B302D08A42B00617B34 /* User.swift */,
 				E18C490D2D41A0BA00C40146 /* UserProfile.swift */,
 				E1E32B2C2D08A09B00617B34 /* UserToken.swift */,
+				DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -894,6 +900,8 @@
 				E1D96C3F2D63586F003F187E /* IndexResponse.swift in Sources */,
 				E18C49102D41A0EA00C40146 /* Gender.swift in Sources */,
 				E9E97F16E513CFDC104779A8 /* View+hidden.swift in Sources */,
+				25B0A84B7113D116436F7463 /* WhatsNewEntry.swift in Sources */,
+				25CDCDCD4199164B85D10294 /* WhatsNewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

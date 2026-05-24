@@ -157,7 +157,7 @@ struct ContentView: View {
 
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
-                    = AVAudioSession.sharedInstance().recordPermission != .granted
+                    = AVAudioSession.sharedInstance().recordPermission != .granted 
                         || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
                 guard !isPresentingOnboardingSheet else { return }
 

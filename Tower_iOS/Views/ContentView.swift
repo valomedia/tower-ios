@@ -131,7 +131,7 @@ struct ContentView: View {
 
     private func login() {
         Task {
-            guard !isPresentingCallSheet
+            guard !isPresentingCallSheet 
                 && !isPresentingSignupSheet
                 && !isPresentingOnboardingSheet
                 && !isPresentingUpdatePrompt

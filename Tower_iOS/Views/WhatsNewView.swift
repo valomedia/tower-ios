@@ -32,7 +32,7 @@ struct WhatsNewView: View {
                                     .foregroundColor(.secondary)
                                 Text(entry.title)
                                     .font(.headline)
-                                ForEach(entry.items, id: \.self) { item in
+                                ForEach(Array(entry.items.enumerated()), id: \.offset) { _, item in
                                     HStack(alignment: .top, spacing: 8) {
                                         Text("•")
                                         Text(item)

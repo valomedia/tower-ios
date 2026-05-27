@@ -46,20 +46,10 @@ struct WhatsNewView: View {
         }
         .navigationTitle("Neuigkeiten")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { Self.markAsSeen() }
+        .onAppear { WhatsNewEntry.markAsSeen() }
     }
 
     // MARK: - Static methods
-
-    static func shouldAutoShow() -> Bool {
-        guard let latestVersion = WhatsNewEntry.latestVersion else { return false }
-        return UserDefaults.standard.string(forKey: "latest_seen_whats_new_version") != latestVersion
-    }
-
-    static func markAsSeen() {
-        guard let latestVersion = WhatsNewEntry.latestVersion else { return }
-        UserDefaults.standard.set(latestVersion, forKey: "latest_seen_whats_new_version")
-    }
 
 }
 

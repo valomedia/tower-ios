@@ -83,6 +83,14 @@ struct WhatsNewEntry: Identifiable {
         all.first?.id
     }
 
+    static var isUnread: Bool {
+        guard let latestVersion = WhatsNewEntry.latestVersion else { return false }
+        return UserDefaults.standard.string(forKey: "latest_seen_whats_new_version") != latestVersion
+    }
+    static func markAsSeen() {
+        guard let latestVersion = WhatsNewEntry.latestVersion else { return }
+        UserDefaults.standard.set(latestVersion, forKey: "latest_seen_whats_new_version")
+    }
 
     // MARK: - Properties
 

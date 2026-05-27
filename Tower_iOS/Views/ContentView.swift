@@ -167,7 +167,7 @@ struct ContentView: View {
                 guard !isPresentingSignupSheet else { return }
 
                 // Show What's New tab once per version if there are new entries.
-                if WhatsNewView.shouldAutoShow() {
+                if WhatsNewEntry.isUnread {
                     selectedTab = .whatsNew
                 }
 

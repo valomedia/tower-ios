@@ -55,14 +55,12 @@ struct WhatsNewView: View {
 
     static func shouldAutoShow() -> Bool {
         guard let latestVersion = WhatsNewEntry.latestVersion else { return false }
-        let key = "hasSeenWhatsNew_\(latestVersion)"
-        return !UserDefaults.standard.bool(forKey: key)
+        return UserDefaults.standard.string(forKey: "latest_seen_whats_new_version") != latestVersion
     }
 
     static func markAsSeen() {
         guard let latestVersion = WhatsNewEntry.latestVersion else { return }
-        let key = "hasSeenWhatsNew_\(latestVersion)"
-        UserDefaults.standard.set(true, forKey: key)
+        UserDefaults.standard.set(latestVersion, forKey: "latest_seen_whats_new_version")
     }
 
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: WhatsNewEntry
 
@@ -15,9 +16,9 @@ struct WhatsNewEntry: Identifiable {
     // MARK: - Properties
 
     let id: String
-    let version: String
-    let title: String
     let body: String
+    let version: LocalizedStringKey
+    let title: LocalizedStringKey
 
     var paragraphs: [AttributedString] {
         body

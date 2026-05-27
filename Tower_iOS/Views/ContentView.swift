@@ -157,13 +157,21 @@ struct ContentView: View {
 
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
-                    = AVAudioSession.sharedInstance().recordPermission != .granted 
-                        || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+                    = AVAudioSession.sharedInstance().recordPermission != .granted
+                    || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+
                 guard !isPresentingOnboardingSheet else { return }
 
                 // If we don't know the name or e-mail of the user prompt them to sign up (first name and e-mail are
                 // only required fields).
                 isPresentingSignupSheet = Settings.firstNamePreference.isEmpty || Settings.emailPreference.isEmpty
+
+                // If the user is just signing up, mark the current WhatsNewEntry as seen (it makes no sense to show
+                // these on the very first use.
+                if isPresentingSignupSheet {
+                    WhatsNewEntry.markAsSeen()
+                }
+
                 guard !isPresentingSignupSheet else { return }
 
                 // Show What's New tab once per version if there are new entries.

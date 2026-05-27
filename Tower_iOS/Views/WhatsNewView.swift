@@ -10,6 +10,8 @@ import SwiftUI
 
 // MARK: WhatsNewView
 
+/// View displaying the changelog
+///
 struct WhatsNewView: View {
 
     // MARK: - Properties

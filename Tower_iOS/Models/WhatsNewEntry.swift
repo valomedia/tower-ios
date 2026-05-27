@@ -11,7 +11,16 @@ import SwiftUI
 
 // MARK: WhatsNewEntry
 
+/// An entry in the changelog.
+///
 struct WhatsNewEntry: Identifiable {
+
+    // MARK: - Static properties
+
+    /// Entries for all prior versions.
+    ///
+    /// This contains the entries for all versions of the app that have been published so far, sorted newest to oldest.
+    ///
     static let all: [WhatsNewEntry] = [
         WhatsNewEntry(
             id: "v1.3.0",
@@ -79,14 +88,31 @@ struct WhatsNewEntry: Identifiable {
                   """
         ),
     ]
+
+    /// The latest version we have an entry for.
+    ///
+    /// This is needed to figure out whether to show the `WhatsNewView`, since there might not be news for every
+    /// version.
+    ///
     static var latestVersion: String? {
         all.first?.id
     }
 
+    /// Whether there is a new entry the user hasn't seen yet.
+    ///
+    /// This is true if a new entry has been added since the user installed the app that the user hasn't seen yet.
+    ///
     static var isUnread: Bool {
         guard let latestVersion = WhatsNewEntry.latestVersion else { return false }
         return UserDefaults.standard.string(forKey: "latest_seen_whats_new_version") != latestVersion
     }
+
+    // MARK: - Static methods
+
+    /// Mark the current entry as seen.
+    ///
+    /// This can be used to mark the newest entry as seen, so `isUnread()` becomes false.
+    ///
     static func markAsSeen() {
         guard let latestVersion = WhatsNewEntry.latestVersion else { return }
         UserDefaults.standard.set(latestVersion, forKey: "latest_seen_whats_new_version")
@@ -94,11 +120,23 @@ struct WhatsNewEntry: Identifiable {
 
     // MARK: - Properties
 
+    /// The string identifying the current version in the code base.
+    ///
+    /// This is used to keep track of which versions we have already seen.
+    ///
     let id: String
-    let version: LocalizedStringKey
-    let title: LocalizedStringKey
-    let body: LocalizedStringKey
 
+    /// Human readable version name.
+    ///
+    let version: LocalizedStringKey
+
+    /// Title for the current update.
+    ///
+    let title: LocalizedStringKey
+
+    /// Body text with the actual changelog.
+    ///
+    let body: LocalizedStringKey
 
 }
 

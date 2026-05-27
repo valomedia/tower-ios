@@ -32,11 +32,8 @@ struct WhatsNewView: View {
                                     .foregroundColor(.secondary)
                                 Text(entry.title)
                                     .font(.headline)
-                                ForEach(Array(entry.items.enumerated()), id: \.offset) { _, item in
-                                    HStack(alignment: .top, spacing: 8) {
-                                        Text("•")
-                                        Text(item)
-                                    }
+                                ForEach(Array(entry.paragraphs.enumerated()), id: \.offset) { _, paragraph in
+                                    Text(paragraph)
                                 }
                             }
                             .accessibilityElement(children: .combine)

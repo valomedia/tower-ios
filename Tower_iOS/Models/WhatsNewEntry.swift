@@ -16,19 +16,10 @@ struct WhatsNewEntry: Identifiable {
     // MARK: - Properties
 
     let id: String
-    let body: String
     let version: LocalizedStringKey
     let title: LocalizedStringKey
+    let body: LocalizedStringKey
 
-    var paragraphs: [AttributedString] {
-        body
-            .components(separatedBy: "\n\n")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
-            .map { paragraph in
-                (try? AttributedString(markdown: paragraph)) ?? AttributedString(paragraph)
-            }
-    }
 
 }
 

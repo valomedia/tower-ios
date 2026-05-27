@@ -32,9 +32,7 @@ struct WhatsNewView: View {
                                     .foregroundColor(.secondary)
                                 Text(entry.title)
                                     .font(.headline)
-                                ForEach(Array(entry.paragraphs.enumerated()), id: \.offset) { _, paragraph in
-                                    Text(paragraph)
-                                }
+                                Text(entry.body)
                             }
                             .accessibilityElement(children: .combine)
                             if entry.id != WhatsNewEntry.all.last?.id {

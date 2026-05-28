@@ -18,7 +18,7 @@ struct ContentView: View {
     // MARK: - Properties
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             VStack {
                 Spacer()
                 Image(uiImage: Asset.Assets.logo.image)
@@ -44,6 +44,7 @@ struct ContentView: View {
                 Spacer()
             }
                 .padding()
+                .tag(Tab.home)
                 .tabItem {
                     Label("Start", systemImage: "house")
                 }
@@ -52,6 +53,7 @@ struct ContentView: View {
                 ProfileEditView()
             }
                 .navigationViewStyle(.stack)
+                .tag(Tab.profile)
                 .tabItem {
                     Label("Profil", systemImage: "person.crop.circle")
                 }
@@ -60,8 +62,18 @@ struct ContentView: View {
                 ContactView()
             }
                 .navigationViewStyle(.stack)
+                .tag(Tab.contact)
                 .tabItem {
                     Label("Kontakt", systemImage: "envelope")
+                }
+
+            NavigationView {
+                WhatsNewView()
+            }
+                .navigationViewStyle(.stack)
+                .tag(Tab.whatsNew)
+                .tabItem {
+                    Label("Neuigkeiten", systemImage: "sparkles")
                 }
         }
             .sheet(item: $env.errorWrapper, onDismiss: login) { errorWrapper in
@@ -104,8 +116,16 @@ struct ContentView: View {
 
     @State private var isPresentingUpdatePrompt = false
 
+    @State private var selectedTab: Tab = .home
+
     @Environment(\.scenePhase)
     private var phase
+
+    // MARK: - Types
+
+    private enum Tab {
+        case home, profile, contact, whatsNew
+    }
 
     // MARK: - Methods
 
@@ -137,14 +157,27 @@ struct ContentView: View {
 
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
-                    = AVAudioSession.sharedInstance().recordPermission != .granted 
-                        || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+                    = AVAudioSession.sharedInstance().recordPermission != .granted
+                    || AVCaptureDevice.authorizationStatus(for: .video) != .authorized
+
                 guard !isPresentingOnboardingSheet else { return }
 
                 // If we don't know the name or e-mail of the user prompt them to sign up (first name and e-mail are
                 // only required fields).
                 isPresentingSignupSheet = Settings.firstNamePreference.isEmpty || Settings.emailPreference.isEmpty
+
+                // If the user is just signing up, mark the current WhatsNewEntry as seen (it makes no sense to show
+                // these on the very first use.
+                if isPresentingSignupSheet {
+                    WhatsNewEntry.markAsSeen()
+                }
+
                 guard !isPresentingSignupSheet else { return }
+
+                // Show What's New tab once per version if there are new entries.
+                if WhatsNewEntry.isUnread {
+                    selectedTab = .whatsNew
+                }
 
                 // We have everything we need to make a call, check to see if the service is actually open.
                 openingHours = indexResponse.openingHours.description

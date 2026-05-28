@@ -11,13 +11,14 @@
 		14574E092DD610C9000BB638 /* camera-switch-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 14574E082DD610C9000BB638 /* camera-switch-tone.mp3 */; };
 		14574E0B2DD61218000BB638 /* AVPlayerItem+cameraSwitchTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14574E0A2DD611F2000BB638 /* AVPlayerItem+cameraSwitchTone.swift */; };
 		14CF25592DA7CA9E006B5C16 /* DarkModeAwareProminentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF25582DA7CA99006B5C16 /* DarkModeAwareProminentButtonStyle.swift */; };
+		25B0A84B7113D116436F7463 /* WhatsNewEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */; };
+		25CDCDCD4199164B85D10294 /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1270353A5A25954DBD14923E /* WhatsNewView.swift */; };
 		79BBFF54BDAF562C38A27D7D /* Pods_Tower_iOS_Tower_iOSUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */; };
 		7A633F105F3FC525B55AAB9A /* Pods_Tower_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B24231535EBB3B60DD5E832 /* Pods_Tower_iOS.framework */; };
 		E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */; };
 		E11F4A502D726AF300035168 /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11F4A4F2D726AF300035168 /* RegisterUserResponse.swift */; };
 		E13F5A6C2D53C9B40067CDFD /* SignupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */; };
 		E13F5A702D53E3180067CDFD /* NewsletterApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F5A6F2D53E3180067CDFD /* NewsletterApi.swift */; };
-		E17A00042E00000100000001 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A00032E00000100000001 /* ProfileEditView.swift */; };
 		E1409EC82D908F0100D2FA3D /* AwaitAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1409EC72D908F0100D2FA3D /* AwaitAssistanceResponse.swift */; };
 		E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D25F2C9844B1004751CF /* call-start-tone.mp3 */; };
 		E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E154D2602C9844B1004751CF /* call-end-tone.mp3 */; };
@@ -26,6 +27,7 @@
 		E1588FB92D8F4E5600501EFE /* UpdatePrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1588FB82D8F4E5600501EFE /* UpdatePrompt.swift */; };
 		E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
+		E17A00042E00000100000001 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A00032E00000100000001 /* ProfileEditView.swift */; };
 		E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490D2D41A0BA00C40146 /* UserProfile.swift */; };
 		E18C49102D41A0EA00C40146 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490F2D41A0EA00C40146 /* Gender.swift */; };
 		E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C49112D41A94C00C40146 /* Regex+matches.swift */; };
@@ -106,8 +108,6 @@
 		E9E97F7C4E4BA29DED0D62A5 /* Settings+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E977A62B8656EAEC142C8F /* Settings+Generated.swift */; };
 		E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E971CC4CD62D229DA2C740 /* MissingFeatureView.swift */; };
 		F5248DC9A685BCCA9B722229 /* Pods_Tower_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20B5F403853749BA57CCF88 /* Pods_Tower_iOSTests.framework */; };
-		25B0A84B7113D116436F7463 /* WhatsNewEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */; };
-		25CDCDCD4199164B85D10294 /* WhatsNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1270353A5A25954DBD14923E /* WhatsNewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +141,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1270353A5A25954DBD14923E /* WhatsNewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 		12951A18D2A6A277AC687368 /* Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOS-Tower_iOSUITests/Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig"; sourceTree = "<group>"; };
 		1420B18A2DC3BE3400FA491B /* ContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactView.swift; sourceTree = "<group>"; };
 		14574E082DD610C9000BB638 /* camera-switch-tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "camera-switch-tone.mp3"; sourceTree = "<group>"; };
@@ -154,6 +155,7 @@
 		B20B5F403853749BA57CCF88 /* Pods_Tower_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tower_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB9396403C98BBA9AB472014 /* Pods_Tower_iOS_Tower_iOSUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tower_iOS_Tower_iOSUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEFF2F75F52C4766E1426D1E /* Pods-Tower_iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tower_iOSTests.release.xcconfig"; path = "Target Support Files/Pods-Tower_iOSTests/Pods-Tower_iOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewEntry.swift; sourceTree = "<group>"; };
 		E105F97F2C4082380041B38F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E11F4A4F2D726AF300035168 /* RegisterUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserResponse.swift; sourceTree = "<group>"; };
 		E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupSheet.swift; sourceTree = "<group>"; };
@@ -258,8 +260,6 @@
 		E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+hidden.swift"; sourceTree = "<group>"; };
 		E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingSheet.swift; sourceTree = "<group>"; };
-		DD270F353D4A3E84CD55E0B1 /* WhatsNewEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewEntry.swift; sourceTree = "<group>"; };
-		1270353A5A25954DBD14923E /* WhatsNewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1079,7 +1079,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = PKW2VF887G;
 				ENABLE_PREVIEWS = YES;
@@ -1102,7 +1102,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.3.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "media.valo.Tower-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1139,7 +1139,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = PKW2VF887G;
 				ENABLE_PREVIEWS = YES;
@@ -1162,7 +1162,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.3.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "media.valo.Tower-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";

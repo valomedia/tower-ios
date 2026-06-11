@@ -1,0 +1,47 @@
+name: iOS Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: macos-15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install CocoaPods
+        run: |
+          if ! command -v pod >/dev/null 2>&1; then
+            sudo gem install cocoapods --no-document
+          fi
+
+      - name: Install dependencies
+        run: pod install
+
+      - name: Run unit tests
+        run: |
+          set -euo pipefail
+          SIMULATOR_NAME="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {gsub(/^ +| +$/, "", $1); print $1; exit}')"
+
+          if [ -z "${SIMULATOR_NAME}" ]; then
+            echo "No available iPhone simulator found." >&2
+            xcrun simctl list devices available >&2
+            exit 1
+          fi
+
+          echo "Using simulator: ${SIMULATOR_NAME}"
+          xcodebuild test \
+            -workspace Tower_iOS.xcworkspace \
+            -scheme Tower_iOS \
+            -destination "platform=iOS Simulator,name=${SIMULATOR_NAME},OS=latest" \
+            -only-testing:Tower_iOSTests \
+            CODE_SIGNING_ALLOWED=NO

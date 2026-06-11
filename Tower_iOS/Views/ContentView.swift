@@ -155,6 +155,11 @@ struct ContentView: View {
                 }
                 isConnected = true
 
+                // Fetch the server profile and cache it locally.
+                if let response = try? await TowerApi.getUser() {
+                    response.user.writeToSettings()
+                }
+
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
                     = AVAudioSession.sharedInstance().recordPermission != .granted

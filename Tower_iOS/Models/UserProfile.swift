@@ -54,6 +54,32 @@ struct UserProfile: Codable {
         }
     }
 
+    init(
+        firstName: String?,
+        lastName: String?,
+        gender: Gender?,
+        birthdate: String?,
+        phone: String?,
+        email: String?
+    ) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.gender = gender
+        self.birthdate = birthdate
+        self.phone = phone
+        self.email = email
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
+        lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
+        gender = try? container.decodeIfPresent(Gender.self, forKey: .gender)
+        birthdate = try container.decodeIfPresent(String.self, forKey: .birthdate)
+        phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        email = try container.decodeIfPresent(String.self, forKey: .email)
+    }
+
     // MARK: - Properties
 
     /// The given name of the user, if known.
@@ -82,6 +108,32 @@ struct UserProfile: Codable {
 
     // MARK: - Methods
 
+    static func fromFormFields(
+        firstName: String,
+        lastName: String,
+        gender: String,
+        birthdate: String,
+        phone: String,
+        email: String
+    ) -> UserProfile {
+        UserProfile(
+            firstName: firstName.isEmpty ? nil : firstName,
+            lastName: lastName.isEmpty ? nil : lastName,
+            gender: Gender(rawValue: gender),
+            birthdate: apiBirthdate(fromPreference: birthdate),
+            phone: phone.isEmpty ? nil : phone,
+            email: email.isEmpty ? nil : email
+        )
+    }
+
+    /// Validate an e-mail address using the same rule as the backend.
+    ///
+    static func isValidEmail(_ email: String) -> Bool {
+        let trimmed = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return false }
+        return trimmed.range(of: #"^[^\s@]+@[^\s@]+\.[^\s@]+$"#, options: .regularExpression) != nil
+    }
+
     static func date(fromPreference value: String) -> Date? {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedValue.isEmpty else { return nil }
@@ -91,6 +143,23 @@ struct UserProfile: Codable {
     static func apiBirthdate(fromPreference value: String) -> String? {
         guard let date = date(fromPreference: value) else { return nil }
         return apiBirthdateFormatter.string(from: date)
+    }
+
+    static func preferenceBirthdate(fromApi value: String?) -> String? {
+        guard let value, !value.isEmpty else { return nil }
+        guard let date = apiBirthdateFormatter.date(from: value) else { return nil }
+        return preferenceBirthdateFormatter.string(from: date)
+    }
+
+    /// Write this profile's data to the local Settings cache.
+    ///
+    func writeToSettings() {
+        Settings.firstNamePreference = firstName ?? ""
+        Settings.lastNamePreference = lastName ?? ""
+        Settings.genderPreference = gender?.rawValue ?? ""
+        Settings.birthdatePreference = Self.preferenceBirthdate(fromApi: birthdate) ?? ""
+        Settings.phonePreference = phone ?? ""
+        Settings.emailPreference = email ?? ""
     }
 
 }

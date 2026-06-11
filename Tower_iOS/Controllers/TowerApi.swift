@@ -49,6 +49,34 @@ class TowerApi {
             as: RegisterUserResponse.self)
     }
 
+    /// Fetch the user's profile from the server.
+    ///
+    /// - Returns: The GetUserResponse containing the user profile.
+    /// - Throws:
+    ///
+    class func getUser() async throws -> GetUserResponse {
+        try await request(
+            "POST",
+            "/getUser",
+            ["userId": Settings.userIdPreference],
+            as: GetUserResponse.self)
+    }
+
+    /// Update the user's profile on the server.
+    ///
+    /// The server replaces the entire profile row, so all fields the caller wants to keep must be included.
+    ///
+    /// - Parameters:
+    ///   - profile: The complete profile to store.
+    /// - Throws:
+    ///
+    class func updateUser(_ profile: UserProfile) async throws {
+        try await request(
+            "POST",
+            "/updateUser",
+            UpdateUserBody(profile: profile))
+    }
+
     /// Make a request for an assistance session.
     /// 
     /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the
@@ -154,5 +182,27 @@ class TowerApi {
         default:throw TowerError.unexpectedError
         }
     }
-    
+
+    // MARK: - Types
+
+    private struct UpdateUserBody: Codable {
+        var userId: String
+        var firstName: String?
+        var lastName: String?
+        var gender: Gender?
+        var birthdate: String?
+        var phone: String?
+        var email: String?
+
+        init(profile: UserProfile) {
+            userId = Settings.userIdPreference
+            firstName = profile.firstName
+            lastName = profile.lastName
+            gender = profile.gender
+            birthdate = profile.birthdate
+            phone = profile.phone
+            email = profile.email
+        }
+    }
+
 }

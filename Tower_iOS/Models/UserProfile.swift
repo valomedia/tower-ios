@@ -108,6 +108,17 @@ struct UserProfile: Codable {
 
     // MARK: - Methods
 
+    /// True when the profile does not contain any user-supplied data.
+    ///
+    var isEmpty: Bool {
+        Self.normalized(firstName) == nil
+            && Self.normalized(lastName) == nil
+            && gender == nil
+            && Self.normalized(birthdate) == nil
+            && Self.normalized(phone) == nil
+            && Self.normalized(email) == nil
+    }
+
     static func fromFormFields(
         firstName: String,
         lastName: String,
@@ -160,6 +171,11 @@ struct UserProfile: Codable {
         Settings.birthdatePreference = Self.preferenceBirthdate(fromApi: birthdate) ?? ""
         Settings.phonePreference = phone ?? ""
         Settings.emailPreference = email ?? ""
+    }
+
+    private static func normalized(_ value: String?) -> String? {
+        guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty else { return nil }
+        return value
     }
 
 }

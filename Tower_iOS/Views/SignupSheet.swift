@@ -80,7 +80,7 @@ struct SignupSheet: View {
                             Spacer()
                         }
                     })
-                        .disabled(!canSubmit || isSaving)
+                        .disabled(isSaving)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                         .foregroundColor(colorScheme == .dark ? .black : .white)
                 }
@@ -121,6 +121,7 @@ struct SignupSheet: View {
 
     private func handleSignup() {
         hasAttempted = true
+        saveError = nil
         guard canSubmit else { return }
 
         var profile = UserProfile()
@@ -129,7 +130,6 @@ struct SignupSheet: View {
             ? nil : lastName.trimmingCharacters(in: .whitespacesAndNewlines)
         profile.email = trimmedEmail
         isSaving = true
-        saveError = nil
         Task {
             do {
                 try await TowerApi.updateUser(profile)

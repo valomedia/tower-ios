@@ -102,6 +102,10 @@ struct SignupSheet: View {
         firstName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    private var trimmedLastName: String {
+        lastName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private var trimmedEmail: String {
         email.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -124,11 +128,11 @@ struct SignupSheet: View {
         saveError = nil
         guard canSubmit else { return }
 
-        var profile = UserProfile()
+        var profile = UserProfile.fromSettings()
         profile.firstName = trimmedFirstName
-        profile.lastName = lastName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ? nil : lastName.trimmingCharacters(in: .whitespacesAndNewlines)
+        profile.lastName = trimmedLastName.isEmpty ? nil : trimmedLastName
         profile.email = trimmedEmail
+
         isSaving = true
         Task {
             do {
@@ -139,7 +143,7 @@ struct SignupSheet: View {
                 }
                 await NewsletterApi.signup(
                     firstName: trimmedFirstName,
-                    lastName: lastName.trimmingCharacters(in: .whitespacesAndNewlines),
+                    lastName: trimmedLastName,
                     email: trimmedEmail,
                     wantsNewsletter: wantsNewsletter
                 )

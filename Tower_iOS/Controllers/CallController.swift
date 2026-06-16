@@ -404,7 +404,7 @@ class CallController: NSObject, ObservableObject {
             self?.videoHandler?.updateOrientation()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2 * CallController.dataChannelMessageBurstDelay) { [weak self] in
-            self?.sendMessage(DataMessage.userHelloEvent(clientInfo: ClientInfo(), userProfile: UserProfile()))
+            self?.sendMessage(DataMessage.userHelloEvent(clientInfo: ClientInfo(), userProfile: UserProfile.fromSettings()))
         }
     }
 

@@ -40,20 +40,6 @@ struct UserProfile: Codable {
 
     // MARK: - Life cycle methods
 
-    init() {
-        firstName = (Settings.firstNamePreference != "") .!! Settings.firstNamePreference
-        lastName = (Settings.lastNamePreference != "") .!! Settings.lastNamePreference
-        gender = Gender.init(rawValue: Settings.genderPreference)
-        birthdate = Self.apiBirthdate(fromPreference: Settings.birthdatePreference)
-        phone = (Settings.phonePreference != "") .!! Settings.phonePreference
-        email = (Settings.emailPreference != "") .!! Settings.emailPreference
-
-        // If the birthdate is not valid, unset it.
-        if birthdate == nil && !Settings.birthdatePreference.isEmpty {
-            Settings.birthdatePreference = ""
-        }
-    }
-
     init(
         firstName: String?,
         lastName: String?,
@@ -107,6 +93,25 @@ struct UserProfile: Codable {
     var email: String?
 
     // MARK: - Methods
+
+    /// Build a profile from the locally cached Settings values.
+    ///
+    static func fromSettings() -> UserProfile {
+        var profile = UserProfile(
+            firstName: (Settings.firstNamePreference != "") .!! Settings.firstNamePreference,
+            lastName: (Settings.lastNamePreference != "") .!! Settings.lastNamePreference,
+            gender: Gender(rawValue: Settings.genderPreference),
+            birthdate: apiBirthdate(fromPreference: Settings.birthdatePreference),
+            phone: (Settings.phonePreference != "") .!! Settings.phonePreference,
+            email: (Settings.emailPreference != "") .!! Settings.emailPreference
+        )
+
+        if profile.birthdate == nil && !Settings.birthdatePreference.isEmpty {
+            Settings.birthdatePreference = ""
+        }
+
+        return profile
+    }
 
     /// True when the profile does not contain any user-supplied data.
     ///

@@ -113,6 +113,29 @@ struct UserProfile: Codable {
         return profile
     }
 
+    /// Synchronise the local profile cache with the server.
+    ///
+    /// On first launch after an update the server may not have a profile yet, so local data is pushed up.
+    /// Otherwise the server is treated as the source of truth.
+    ///
+    static func syncWithServer() async throws {
+        let localProfile = fromSettings()
+        do {
+            let serverProfile = try await TowerApi.getUser().user
+            if serverProfile.isEmpty {
+                if !localProfile.isEmpty {
+                    try await TowerApi.updateUser(localProfile)
+                }
+            } else {
+                serverProfile.writeToSettings()
+            }
+        } catch TowerError.notFound {
+            if !localProfile.isEmpty {
+                try await TowerApi.updateUser(localProfile)
+            }
+        }
+    }
+
     /// True when the profile does not contain any user-supplied data.
     ///
     var isEmpty: Bool {

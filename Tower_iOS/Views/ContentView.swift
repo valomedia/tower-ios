@@ -155,24 +155,7 @@ struct ContentView: View {
                 }
                 isConnected = true
 
-                let localProfile = UserProfile()
-                do {
-                    let response = try await TowerApi.getUser()
-                    let serverProfile = response.user
-
-                    if serverProfile.isEmpty {
-                        // Preserve profile data from older app versions by seeding the backend once.
-                        if !localProfile.isEmpty {
-                            try await TowerApi.updateUser(localProfile)
-                        }
-                    } else {
-                        serverProfile.writeToSettings()
-                    }
-                } catch TowerError.notFound {
-                    if !localProfile.isEmpty {
-                        try await TowerApi.updateUser(localProfile)
-                    }
-                }
+                try await UserProfile.syncWithServer()
 
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet

@@ -148,7 +148,7 @@ class TowerApi {
     private class func request<T>(
         _ method: String,
         _ path: String,
-        _ body: Codable? = nil,
+        _ body: Encodable? = nil,
         as type: T.Type = [String: String].self
     ) async throws -> T where T: Decodable {
         let url = URL(string: Settings.endpointPreference + path)
@@ -185,23 +185,23 @@ class TowerApi {
 
     // MARK: - Types
 
-    private struct UpdateUserBody: Codable {
+    private struct UpdateUserBody: Encodable {
         var userId: String
-        var firstName: String?
-        var lastName: String?
-        var gender: Gender?
-        var birthdate: String?
-        var phone: String?
-        var email: String?
+        var profile: UserProfile
 
         init(profile: UserProfile) {
-            userId = Settings.userIdPreference
-            firstName = profile.firstName
-            lastName = profile.lastName
-            gender = profile.gender
-            birthdate = profile.birthdate
-            phone = profile.phone
-            email = profile.email
+            self.userId = Settings.userIdPreference
+            self.profile = profile
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(userId, forKey: .userId)
+            try profile.encode(to: encoder)
+        }
+
+        enum CodingKeys: String, CodingKey {
+            case userId
         }
     }
 

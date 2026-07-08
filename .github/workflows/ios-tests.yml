@@ -1,4 +1,4 @@
-name: iOS Tests
+name: iOS CI
 
 on:
   pull_request:
@@ -7,6 +7,34 @@ on:
       - main
 
 jobs:
+  build:
+    name: Build
+    runs-on: macos-15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install CocoaPods
+        run: |
+          if ! command -v pod >/dev/null 2>&1; then
+            sudo gem install cocoapods --no-document
+          fi
+
+      - name: Install dependencies
+        run: pod install
+
+      - name: Build app
+        run: |
+          xcodebuild build \
+            -workspace Tower_iOS.xcworkspace \
+            -scheme Tower_iOS \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO
+
   unit-tests:
     name: Unit tests
     runs-on: macos-15

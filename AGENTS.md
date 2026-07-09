@@ -10,9 +10,12 @@
 ## Commands
 
 - `pod install` - install or refresh CocoaPods dependencies.
+- `scripts/lint` - run the Xcode static analyzer for the app workspace and scheme.
 - `xcodebuild test -workspace Tower_iOS.xcworkspace -scheme Tower_iOS -destination "platform=iOS Simulator,name=<iPhone simulator>,OS=latest" -only-testing:Tower_iOSTests CODE_SIGNING_ALLOWED=NO` - run unit tests on macOS with Xcode.
-- `.github/workflows/ios-tests.yml` contains the CI version of the test command,
-  including simulator discovery.
+- `.github/workflows/ios-tests.yml` contains the CI lint,
+  build,
+  and unit-test jobs,
+  including simulator discovery for unit tests.
 
 ## Structure
 

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+xcodebuild analyze \
+  -workspace Tower_iOS.xcworkspace \
+  -scheme Tower_iOS \
+  -sdk iphonesimulator \
+  CODE_SIGNING_ALLOWED=NO

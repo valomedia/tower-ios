@@ -49,7 +49,9 @@ struct OpeningHoursSheet: View {
                 image: Image(uiImage: Asset.Assets.logo.image),
                 title: "Willkommen bei Tower!",
                 headline: openingHours,
-                caption: "Wir arbeiten daran, diese Zeiten weiter auszubauen. Wenn du jetzt einen Termin mit uns hast, gehe auf Weiter. Ansonsten kannst du hier direkt deinen persönlichen Termin vereinbaren."
+                caption: "Wir arbeiten daran, diese Zeiten weiter auszubauen. " +
+                    "Wenn du jetzt einen Termin mit uns hast, gehe auf Weiter. " +
+                    "Ansonsten kannst du hier direkt deinen persönlichen Termin vereinbaren."
             ) {
                 VStack(spacing: 16) {
                     Button {

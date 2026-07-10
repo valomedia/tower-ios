@@ -1,0 +1,9 @@
+included:
+  - Tower_iOS
+  - Tower_iOSTests
+  - Tower_iOSUITests
+
+excluded:
+  - Pods
+  - Tower_iOS/Models/Assets+Generated.swift
+  - Tower_iOS/Models/Settings+Generated.swift

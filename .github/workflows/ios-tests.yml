@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: pod install
 
-      - name: Run static analysis
+      - name: Run SwiftLint
         run: scripts/lint
 
   build:

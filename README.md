@@ -13,10 +13,10 @@ you need to install the runtime dependencies using `$ pod install`.
 Once dependencies are installed,
 you can build the project like normal.
 
-## Static analysis
+## Linting
 
 Run `$ scripts/lint` from the repository root
-to execute the Xcode static analyzer for the app workspace and scheme.
+to execute SwiftLint through the CocoaPods-installed binary.
 
 ## Installing
 

@@ -3,22 +3,26 @@ PODS:
     - AzureCommunicationCommon (~> 1.0)
   - AzureCommunicationCommon (1.3.5)
   - SwiftGen (6.6.3)
+  - SwiftLint (0.65.0)
 
 DEPENDENCIES:
   - AzureCommunicationCalling (~> 2.0)
   - SwiftGen (~> 6.0)
+  - SwiftLint (~> 0.65)
 
 SPEC REPOS:
   trunk:
     - AzureCommunicationCalling
     - AzureCommunicationCommon
     - SwiftGen
+    - SwiftLint
 
 SPEC CHECKSUMS:
   AzureCommunicationCalling: a374d99e6c6c6f4589c61eeb59ca193aea48727e
   AzureCommunicationCommon: b37ed8faa9f3f17744b1450462038689766f89f3
   SwiftGen: 4993cbf71cbc4886f775e26f8d5c3a1188ec9f99
+  SwiftLint: c94465bc87831f3e16c52b3569f0626de50bd7da
 
-PODFILE CHECKSUM: 28c5c23991d5f672495c4b051a862043fc790280
+PODFILE CHECKSUM: 680133016f5e9a5f6f49a8bd76ffb00820d10994
 
 COCOAPODS: 1.16.2

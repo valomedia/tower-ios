@@ -10,7 +10,7 @@
 ## Commands
 
 - `pod install` - install or refresh CocoaPods dependencies.
-- `scripts/lint` - run the Xcode static analyzer for the app workspace and scheme.
+- `scripts/lint` - run SwiftLint through the CocoaPods-installed binary.
 - `xcodebuild test -workspace Tower_iOS.xcworkspace -scheme Tower_iOS -destination "platform=iOS Simulator,name=<iPhone simulator>,OS=latest" -only-testing:Tower_iOSTests CODE_SIGNING_ALLOWED=NO` - run unit tests on macOS with Xcode.
 - `.github/workflows/ios-tests.yml` contains the CI lint,
   build,
@@ -32,8 +32,10 @@
 - Keep dependency changes in `Podfile` and `Podfile.lock` together.
 - Do not edit or commit `Pods/`;
   it is ignored and recreated by `pod install`.
-- `SwiftGen` is provided by CocoaPods for Xcode builds.
-  If the build cannot find it, run `pod install --repo-update`.
+- `SwiftGen` and `SwiftLint` are provided by CocoaPods.
+  If either tool is missing, run `pod install --repo-update`.
+- Do not add SwiftLint as an Xcode build phase;
+  linting is intentionally kept as a separate command and CI job.
 
 ## Generated files
 

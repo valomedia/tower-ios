@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-xcodebuild analyze \
-  -workspace Tower_iOS.xcworkspace \
-  -scheme Tower_iOS \
-  -sdk iphonesimulator \
-  CODE_SIGNING_ALLOWED=NO
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+readonly swiftlint="Pods/SwiftLint/swiftlint"
+
+if [[ ! -x "${swiftlint}" ]]; then
+  echo "SwiftLint is not installed. Run 'pod install --repo-update' to install it." >&2
+  exit 1
+fi
+
+exec "${swiftlint}" lint --config .swiftlint.yml

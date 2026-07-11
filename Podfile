@@ -14,6 +14,7 @@ target 'Tower_iOS' do
   # Pods for Tower_iOS
   pod 'AzureCommunicationCalling', '~> 2.0'
   pod 'SwiftGen', '~> 6.0', :configurations => []
+  pod 'SwiftLint', '~> 0.65', :configurations => []
 
   target 'Tower_iOSTests' do
     inherit! :search_paths

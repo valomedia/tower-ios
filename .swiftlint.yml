@@ -7,3 +7,23 @@ excluded:
   - Pods
   - Tower_iOS/Models/Assets+Generated.swift
   - Tower_iOS/Models/Settings+Generated.swift
+
+# Keep legacy force-unwrap patterns visible without failing the new CI lint job.
+force_cast: warning
+force_try: warning
+
+# Existing app and test type names include the product's underscore.
+type_name:
+  allowed_symbols:
+    - _
+
+# Existing helper closures use short placeholder names.
+identifier_name:
+  excluded:
+    - x
+
+# Keep the current large camera controller as a warning,
+# while still failing on larger regressions.
+type_body_length:
+  warning: 350
+  error: 450

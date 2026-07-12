@@ -2,7 +2,6 @@
 //  AVPlayerItem+cameraSwitchTone.swift
 //  Tower_iOS
 //
-//  Created by Arne Engelland on 15.05.25.
 //  Copyright © 2025 valo.media GmbH. All rights reserved.
 //
 

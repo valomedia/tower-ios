@@ -2,7 +2,6 @@
 //  CallQualityData.swift
 //  tower-ios
 //
-//  Created by Jean-Pierre Höhmann on 2024-11-17.
 //  Copyright (c) 2024 valo.media GmbH. All rights reserved.
 //
 

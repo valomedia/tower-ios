@@ -2,7 +2,6 @@
 //  ImageSize.swift
 //  Tower_iOS
 //
-//  Created by Jean-Pierre Höhmann on 2024-08-04.
 //
 //
 

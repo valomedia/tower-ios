@@ -2,7 +2,6 @@
 //  AssistanceSessionState.swift
 //  tower-ios
 //
-//  Created by Jean-Pierre Höhmann on 2024-12-10.
 //  Copyright (c) 2024 valo.media GmbH. All rights reserved.
 //
 

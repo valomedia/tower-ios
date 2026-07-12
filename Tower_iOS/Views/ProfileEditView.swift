@@ -2,7 +2,6 @@
 //  ProfileEditView.swift
 //  Tower_iOS
 //
-//  Created by Arne Engelland on 2026-04-17.
 //
 
 import Foundation

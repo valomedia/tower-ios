@@ -2,7 +2,6 @@
 //  VideoStreamResolution+dimensions.swift
 //  tower-ios
 //
-//  Created by Jean-Pierre Höhmann on 2024-12-16.
 //  Copyright (c) 2024-2025 valo.media GmbH. All rights reserved.
 //
 

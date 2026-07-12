@@ -2,7 +2,6 @@
 //  Font+tower.swift
 //  Tower_iOS
 //
-//  Created by Jean-Pierre Höhmann on 2023-06-09.
 //
 //
 

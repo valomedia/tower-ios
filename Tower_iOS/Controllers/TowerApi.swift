@@ -2,7 +2,6 @@
 //  TowerApi.swift
 //  tower-ios
 //
-//  Created by Jean-Pierre Höhmann on 2023-04-20.
 //  Copyright (c) 2023-2025 valo.media GmbH. All rights reserved.
 //
 

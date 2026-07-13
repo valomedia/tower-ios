@@ -2,7 +2,6 @@
 //  NewsletterApi.swift
 //  tower-ios
 //
-//  Created by Jean-Pierre Höhmann on 2025-02-05.
 //  Copyright (c) 2025 valo.media GmbH. All rights reserved.
 //
 

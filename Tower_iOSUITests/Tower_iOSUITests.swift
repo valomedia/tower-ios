@@ -2,7 +2,6 @@
 //  Tower_iOSUITests.swift
 //  Tower_iOSUITests
 //
-//  Created by Jean-Pierre Höhmann on 2023-03-06.
 //
 //
 

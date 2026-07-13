@@ -2,7 +2,6 @@
 //  WhatsNewEntry.swift
 //  Tower_iOS
 //
-//  Created by Arne Engelland on 2026-05-20.
 //  Copyright © 2026 valo.media GmbH. All rights reserved.
 //
 

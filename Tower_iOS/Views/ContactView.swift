@@ -2,7 +2,6 @@
 //  ContactView.swift
 //  Tower_iOS
 //
-//  Created by Arne Engelland on 2025-05-01.
 //  Copyright © 2025 valo.media GmbH. All rights reserved.
 //
 

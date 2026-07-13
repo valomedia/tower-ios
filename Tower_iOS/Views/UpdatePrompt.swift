@@ -2,7 +2,6 @@
 //  UpdatePrompt.swift
 //  tower-ios
 //
-//  Created by Jean-Pierre Höhmann on 2025-03-22.
 //  Copyright (c) 2025 valo.media GmbH. All rights reserved.
 //
 

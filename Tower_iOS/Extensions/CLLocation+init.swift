@@ -2,7 +2,6 @@
 //  CLLocation+init.swift
 //  Tower_iOS
 //
-//  Created by Jean-Pierre Höhmann on 2023-05-24.
 //
 //
 

@@ -94,11 +94,11 @@ class TowerApi {
         request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
 
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard let response = response as? HTTPURLResponse else {
             throw TowerError.invalidEndpoint
         }
-        try validateResponse(response)
+        try validateResponse(response, data: data)
     }
 
     /// Signal to the backend, that the caller has given up on waiting.
@@ -137,20 +137,15 @@ class TowerApi {
         guard let response = response as? HTTPURLResponse else {
             throw TowerError.invalidEndpoint
         }
-        try validateResponse(response)
+        try validateResponse(response, data: data)
         return try JSONDecoder.shared.decode(type, from: data)
     }
 
     /// Throws a specific TowerError based on HTTP status code.
     ///
-    private class func validateResponse(_ response: HTTPURLResponse) throws {
-        switch response.statusCode {
-        case 200..<300:return
-        case 400:throw TowerError.badRequest
-        case 401:throw TowerError.badCredentials
-        case 404:throw TowerError.notFound
-        case 500...599:throw TowerError.serverError
-        default:throw TowerError.unexpectedError
+    private class func validateResponse(_ response: HTTPURLResponse, data: Data? = nil) throws {
+        if let error = TowerError.responseError(statusCode: response.statusCode, data: data) {
+            throw error
         }
     }
     

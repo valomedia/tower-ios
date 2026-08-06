@@ -106,6 +106,7 @@
 		A10000000000000000000006 /* RegexExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* RegexExtensionTests.swift */; };
 		A10000000000000000000008 /* SequenceExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000007 /* SequenceExtensionTests.swift */; };
 		A10000000000000000000010 /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000009 /* UserTests.swift */; };
+		D40000000000000000000004 /* TowerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40000000000000000000003 /* TowerErrorTests.swift */; };
 		E9E97F16E513CFDC104779A8 /* View+hidden.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */; };
 		E9E97F39E2ED8B908232E0A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */; };
 		E9E97F55954B805E6C79A4C6 /* Optional+throwingUnwrapOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E976940E08971EC4DE8312 /* Optional+throwingUnwrapOperator.swift */; };
@@ -227,6 +228,7 @@
 		A10000000000000000000005 /* RegexExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexExtensionTests.swift; sourceTree = "<group>"; };
 		A10000000000000000000007 /* SequenceExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceExtensionTests.swift; sourceTree = "<group>"; };
 		A10000000000000000000009 /* UserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTests.swift; sourceTree = "<group>"; };
+		D40000000000000000000003 /* TowerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerErrorTests.swift; sourceTree = "<group>"; };
 		E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bool+then.swift"; sourceTree = "<group>"; };
 		E9E9739414376D953A5C2437 /* Font+tower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Font+tower.swift"; sourceTree = "<group>"; };
 		E9E9739962E5C94DE982482A /* swiftgenInputFiles.xcfilelist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcfilelist; path = swiftgenInputFiles.xcfilelist; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				A10000000000000000000003 /* JSONCodingTests.swift */,
 				A10000000000000000000005 /* RegexExtensionTests.swift */,
 				A10000000000000000000007 /* SequenceExtensionTests.swift */,
+				D40000000000000000000003 /* TowerErrorTests.swift */,
 				A10000000000000000000009 /* UserTests.swift */,
 			);
 			path = Tower_iOSTests;
@@ -832,6 +835,7 @@
 				A10000000000000000000004 /* JSONCodingTests.swift in Sources */,
 				A10000000000000000000006 /* RegexExtensionTests.swift in Sources */,
 				A10000000000000000000008 /* SequenceExtensionTests.swift in Sources */,
+				D40000000000000000000004 /* TowerErrorTests.swift in Sources */,
 				A10000000000000000000010 /* UserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -48,6 +48,25 @@ class TowerApi {
             as: RegisterUserResponse.self)
     }
 
+    /// Retrieve the current user's profile from the backend.
+    ///
+    class func getUserProfile(userId: UUID) async throws -> UserProfile {
+        try await request(
+            "POST",
+            "/getUser",
+            ["userId": userId.uuidString],
+            as: GetUserResponse.self).user.profile
+    }
+
+    /// Replace the current user's complete profile on the backend.
+    ///
+    class func updateUserProfile(_ profile: UserProfile, userId: UUID) async throws {
+        try await request(
+            "POST",
+            "/updateUser",
+            UpdateUserRequest(userId: userId.uuidString, profile: profile))
+    }
+
     /// Make a request for an assistance session.
     /// 
     /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the
@@ -119,7 +138,7 @@ class TowerApi {
     private class func request<T>(
         _ method: String,
         _ path: String,
-        _ body: Codable? = nil,
+        _ body: Encodable? = nil,
         as type: T.Type = [String: String].self
     ) async throws -> T where T: Decodable {
         let url = URL(string: Settings.endpointPreference + path)

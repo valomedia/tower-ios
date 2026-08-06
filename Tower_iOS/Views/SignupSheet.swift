@@ -25,29 +25,33 @@ struct SignupSheet: View {
                 Section {
                     HStack {
                         Text("Vorname")
-                        TextField(text: $firstName, prompt: Text("Erforderlich")) {
+                        TextField(text: $profileForm.firstName, prompt: Text("Erforderlich")) {
                             Text("Vorname")
                         }
                     }
                     HStack {
                         Text("Nachname")
-                        TextField(text: $lastName, prompt: Text("Optional")) {
+                        TextField(text: $profileForm.lastName, prompt: Text("Optional")) {
                             Text("Nachname")
                         }
                     }
                     HStack {
-                        Text("e-Mail")
-                        TextField(text: $email, prompt: Text("Erforderlich")) {
+                        Text("E-Mail")
+                        TextField(text: $profileForm.email, prompt: Text("Erforderlich")) {
                             Text("E-Mail-Adresse")
                         }
                             .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                     }
+                } footer: {
+                    if profileForm.hasInvalidEmail {
+                        Text("Bitte gib eine gültige E-Mail-Adresse ein.")
+                    }
                 }
                 Section {
                     Toggle("Ich möchte euren monatlichen Newsletter erhalten", isOn: $wantsNewsletter)
-                        .disabled(isEmailProvided)
+                        .disabled(!profileForm.isEmailValid)
                 }
                 Section {
                     Button(action: handleSignup, label: {
@@ -57,43 +61,64 @@ struct SignupSheet: View {
                             Spacer()
                         }
                     })
-                        .disabled(firstName.isEmpty || !isEmailProvided)
+                        .disabled(!profileForm.isValid || !env.isUserProfileLoaded || isSaving)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                         .foregroundColor(colorScheme == .dark ? .black : .white)
                 }
             }
+                .disabled(!env.isUserProfileLoaded || isSaving)
                 .navigationTitle("Angaben zu dir")
         }
             .dynamicTypeSize(...DynamicTypeSize.accessibility4)
+            .onAppear(perform: loadProfile)
+            .sheet(item: $errorWrapper) { ErrorView(errorWrapper: $0) }
     }
 
-    @State private var firstName = Settings.firstNamePreference
-    @State private var lastName = Settings.lastNamePreference
-    @State private var email = Settings.emailPreference
+    @State private var profileForm = UserProfileForm()
     @State private var wantsNewsletter = false
-    
-    private var isEmailProvided: Bool {
-        !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
+    @State private var isSaving = false
+    @State private var errorWrapper: ErrorWrapper?
 
     @Environment(\.dismiss)
     private var dismiss
 
+    @EnvironmentObject private var env: TowerEnvironment
+
     // MARK: - Methods
 
     private func handleSignup() {
-        Settings.firstNamePreference = firstName
-        Settings.lastNamePreference = lastName
-        Settings.emailPreference = email
-        dismiss()
+        let profile = profileForm.profile
+        let firstName = profile.firstName ?? ""
+        let lastName = profile.lastName ?? ""
+        let email = profile.email ?? ""
+        let shouldSubscribe = wantsNewsletter
+        isSaving = true
         Task {
-            await NewsletterApi.signup(
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                wantsNewsletter: wantsNewsletter
-            )
+            do {
+                try await env.updateUserProfile(profile)
+                await MainActor.run {
+                    isSaving = false
+                    dismiss()
+                }
+                await NewsletterApi.signup(
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    wantsNewsletter: shouldSubscribe)
+            } catch {
+                await MainActor.run {
+                    isSaving = false
+                    errorWrapper = ErrorWrapper(
+                        error: error,
+                        guidance: "Bitte überprüfe deine Angaben und versuche es mit einer anderen E-Mail-Adresse.")
+                }
+            }
         }
+    }
+
+    private func loadProfile() {
+        guard let userProfile = env.userProfile else { return }
+        profileForm = UserProfileForm(userProfile)
     }
 
 }
@@ -102,13 +127,15 @@ struct SignupSheet: View {
 
 class SignupSheet_Previews: PreviewProvider {
 
-    // Mark: - Static properties
+    // MARK: - Static properties
 
     static var previews: some View {
         VStack {
             EmptyView()
         }
-        .sheet(isPresented: $isPresented) { SignupSheet() }
+        .sheet(isPresented: $isPresented) {
+            SignupSheet().environmentObject(env)
+        }
     }
 
     @State static private var isPresented = true

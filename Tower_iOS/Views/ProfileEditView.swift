@@ -18,30 +18,36 @@ struct ProfileEditView: View {
     @Environment(\.colorScheme)
     private var colorScheme
 
-    @State private var firstName = ""
-    @State private var lastName = ""
-    @State private var gender = ""
-    @State private var birthdate = ""
-    @State private var phone = ""
-    @State private var email = ""
+    @State private var profileForm = UserProfileForm()
     @State private var hasSaved = false
-    @State private var savedSnapshot: [String] = []
+    @State private var savedProfile = UserProfile()
+    @State private var isSaving = false
+
+    @EnvironmentObject private var env: TowerEnvironment
 
     var body: some View {
         Form {
-            Text("Hier kannst du deine Angaben bearbeiten. Vorname und E-Mail benötigen wir, um dich bei einem Anruf zuordnen und kontaktieren zu können.")
+            if !env.isUserProfileLoaded {
+                Section {
+                    ProgressView("Profil wird geladen …")
+                }
+            }
+
+            Text(
+                "Hier kannst du deine Angaben bearbeiten. Vorname und E-Mail benötigen wir, " +
+                    "um dich bei einem Anruf zuordnen und kontaktieren zu können.")
 
             Section("Name") {
                 HStack {
                     Text("Vorname")
-                    TextField(text: $firstName, prompt: Text("Erforderlich")) {
+                    TextField(text: $profileForm.firstName, prompt: Text("Erforderlich")) {
                         Text("Vorname")
                     }
                     .textContentType(.givenName)
                 }
                 HStack {
                     Text("Nachname")
-                    TextField(text: $lastName, prompt: Text("Optional")) {
+                    TextField(text: $profileForm.lastName, prompt: Text("Optional")) {
                         Text("Nachname")
                     }
                     .textContentType(.familyName)
@@ -49,7 +55,7 @@ struct ProfileEditView: View {
             }
 
             Section {
-                Picker("Geschlecht", selection: $gender) {
+                Picker("Geschlecht", selection: $profileForm.gender) {
                     Text("Keine Angabe").tag("")
                     Text(Gender.male.localizedDescription).tag(Gender.male.rawValue)
                     Text(Gender.female.localizedDescription).tag(Gender.female.rawValue)
@@ -57,7 +63,7 @@ struct ProfileEditView: View {
                 }
                 HStack {
                     Text("Geburtsdatum")
-                    TextField(text: $birthdate, prompt: Text("TT.MM.JJJJ")) {
+                    TextField(text: $profileForm.birthdate, prompt: Text("TT.MM.JJJJ")) {
                         Text("Geburtsdatum")
                     }
                     .keyboardType(.numbersAndPunctuation)
@@ -66,15 +72,15 @@ struct ProfileEditView: View {
             } header: {
                 Text("Persönliche Angaben")
             } footer: {
-                if !isBirthdateValid {
+                if !profileForm.isBirthdateValid {
                     Text("Bitte gib das Geburtsdatum im Format TT.MM.JJJJ ein.")
                 }
             }
 
-            Section("Kontakt") {
+            Section {
                 HStack {
                     Text("Telefon")
-                    TextField(text: $phone, prompt: Text("Optional")) {
+                    TextField(text: $profileForm.phone, prompt: Text("Optional")) {
                         Text("Telefonnummer")
                     }
                     .keyboardType(.phonePad)
@@ -82,13 +88,19 @@ struct ProfileEditView: View {
                 }
                 HStack {
                     Text("E-Mail")
-                    TextField(text: $email, prompt: Text("Erforderlich")) {
+                    TextField(text: $profileForm.email, prompt: Text("Erforderlich")) {
                         Text("E-Mail-Adresse")
                     }
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
+                }
+            } header: {
+                Text("Kontakt")
+            } footer: {
+                if profileForm.hasInvalidEmail {
+                    Text("Bitte gib eine gültige E-Mail-Adresse ein.")
                 }
             }
 
@@ -103,7 +115,7 @@ struct ProfileEditView: View {
                         Spacer()
                     }
                 }
-                .disabled(!canSave || !hasUnsavedChanges)
+                .disabled(!profileForm.isValid || !hasUnsavedChanges || isSaving)
                 .listRowBackground(Color(Asset.Assets.accentColor.color))
                 .foregroundColor(colorScheme == .dark ? .black : .white)
             }
@@ -124,67 +136,50 @@ struct ProfileEditView: View {
                 }
             }
         }
+        .disabled(!env.isUserProfileLoaded || isSaving)
         .navigationTitle("Profil")
         .navigationBarTitleDisplayMode(.inline)
         .dynamicTypeSize(...DynamicTypeSize.accessibility4)
         .onAppear(perform: loadProfile)
-    }
-
-    private var canSave: Bool {
-        !trimmedFirstName.isEmpty && !trimmedEmail.isEmpty && isBirthdateValid
-    }
-
-    private var formSnapshot: [String] {
-        [
-            trimmedFirstName,
-            lastName.trimmingCharacters(in: .whitespacesAndNewlines),
-            gender,
-            birthdate.trimmingCharacters(in: .whitespacesAndNewlines),
-            phone.trimmingCharacters(in: .whitespacesAndNewlines),
-            trimmedEmail,
-        ]
+        .onChange(of: env.userProfile) { profile in
+            guard let profile, profile != savedProfile else { return }
+            loadProfile()
+        }
     }
 
     private var hasUnsavedChanges: Bool {
-        formSnapshot != savedSnapshot
-    }
-
-    private var trimmedFirstName: String {
-        firstName.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    private var trimmedEmail: String {
-        email.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    private var isBirthdateValid: Bool {
-        let value = birthdate.trimmingCharacters(in: .whitespacesAndNewlines)
-        return value.isEmpty || UserProfile.date(fromPreference: value) != nil
+        profileForm.profile != savedProfile
     }
 
     // MARK: - Methods
 
     private func loadProfile() {
-        firstName = Settings.firstNamePreference
-        lastName = Settings.lastNamePreference
-        gender = Settings.genderPreference
-        birthdate = Settings.birthdatePreference
-        phone = Settings.phonePreference
-        email = Settings.emailPreference
-        savedSnapshot = formSnapshot
+        guard let profile = env.userProfile else { return }
+        profileForm = UserProfileForm(profile)
+        savedProfile = profile
         hasSaved = false
     }
 
     private func saveProfile() {
-        Settings.firstNamePreference = trimmedFirstName
-        Settings.lastNamePreference = lastName.trimmingCharacters(in: .whitespacesAndNewlines)
-        Settings.genderPreference = gender
-        Settings.birthdatePreference = birthdate.trimmingCharacters(in: .whitespacesAndNewlines)
-        Settings.phonePreference = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-        Settings.emailPreference = trimmedEmail
-
-        savedSnapshot = formSnapshot
-        hasSaved = true
+        let profile = profileForm.profile
+        isSaving = true
+        Task {
+            do {
+                try await env.updateUserProfile(profile)
+                await MainActor.run {
+                    savedProfile = profile
+                    hasSaved = true
+                    isSaving = false
+                }
+            } catch {
+                await MainActor.run {
+                    isSaving = false
+                    env.errorWrapper = ErrorWrapper(
+                        error: error,
+                        guidance: "Bitte überprüfe deine Angaben und versuche es noch einmal.")
+                }
+            }
+        }
     }
 
 }
@@ -198,6 +193,7 @@ class ProfileEditView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             ProfileEditView()
+                .environmentObject(env)
         }
     }
 

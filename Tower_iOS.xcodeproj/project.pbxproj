@@ -109,7 +109,10 @@
 		B20000000000000000000002 /* GetUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* GetUserResponse.swift */; };
 		B20000000000000000000004 /* UpdateUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* UpdateUserRequest.swift */; };
 		B20000000000000000000008 /* UserProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* UserProfileTests.swift */; };
+		C30000000000000000000002 /* UserProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30000000000000000000001 /* UserProfileStore.swift */; };
+		C30000000000000000000006 /* UserProfileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30000000000000000000005 /* UserProfileStoreTests.swift */; };
 		C30000000000000000000008 /* UpdateUserRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30000000000000000000007 /* UpdateUserRequestTests.swift */; };
+		D40000000000000000000002 /* TowerEnvironmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40000000000000000000001 /* TowerEnvironmentTests.swift */; };
 		D40000000000000000000004 /* TowerErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40000000000000000000003 /* TowerErrorTests.swift */; };
 		E9E97F16E513CFDC104779A8 /* View+hidden.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E97F491C70B029FFA1AFE7 /* View+hidden.swift */; };
 		E9E97F39E2ED8B908232E0A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9E97F3912449DD2605F6202 /* Preview Assets.xcassets */; };
@@ -235,7 +238,10 @@
 		B20000000000000000000001 /* GetUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserResponse.swift; sourceTree = "<group>"; };
 		B20000000000000000000003 /* UpdateUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserRequest.swift; sourceTree = "<group>"; };
 		B20000000000000000000007 /* UserProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTests.swift; sourceTree = "<group>"; };
+		C30000000000000000000001 /* UserProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStore.swift; sourceTree = "<group>"; };
+		C30000000000000000000005 /* UserProfileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStoreTests.swift; sourceTree = "<group>"; };
 		C30000000000000000000007 /* UpdateUserRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserRequestTests.swift; sourceTree = "<group>"; };
+		D40000000000000000000001 /* TowerEnvironmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerEnvironmentTests.swift; sourceTree = "<group>"; };
 		D40000000000000000000003 /* TowerErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerErrorTests.swift; sourceTree = "<group>"; };
 		E9E9737CE0BA23F6FA9AE619 /* Bool+then.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bool+then.swift"; sourceTree = "<group>"; };
 		E9E9739414376D953A5C2437 /* Font+tower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Font+tower.swift"; sourceTree = "<group>"; };
@@ -348,6 +354,7 @@
 				E9E97F1B5AB45A46393533FC /* PreviewProvider+env.swift */,
 				E9E97EBFD1B3060D27E32B34 /* TowerApi.swift */,
 				E9E9700F363770A1847466DE /* TowerEnvironment.swift */,
+				C30000000000000000000001 /* UserProfileStore.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -359,9 +366,11 @@
 				A10000000000000000000003 /* JSONCodingTests.swift */,
 				A10000000000000000000005 /* RegexExtensionTests.swift */,
 				A10000000000000000000007 /* SequenceExtensionTests.swift */,
+				D40000000000000000000001 /* TowerEnvironmentTests.swift */,
 				D40000000000000000000003 /* TowerErrorTests.swift */,
 				C30000000000000000000007 /* UpdateUserRequestTests.swift */,
 				B20000000000000000000007 /* UserProfileTests.swift */,
+				C30000000000000000000005 /* UserProfileStoreTests.swift */,
 				A10000000000000000000009 /* UserTests.swift */,
 			);
 			path = Tower_iOSTests;
@@ -847,9 +856,11 @@
 				A10000000000000000000004 /* JSONCodingTests.swift in Sources */,
 				A10000000000000000000006 /* RegexExtensionTests.swift in Sources */,
 				A10000000000000000000008 /* SequenceExtensionTests.swift in Sources */,
+				D40000000000000000000002 /* TowerEnvironmentTests.swift in Sources */,
 				D40000000000000000000004 /* TowerErrorTests.swift in Sources */,
 				C30000000000000000000008 /* UpdateUserRequestTests.swift in Sources */,
 				B20000000000000000000008 /* UserProfileTests.swift in Sources */,
+				C30000000000000000000006 /* UserProfileStoreTests.swift in Sources */,
 				A10000000000000000000010 /* UserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -878,6 +889,7 @@
 				E1CB1BDB2C5FEDF40078AF3A /* PhotoData.swift in Sources */,
 				E1CB1BD12C5A9A170078AF3A /* CIImage+image.swift in Sources */,
 				E9E971EB19779781F28DA3D6 /* TowerEnvironment.swift in Sources */,
+				C30000000000000000000002 /* UserProfileStore.swift in Sources */,
 				E9E97F96A50CF792153BAF94 /* MissingFeatureView.swift in Sources */,
 				E1CB1BD72C5B87860078AF3A /* CameraError.swift in Sources */,
 				E9E972A064B4EECA6E5DE6DE /* Assets+Generated.swift in Sources */,

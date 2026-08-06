@@ -24,7 +24,18 @@ class TowerEnvironment: ObservableObject {
     ///
     /// This is a singleton used to mock a TowerEnvironment in previews.
     ///
-    static let preview: TowerEnvironment = TowerEnvironment()
+    static let preview: TowerEnvironment = {
+        let environment = TowerEnvironment()
+        environment.userProfile = UserProfile()
+        environment.loadedUserId = UUID()
+        return environment
+    }()
+
+    // MARK: - Life cycle methods
+
+    init(userProfileStore: UserProfileStore = UserProfileStore()) {
+        self.userProfileStore = userProfileStore
+    }
 
     // MARK: - Properties
 
@@ -35,5 +46,70 @@ class TowerEnvironment: ObservableObject {
     /// at most one error that is current.
     ///
     @Published var errorWrapper: ErrorWrapper?
+
+    /// The current user's server-backed profile, once loaded.
+    ///
+    /// This is deliberately not persisted locally. The backend remains the sole source of truth.
+    ///
+    @Published private(set) var userProfile: UserProfile?
+
+    /// Whether a profile, including an empty profile, has been loaded from the backend.
+    ///
+    var isUserProfileLoaded: Bool {
+        userProfile != nil
+    }
+
+    /// Whether a profile load or update is currently in progress.
+    ///
+    @Published private(set) var isProfileOperationInProgress = false
+
+    private let userProfileStore: UserProfileStore
+    private var loadedUserId: UUID?
+
+    // MARK: - Methods
+
+    /// Load the current user's profile and publish it for views in the current app session.
+    ///
+    @MainActor
+    func loadUserProfile(userId: UUID) async throws {
+        guard !isProfileOperationInProgress else { return }
+
+        isProfileOperationInProgress = true
+        loadedUserId = nil
+        userProfile = nil
+        defer { isProfileOperationInProgress = false }
+
+        let profile = try await userProfileStore.loadProfile(userId: userId)
+        loadedUserId = userId
+        userProfile = profile
+    }
+
+    /// Save a complete profile and publish it for views in the current app session.
+    ///
+    @MainActor
+    func updateUserProfile(_ profile: UserProfile) async throws {
+        guard !isProfileOperationInProgress,
+              userProfile != nil,
+              let userId = loadedUserId
+        else {
+            throw UserProfileError.profileNotLoaded
+        }
+
+        isProfileOperationInProgress = true
+        defer { isProfileOperationInProgress = false }
+
+        try await userProfileStore.updateProfile(profile, userId: userId)
+        userProfile = profile
+    }
+
+    // MARK: - Types
+
+    enum UserProfileError: Equatable, LocalizedError {
+        case profileNotLoaded
+
+        var errorDescription: String? {
+            "Das Benutzerprofil wurde noch nicht geladen."
+        }
+    }
 
 }

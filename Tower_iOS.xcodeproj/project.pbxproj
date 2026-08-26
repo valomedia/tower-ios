@@ -615,7 +615,6 @@
 				ORGANIZATIONNAME = "valo.media GmbH";
 				TargetAttributes = {
 					E9E9788D0F6AB5A2D5ECD54C = {
-						DevelopmentTeam = PKW2VF887G;
 						LastSwiftMigration = 1620;
 					};
 					E9E97CC6FF0AF1241CB4CB96 = {
@@ -1097,12 +1096,13 @@
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
 				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = PKW2VF887G;
+				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tower_iOS/Tower-iOS-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Tower Assist";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Hiermit kannst du dich mit drahtlosen Kopfhörern oder Freisprecheinrichtungen verbinden.";
@@ -1120,7 +1120,7 @@
 				);
 				MARKETING_VERSION = 1.3.1;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = "media.valo.Tower-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "de.tower-assist.Tower-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tower_iOS/Tower_iOS-Bridging-Header.h";
@@ -1157,12 +1157,13 @@
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
 				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = PKW2VF887G;
+				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Tower_iOS/Tower-iOS-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Tower Assist";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Diese App benutzt die Kamera, um den Assistent:innen die Umgebung zu zeigen.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Hiermit kannst du dich mit drahtlosen Kopfhörern oder Freisprecheinrichtungen verbinden.";
@@ -1180,7 +1181,7 @@
 				);
 				MARKETING_VERSION = 1.3.1;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = "media.valo.Tower-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "de.tower-assist.Tower-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Tower_iOS/Tower_iOS-Bridging-Header.h";

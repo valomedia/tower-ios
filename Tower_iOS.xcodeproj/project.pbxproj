@@ -36,6 +36,7 @@
 		E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490D2D41A0BA00C40146 /* UserProfile.swift */; };
 		E18C49102D41A0EA00C40146 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490F2D41A0EA00C40146 /* Gender.swift */; };
 		E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C49112D41A94C00C40146 /* Regex+matches.swift */; };
+		E18E4BE33048D0FF003B3580 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = E18E4BE23048D0FF003B3580 /* AppIcon.icon */; };
 		E19DC87F2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */; };
 		E1A6F9432D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */; };
 		E1A6F9452D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A6F9442D11F9A100A28CA4 /* CMVideoDimensions+Hashable.swift */; };
@@ -184,6 +185,7 @@
 		E18C490D2D41A0BA00C40146 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		E18C490F2D41A0EA00C40146 /* Gender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gender.swift; sourceTree = "<group>"; };
 		E18C49112D41A94C00C40146 /* Regex+matches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Regex+matches.swift"; sourceTree = "<group>"; };
+		E18E4BE23048D0FF003B3580 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		E195FEA42A1E03FD00A506EA /* Tower-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tower-iOS-Info.plist"; sourceTree = "<group>"; };
 		E19DC87E2D0F192E004404C5 /* CMVideoDimensions+aspectRatio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoDimensions+aspectRatio.swift"; sourceTree = "<group>"; };
 		E1A6F9422D10C00300A28CA4 /* VideoStreamResolution+dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoStreamResolution+dimensions.swift"; sourceTree = "<group>"; };
@@ -462,6 +464,7 @@
 				E9E975ED4B2377D212EEC753 /* Tower_iOS */,
 				E9E9742C92C0C45776CAB10B /* Tower_iOSTests */,
 				E9E97E86ECD27CC8CE71A6CF /* Tower_iOSUITests */,
+				E18E4BE23048D0FF003B3580 /* AppIcon.icon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -673,6 +676,7 @@
 				E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */,
 				E105F9802C4082380041B38F /* PrivacyInfo.xcprivacy in Resources */,
 				E154D2632C9844B1004751CF /* call-start-tone.mp3 in Resources */,
+				E18E4BE33048D0FF003B3580 /* AppIcon.icon in Resources */,
 				E154D2642C9844B1004751CF /* call-end-tone.mp3 in Resources */,
 				E9E9773EFE2B1DCFC3F67310 /* swiftgenInputFiles.xcfilelist in Resources */,
 				E9E977C6623BEF99AF35CC84 /* swiftgenOutputFiles.xcfilelist in Resources */,

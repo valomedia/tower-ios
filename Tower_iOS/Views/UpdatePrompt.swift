@@ -20,7 +20,7 @@ struct UpdatePrompt: View {
         NavigationView {
             NoContentView(
                 title: "Deine App benötigt ein Update",
-                headline: "Bitte aktualisiere TOWER Fernassistenz über den App Store, bevor du einen Anruf startest",
+                headline: "Bitte aktualisiere TOWER Assist über den App Store, bevor du einen Anruf startest",
                 caption:
                     """
                     Wir arbeiten kontinuierlich daran, unser Angebot zu verbessen. Gelegentlich ist es dafür \

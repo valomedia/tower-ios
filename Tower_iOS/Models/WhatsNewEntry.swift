@@ -22,6 +22,26 @@ struct WhatsNewEntry: Identifiable {
     ///
     static let all: [WhatsNewEntry] = [
         WhatsNewEntry(
+            id: "v1.4.0",
+            version: "Version 1.4.0",
+            title: "Herzlich willkommen in der TOWER Assist App",
+            body: """
+                  Wenn du diesen Text lesen oder hören kannst, \
+                  hat alles geklappt: \
+                  Du bist in der richtigen App. \
+                  Hier findest du TOWER Assist genauso wie bisher. \
+                  Die neue TOWER Assist App sieht fast genauso aus \
+                  wie die bisherige TOWER Fernassistenz App. \
+                  Das ist so gewollt. \
+                  Auch mit VoiceOver fühlt sie sich vertraut an. \
+                  Du kannst die TOWER Fernassistenz App jetzt von deinem Handy löschen. \
+                  Für TOWER brauchst du ab jetzt nur noch die TOWER Assist App. \
+                  Wenn du unsicher bist oder Fragen hast, \
+                  ruf uns einfach an. \
+                  Wir helfen dir gern.
+                  """
+        ),
+        WhatsNewEntry(
             id: "v1.3.1",
             version: "Version 1.3.1",
             title: "Wir sind umgezogen!",

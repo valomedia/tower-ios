@@ -25,6 +25,8 @@ struct ProfileEditView: View {
     @State private var phone = ""
     @State private var email = ""
     @State private var hasSaved = false
+    @State private var isSaving = false
+    @State private var saveError: String?
     @State private var savedSnapshot: [String] = []
 
     var body: some View {
@@ -71,7 +73,7 @@ struct ProfileEditView: View {
                 }
             }
 
-            Section("Kontakt") {
+            Section {
                 HStack {
                     Text("Telefon")
                     TextField(text: $phone, prompt: Text("Optional")) {
@@ -90,20 +92,39 @@ struct ProfileEditView: View {
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
                 }
+            } header: {
+                Text("Kontakt")
+            } footer: {
+                if !isEmailValid {
+                    Text(trimmedEmail.isEmpty
+                        ? "E-Mail-Adresse ist erforderlich."
+                        : "Bitte gib eine gültige E-Mail-Adresse ein.")
+                }
+            }
+
+            if let saveError {
+                Section {
+                    Text(saveError)
+                        .foregroundColor(.red)
+                }
             }
 
             Section {
                 Button(action: saveProfile) {
                     HStack {
                         Spacer()
-                        Label(
-                            hasSaved && !hasUnsavedChanges ? "Gesichert" : "Sichern",
-                            systemImage: hasSaved && !hasUnsavedChanges ? "checkmark.circle" : "checkmark"
-                        ).labelStyle(.trailingIcon)
+                        if isSaving {
+                            ProgressView()
+                        } else {
+                            Label(
+                                hasSaved && !hasUnsavedChanges ? "Gesichert" : "Sichern",
+                                systemImage: hasSaved && !hasUnsavedChanges ? "checkmark.circle" : "checkmark"
+                            ).labelStyle(.trailingIcon)
+                        }
                         Spacer()
                     }
                 }
-                .disabled(!canSave || !hasUnsavedChanges)
+                .disabled(!canSave || !hasUnsavedChanges || isSaving)
                 .listRowBackground(Color(Asset.Assets.accentColor.color))
                 .foregroundColor(colorScheme == .dark ? .black : .white)
             }
@@ -130,8 +151,12 @@ struct ProfileEditView: View {
         .onAppear(perform: loadProfile)
     }
 
+    private var isEmailValid: Bool {
+        UserProfile.isValidEmail(trimmedEmail)
+    }
+
     private var canSave: Bool {
-        !trimmedFirstName.isEmpty && !trimmedEmail.isEmpty && isBirthdateValid
+        !trimmedFirstName.isEmpty && isEmailValid && isBirthdateValid
     }
 
     private var formSnapshot: [String] {
@@ -176,15 +201,33 @@ struct ProfileEditView: View {
     }
 
     private func saveProfile() {
-        Settings.firstNamePreference = trimmedFirstName
-        Settings.lastNamePreference = lastName.trimmingCharacters(in: .whitespacesAndNewlines)
-        Settings.genderPreference = gender
-        Settings.birthdatePreference = birthdate.trimmingCharacters(in: .whitespacesAndNewlines)
-        Settings.phonePreference = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-        Settings.emailPreference = trimmedEmail
+        let profile = UserProfile.fromFormFields(
+            firstName: trimmedFirstName,
+            lastName: lastName.trimmingCharacters(in: .whitespacesAndNewlines),
+            gender: gender,
+            birthdate: birthdate.trimmingCharacters(in: .whitespacesAndNewlines),
+            phone: phone.trimmingCharacters(in: .whitespacesAndNewlines),
+            email: trimmedEmail
+        )
 
-        savedSnapshot = formSnapshot
-        hasSaved = true
+        isSaving = true
+        saveError = nil
+        Task {
+            do {
+                try await TowerApi.updateUser(profile)
+                await MainActor.run {
+                    profile.writeToSettings()
+                    savedSnapshot = formSnapshot
+                    hasSaved = true
+                    isSaving = false
+                }
+            } catch {
+                await MainActor.run {
+                    saveError = "Speichern fehlgeschlagen. Bitte versuche es erneut."
+                    isSaving = false
+                }
+            }
+        }
     }
 
 }

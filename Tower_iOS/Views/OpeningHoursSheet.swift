@@ -28,14 +28,17 @@ struct OpeningHoursSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @EnvironmentObject private var env: TowerEnvironment
 
     private var appointmentURL: URL {
         var components = URLComponents(string: "https://tower-assist.de/terminvereinbarung/")!
         var items: [URLQueryItem] = []
-        let first = Settings.firstNamePreference
-        let mail  = Settings.emailPreference
-        if !first.isEmpty { items.append(URLQueryItem(name: "firstname", value: first)) }
-        if !mail.isEmpty  { items.append(URLQueryItem(name: "email",     value: mail)) }
+        if let first = env.userProfile?.firstName {
+            items.append(URLQueryItem(name: "firstname", value: first))
+        }
+        if let email = env.userProfile?.email {
+            items.append(URLQueryItem(name: "email", value: email))
+        }
         if !items.isEmpty { components.queryItems = items }
         return components.url!
     }
@@ -85,6 +88,7 @@ class OpeningHoursView_Previews: PreviewProvider {
 
     static var previews: some View {
         OpeningHoursSheet("Spontan erreichst du uns Dienstag bis Donnerstag von 12 bis 16 Uhr.")
+            .environmentObject(env)
     }
 
 }

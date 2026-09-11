@@ -48,6 +48,25 @@ class TowerApi {
             as: RegisterUserResponse.self)
     }
 
+    /// Retrieve the current user's profile from the backend.
+    ///
+    class func getUserProfile(userId: UUID) async throws -> UserProfile {
+        try await request(
+            "POST",
+            "/getUser",
+            ["userId": userId.uuidString],
+            as: GetUserResponse.self).user.profile
+    }
+
+    /// Replace the current user's complete profile on the backend.
+    ///
+    class func updateUserProfile(_ profile: UserProfile, userId: UUID) async throws {
+        try await request(
+            "POST",
+            "/updateUser",
+            UpdateUserRequest(userId: userId.uuidString, profile: profile))
+    }
+
     /// Make a request for an assistance session.
     /// 
     /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the
@@ -94,11 +113,11 @@ class TowerApi {
         request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
 
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard let response = response as? HTTPURLResponse else {
             throw TowerError.invalidEndpoint
         }
-        try validateResponse(response)
+        try validateResponse(response, data: data)
     }
 
     /// Signal to the backend, that the caller has given up on waiting.
@@ -119,7 +138,7 @@ class TowerApi {
     private class func request<T>(
         _ method: String,
         _ path: String,
-        _ body: Codable? = nil,
+        _ body: Encodable? = nil,
         as type: T.Type = [String: String].self
     ) async throws -> T where T: Decodable {
         let url = URL(string: Settings.endpointPreference + path)
@@ -137,20 +156,15 @@ class TowerApi {
         guard let response = response as? HTTPURLResponse else {
             throw TowerError.invalidEndpoint
         }
-        try validateResponse(response)
+        try validateResponse(response, data: data)
         return try JSONDecoder.shared.decode(type, from: data)
     }
 
     /// Throws a specific TowerError based on HTTP status code.
     ///
-    private class func validateResponse(_ response: HTTPURLResponse) throws {
-        switch response.statusCode {
-        case 200..<300:return
-        case 400:throw TowerError.badRequest
-        case 401:throw TowerError.badCredentials
-        case 404:throw TowerError.notFound
-        case 500...599:throw TowerError.serverError
-        default:throw TowerError.unexpectedError
+    private class func validateResponse(_ response: HTTPURLResponse, data: Data? = nil) throws {
+        if let error = TowerError.responseError(statusCode: response.statusCode, data: data) {
+            throw error
         }
     }
     

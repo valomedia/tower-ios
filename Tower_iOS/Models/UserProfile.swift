@@ -11,7 +11,7 @@ import Foundation
 
 /// Information provided by the user about themselves.
 ///
-struct UserProfile: Codable {
+struct UserProfile: Codable, Equatable {
 
     private static let preferenceBirthdateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -28,6 +28,8 @@ struct UserProfile: Codable {
         return formatter
     }()
 
+    private static let emailRegex = try? Regex(#"^[^\s@]+@[^\s@]+\.[^\s@]+$"#)
+
     enum CodingKeys: String, CodingKey {
         case firstName = "firstName"
         case lastName = "lastName"
@@ -39,18 +41,32 @@ struct UserProfile: Codable {
 
     // MARK: - Life cycle methods
 
-    init() {
-        firstName = (Settings.firstNamePreference != "") .!! Settings.firstNamePreference
-        lastName = (Settings.lastNamePreference != "") .!! Settings.lastNamePreference
-        gender = Gender.init(rawValue: Settings.genderPreference)
-        birthdate = Self.apiBirthdate(fromPreference: Settings.birthdatePreference)
-        phone = (Settings.phonePreference != "") .!! Settings.phonePreference
-        email = (Settings.emailPreference != "") .!! Settings.emailPreference
+    init(
+        firstName: String? = nil,
+        lastName: String? = nil,
+        gender: Gender? = nil,
+        birthdate: String? = nil,
+        phone: String? = nil,
+        email: String? = nil
+    ) {
+        self.firstName = Self.nonEmpty(firstName)
+        self.lastName = Self.nonEmpty(lastName)
+        self.gender = gender
+        self.birthdate = Self.nonEmpty(birthdate)
+        self.phone = Self.nonEmpty(phone)
+        self.email = Self.nonEmptyPreservingWhitespace(email)
+    }
 
-        // If the birthdate is not valid, unset it.
-        if birthdate == nil && !Settings.birthdatePreference.isEmpty {
-            Settings.birthdatePreference = ""
-        }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let gender = try container.decodeIfPresent(String.self, forKey: .gender)
+        self.init(
+            firstName: try container.decodeIfPresent(String.self, forKey: .firstName),
+            lastName: try container.decodeIfPresent(String.self, forKey: .lastName),
+            gender: gender.flatMap(Gender.init(rawValue:)),
+            birthdate: try container.decodeIfPresent(String.self, forKey: .birthdate),
+            phone: try container.decodeIfPresent(String.self, forKey: .phone),
+            email: try container.decodeIfPresent(String.self, forKey: .email))
     }
 
     // MARK: - Properties
@@ -79,6 +95,23 @@ struct UserProfile: Codable {
     ///
     var email: String?
 
+    /// Whether the profile contains no user-provided information.
+    ///
+    var isEmpty: Bool {
+        firstName == nil
+            && lastName == nil
+            && gender == nil
+            && birthdate == nil
+            && phone == nil
+            && email == nil
+    }
+
+    /// Whether the profile has the fields required before placing a call.
+    ///
+    var isComplete: Bool {
+        firstName != nil && email.map(Self.isValidEmail) == true
+    }
+
     // MARK: - Methods
 
     static func date(fromPreference value: String) -> Date? {
@@ -90,6 +123,27 @@ struct UserProfile: Codable {
     static func apiBirthdate(fromPreference value: String) -> String? {
         guard let date = date(fromPreference: value) else { return nil }
         return apiBirthdateFormatter.string(from: date)
+    }
+
+    static func preferenceBirthdate(fromApi value: String?) -> String {
+        guard let value, let date = apiBirthdateFormatter.date(from: value) else { return "" }
+        return preferenceBirthdateFormatter.string(from: date)
+    }
+
+    /// Uses the same deliberately loose syntax check as the backend.
+    ///
+    static func isValidEmail(_ value: String) -> Bool {
+        guard let emailRegex else { return false }
+        return (try? emailRegex.matches(value)) == true
+    }
+
+    private static func nonEmpty(_ value: String?) -> String? {
+        let value = value?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value?.isEmpty == false ? value : nil
+    }
+
+    private static func nonEmptyPreservingWhitespace(_ value: String?) -> String? {
+        value?.isEmpty == false ? value : nil
     }
 
 }

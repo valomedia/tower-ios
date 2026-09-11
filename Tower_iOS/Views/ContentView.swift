@@ -37,8 +37,9 @@ struct ContentView: View {
                     Label("Jetzt anrufen", systemImage: "phone.fill")
                 }
                     .buttonStyle(.darkModeAwareProminent)
-                    .disabled(!isConnected)
-                    .accessibilityHidden(!isConnected)
+                    .disabled(!isConnected || !env.isUserProfileLoaded || env.isProfileOperationInProgress)
+                    .accessibilityHidden(
+                        !isConnected || !env.isUserProfileLoaded || env.isProfileOperationInProgress)
                     .padding()
                 Spacer()
             }
@@ -93,6 +94,19 @@ struct ContentView: View {
             .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
                 UpdatePrompt().interactiveDismissDisabled()
             }
+            .confirmationDialog(
+                "Benutzerkonto nicht gefunden",
+                isPresented: $isPresentingAccountRecovery,
+                titleVisibility: .visible
+            ) {
+                Button("Erneut versuchen", action: login)
+                Button("Neues Benutzerkonto anlegen", role: .destructive, action: createNewAccount)
+                Button("Abbrechen", role: .cancel) {}
+            } message: {
+                Text(
+                    "Der Server konnte das auf diesem Gerät gespeicherte Benutzerkonto nicht finden. " +
+                        "Beim Anlegen eines neuen Kontos müssen deine Angaben erneut eingegeben werden.")
+            }
             .onChange(of: phase) { phase in
                 if (phase == .active && env.errorWrapper == nil) { login() }
             }
@@ -108,6 +122,12 @@ struct ContentView: View {
     @State private var isPresentingOnboardingSheet = false
 
     @State private var isConnected = false
+
+    @State private var isLoggingIn = false
+
+    @State private var isCreatingNewAccount = false
+
+    @State private var isPresentingAccountRecovery = false
 
     @State private var isPresentingOpeningHours = false
 
@@ -128,13 +148,19 @@ struct ContentView: View {
 
     // MARK: - Methods
 
+    @MainActor
     private func login() {
-        Task {
-            guard !isPresentingCallSheet 
-                && !isPresentingSignupSheet
-                && !isPresentingOnboardingSheet
-                && !isPresentingUpdatePrompt
-            else { return }
+        guard !isLoggingIn
+            && !isCreatingNewAccount
+            && !isPresentingCallSheet
+            && !isPresentingSignupSheet
+            && !isPresentingOnboardingSheet
+            && !isPresentingUpdatePrompt
+        else { return }
+
+        isLoggingIn = true
+        Task { @MainActor in
+            defer { isLoggingIn = false }
             isConnected = false
             isPresentingOpeningHours = false
 
@@ -149,10 +175,13 @@ struct ContentView: View {
                 guard !isPresentingUpdatePrompt else { return }
 
                 // If we don't have an anonymous account yet, create one, so it has time to propagate.
-                if UUID(uuidString: Settings.userIdPreference) == nil {
-                    Settings.userIdPreference = (try await TowerApi.registerUser()).userId.uuidString
+                let userId: UUID
+                if let storedUserId = UUID(uuidString: Settings.userIdPreference) {
+                    userId = storedUserId
+                } else {
+                    userId = try await TowerApi.registerUser().userId
+                    Settings.userIdPreference = userId.uuidString
                 }
-                isConnected = true
 
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
@@ -161,9 +190,11 @@ struct ContentView: View {
 
                 guard !isPresentingOnboardingSheet else { return }
 
-                // If we don't know the name or e-mail of the user prompt them to sign up (first name and e-mail are
-                // only required fields).
-                isPresentingSignupSheet = Settings.firstNamePreference.isEmpty || Settings.emailPreference.isEmpty
+                // Load the server profile, uploading legacy local-only data once for users upgrading the app.
+                try await env.loadUserProfile(userId: userId)
+
+                // If the server does not have a usable name and e-mail, prompt the user to complete the profile.
+                isPresentingSignupSheet = env.userProfile?.isComplete != true
 
                 // If the user is just signing up, mark the current WhatsNewEntry as seen (it makes no sense to show
                 // these on the very first use.
@@ -181,18 +212,42 @@ struct ContentView: View {
                 // We have everything we need to make a call, check to see if the service is actually open.
                 openingHours = indexResponse.openingHours.description
                 isPresentingOpeningHours = indexResponse.openingHours.status == .closed
-                guard !isPresentingOpeningHours else { return }
-            }
-            catch {
-                Task { @MainActor in
-                    env.errorWrapper = ErrorWrapper(
-                        error: error,
-                        guidance: """
-                            Bitte überprüfe, ob du mit dem Internet verbunden bist. Wenn das Problem nicht an deiner \
-                            Internetverbindung liegt, gibt es möglicherweise ein vorrübergehendes Problem mit dem \
-                            Fernassistenz-Service. In diesem Fall versuche es bitte später noch einmal.
-                            """)
+                isConnected = true
+            } catch {
+                if error as? TowerError == .userNotFound {
+                    isPresentingAccountRecovery = true
+                } else {
+                    env.errorWrapper = loginErrorWrapper(for: error)
                 }
+            }
+        }
+    }
+
+    private func loginErrorWrapper(for error: Error) -> ErrorWrapper {
+        ErrorWrapper(
+            error: error,
+            guidance: """
+                Bitte überprüfe, ob du mit dem Internet verbunden bist. Wenn das Problem nicht an deiner \
+                Internetverbindung liegt, gibt es möglicherweise ein vorrübergehendes Problem mit dem \
+                Fernassistenz-Service. In diesem Fall versuche es bitte später noch einmal.
+                """)
+    }
+
+    @MainActor
+    private func createNewAccount() {
+        guard !isCreatingNewAccount else { return }
+
+        isCreatingNewAccount = true
+        Task { @MainActor in
+            do {
+                Settings.userIdPreference = try await TowerApi.registerUser().userId.uuidString
+                isCreatingNewAccount = false
+                login()
+            } catch {
+                isCreatingNewAccount = false
+                env.errorWrapper = ErrorWrapper(
+                    error: error,
+                    guidance: "Das neue Benutzerkonto konnte nicht angelegt werden. Bitte versuche es erneut.")
             }
         }
     }

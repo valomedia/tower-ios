@@ -90,6 +90,7 @@ class CallController: NSObject, ObservableObject {
     private var videoHandler: VideoHandler?
     private var locationHandler: LocationHandler?
     private var dataHandler: DataHandler?
+    private var userProfile = UserProfile()
     
     // MARK: - Life cycle methods
 
@@ -402,8 +403,11 @@ class CallController: NSObject, ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + CallController.dataChannelMessageBurstDelay) { [weak self] in
             self?.videoHandler?.updateOrientation()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2 * CallController.dataChannelMessageBurstDelay) { [weak self] in
-            self?.sendMessage(DataMessage.userHelloEvent(clientInfo: ClientInfo(), userProfile: UserProfile()))
+        let userHelloDeadline = DispatchTime.now() + 2 * CallController.dataChannelMessageBurstDelay
+        DispatchQueue.main.asyncAfter(deadline: userHelloDeadline) { [weak self] in
+            self?.sendMessage(DataMessage.userHelloEvent(
+                clientInfo: ClientInfo(),
+                userProfile: self?.userProfile ?? UserProfile()))
         }
     }
 
@@ -428,6 +432,7 @@ class CallController: NSObject, ObservableObject {
 
     private func createSession() async throws -> CommunicationTokenCredential {
         let requestAssistanceResponse = try await TowerApi.requestAssistance()
+        userProfile = requestAssistanceResponse.userToken.user.profile
         _ = requestAssistanceResponse.keepaliveInterval.map { keepaliveInterval in
             Task { await sendKeepalives(keepaliveInterval) }
         }

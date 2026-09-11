@@ -12,7 +12,7 @@ import Foundation
 
 /// An error representing an issue while communicating with the service.
 ///
-enum TowerError: Error, LocalizedError, CustomStringConvertible {
+enum TowerError: Error, Equatable, LocalizedError, CustomStringConvertible {
 
     /// The requested endpoint is not a valid url.
     ///
@@ -34,6 +34,10 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
     ///
     case notFound
 
+    /// The server responded that the registered user does not exist.
+    ///
+    case userNotFound
+
     /// The server responded with a 5XX-response.
     ///
     case serverError
@@ -53,7 +57,9 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
         case .badCredentials:
             return "Credentials are invalid"
         case .notFound:
-            return "Assistance request not found"
+            return "Requested resource not found"
+        case .userNotFound:
+            return "User account not found"
         case .serverError:
             return "Server error"
         case .unexpectedError:
@@ -72,12 +78,50 @@ enum TowerError: Error, LocalizedError, CustomStringConvertible {
         case .badCredentials:
             return "Zugangsdaten falsch"
         case .notFound:
-            return "Hilfegesuch nicht gefunden"
+            return "Angeforderte Ressource nicht gefunden"
+        case .userNotFound:
+            return "Benutzerkonto nicht gefunden"
         case .serverError:
             return "Serverfehler"
         case .unexpectedError:
             return "Unerwarteter Fehler"
         }
+    }
+
+    // MARK: - Methods
+
+    /// Return the error represented by an HTTP response, or `nil` for a successful response.
+    ///
+    /// A generic 404 must not be interpreted as a missing user: proxies and older API deployments can return the same
+    /// status for an unavailable route. Only the backend's explicit machine-readable code (or its current legacy
+    /// message) identifies a missing registration.
+    ///
+    static func responseError(statusCode: Int, data: Data? = nil) -> TowerError? {
+        switch statusCode {
+        case 200..<300:
+            return nil
+        case 400:
+            return .badRequest
+        case 401:
+            return .badCredentials
+        case 404:
+            guard let data,
+                  let response = try? JSONDecoder.shared.decode(ErrorResponse.self, from: data),
+                  response.code == "USER_NOT_FOUND" || response.error == "User not found"
+            else { return .notFound }
+            return .userNotFound
+        case 500...599:
+            return .serverError
+        default:
+            return .unexpectedError
+        }
+    }
+
+    // MARK: - Types
+
+    private struct ErrorResponse: Decodable {
+        let code: String?
+        let error: String?
     }
 
 }

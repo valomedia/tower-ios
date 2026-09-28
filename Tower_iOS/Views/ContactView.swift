@@ -69,6 +69,12 @@ struct ContactView: View {
                     .accessibilityLabel("Bathildisheim e.V., Bathildisstraße 7, 34454 Bad Arolsen. In Karten öffnen.")
                     .accessibilityHint("Adresse in Apple Karten anzeigen")
                 }
+
+                Divider()
+
+                VStack {
+                    Link("Quellcode anzeigen", destination: URL(string: "https://github.com/valomedia/tower-ios")!)
+                }
             }
             .padding()
         }

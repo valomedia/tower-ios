@@ -35,6 +35,7 @@ struct ContactView: View {
                     Weitere Infos findest du auf unserer Webseite.
                     """
                 )
+                .padding(.bottom)
 
                 // Contact items as individually focusable links
                 VStack {
@@ -61,9 +62,9 @@ struct ContactView: View {
                             .accessibilityLabel("Webseite tower-assist.de öffnen")
                     }
                 }
-                .padding(.top)
+                .padding(.bottom)
 
-                Divider()
+                Divider().padding(.bottom)
 
                 VStack {
                     Text("Tower Fernassistanz ist ein Angebot von:")
@@ -80,12 +81,17 @@ struct ContactView: View {
                     .accessibilityLabel("Bathildisheim e.V., Bathildisstraße 7, 34454 Bad Arolsen. In Karten öffnen.")
                     .accessibilityHint("Adresse in Apple Karten anzeigen")
                 }
-
-                Divider()
+                .padding(.bottom)
 
                 VStack {
-                    Link("Quellcode anzeigen", destination: URL(string: "https://github.com/valomedia/tower-ios")!)
+                    HStack {
+                        Text("Quellcode:").bold()
+                        Link("github.com/valomedia/tower-ios",
+                             destination: URL(string: "https://github.com/valomedia/tower-ios")!)
+                            .accessibilityHint("Quellcode auf GitHub anzeigen")
+                    }
                 }
+                .padding(.bottom)
             }
             .padding()
         }

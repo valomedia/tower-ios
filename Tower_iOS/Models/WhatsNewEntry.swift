@@ -34,8 +34,6 @@ struct WhatsNewEntry: Identifiable {
                   wie die bisherige TOWER Fernassistenz App. \
                   Das ist so gewollt. \
                   Auch mit VoiceOver fühlt sie sich vertraut an. \
-                  Du kannst die TOWER Fernassistenz App jetzt von deinem Handy löschen. \
-                  Für TOWER brauchst du ab jetzt nur noch die TOWER Assist App. \
                   Wenn du unsicher bist oder Fragen hast, \
                   ruf uns einfach an. \
                   Wir helfen dir gern.

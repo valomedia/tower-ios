@@ -618,11 +618,11 @@
 				ORGANIZATIONNAME = "valo.media GmbH";
 				TargetAttributes = {
 					E9E9788D0F6AB5A2D5ECD54C = {
-						DevelopmentTeam = PKW2VF887G;
+						DevelopmentTeam = 56PYS8YMG4;
 						LastSwiftMigration = 1620;
 					};
 					E9E97CC6FF0AF1241CB4CB96 = {
-						DevelopmentTeam = PKW2VF887G;
+						DevelopmentTeam = 56PYS8YMG4;
 					};
 				};
 			};
@@ -1101,7 +1101,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
 				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = PKW2VF887G;
+				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1138,7 +1138,7 @@
 			baseConfigurationReference = 12951A18D2A6A277AC687368 /* Pods-Tower_iOS-Tower_iOSUITests.release.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PKW2VF887G;
+				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -1161,7 +1161,7 @@
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
 				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = PKW2VF887G;
+				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1199,7 +1199,7 @@
 			baseConfigurationReference = 75B30FDC1EE6B526BC5105B6 /* Pods-Tower_iOS-Tower_iOSUITests.debug.xcconfig */;
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PKW2VF887G;
+				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;

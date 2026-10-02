@@ -67,18 +67,17 @@ struct ContactView: View {
                 Divider().padding(.bottom)
 
                 VStack {
-                    Text("Tower Fernassistanz ist ein Angebot von:")
+                    Text("Tower Assist ist ein Angebot von:")
                         .bold()
-                    let mapsQuery = "https://maps.apple.com/?q=Bathildisheim%20e.V.%20Bathildisstraße%207,%2034454%20Bad%20Arolsen"
-                    Link(destination: URL(string: mapsQuery)!) {
+                    Link(destination: URL(string: "https://maps.apple/p/xc3IhKRBp-Nhi-")!) {
                         VStack {
-                            Text("Bathildisheim e.V.")
-                            Text("Bathildisstraße 7")
-                            Text("34454 Bad Arolsen")
+                            Text("Tower Assist GmbH")
+                            Text("Universitätsplatz 12")
+                            Text("34127 Kassel")
                         }
                         .accessibilityElement(children: .combine)
                     }
-                    .accessibilityLabel("Bathildisheim e.V., Bathildisstraße 7, 34454 Bad Arolsen. In Karten öffnen.")
+                    .accessibilityLabel("Tower Assist GmbH, Universitätsplatz 12, 34127 Kassel. In Karten öffnen.")
                     .accessibilityHint("Adresse in Apple Karten anzeigen")
                 }
                 .padding(.bottom)

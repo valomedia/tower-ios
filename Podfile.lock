@@ -1,28 +1,31 @@
 PODS:
-  - AzureCommunicationCalling (2.15.1):
+  - AzureCommunicationCalling (2.18.4):
     - AzureCommunicationCommon (~> 1.0)
-  - AzureCommunicationCommon (1.3.5)
+  - AzureCommunicationCommon (1.3.8)
   - SwiftGen (6.6.3)
-  - SwiftLint (0.65.0)
+  - SwiftLint (0.65.1)
 
 DEPENDENCIES:
-  - AzureCommunicationCalling (~> 2.0)
+  - AzureCommunicationCalling (from `https://raw.githubusercontent.com/Azure/azure-sdk-for-ios/AzureCommunicationCalling_2.18.4/sdk/communication/AzureCommunicationCalling/AzureCommunicationCalling.podspec.json`)
   - SwiftGen (~> 6.0)
   - SwiftLint (~> 0.65)
 
 SPEC REPOS:
   trunk:
-    - AzureCommunicationCalling
     - AzureCommunicationCommon
     - SwiftGen
     - SwiftLint
 
-SPEC CHECKSUMS:
-  AzureCommunicationCalling: a374d99e6c6c6f4589c61eeb59ca193aea48727e
-  AzureCommunicationCommon: b37ed8faa9f3f17744b1450462038689766f89f3
-  SwiftGen: 4993cbf71cbc4886f775e26f8d5c3a1188ec9f99
-  SwiftLint: c94465bc87831f3e16c52b3569f0626de50bd7da
+EXTERNAL SOURCES:
+  AzureCommunicationCalling:
+    :podspec: https://raw.githubusercontent.com/Azure/azure-sdk-for-ios/AzureCommunicationCalling_2.18.4/sdk/communication/AzureCommunicationCalling/AzureCommunicationCalling.podspec.json
 
-PODFILE CHECKSUM: 34c64e200d9271901bb6bc49533d6cf73f14d2ab
+SPEC CHECKSUMS:
+  AzureCommunicationCalling: cf184eda996232ad05041ffbd537294663cddce1
+  AzureCommunicationCommon: 8280ee7cd56aed5b141545f88f95674a3e66fabf
+  SwiftGen: 4993cbf71cbc4886f775e26f8d5c3a1188ec9f99
+  SwiftLint: 7d51ad56923e88694cee5ca806dbbab30f85eaaa
+
+PODFILE CHECKSUM: 857b84f089081c2d0e84fb7811b18c05c29ad38d
 
 COCOAPODS: 1.17.0

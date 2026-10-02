@@ -1,8 +1,19 @@
 //
-//  ContactView.swift
-//  Tower_iOS
+// Copyright (c) 2025-2026 valo.media GmbH
+// All rights reserved.
 //
-//  Copyright © 2025 valo.media GmbH. All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
 import SwiftUI
@@ -24,6 +35,7 @@ struct ContactView: View {
                     Weitere Infos findest du auf unserer Webseite.
                     """
                 )
+                .padding(.bottom)
 
                 // Contact items as individually focusable links
                 VStack {
@@ -50,9 +62,9 @@ struct ContactView: View {
                             .accessibilityLabel("Webseite tower-assist.de öffnen")
                     }
                 }
-                .padding(.top)
+                .padding(.bottom)
 
-                Divider()
+                Divider().padding(.bottom)
 
                 VStack {
                     Text("Tower Fernassistanz ist ein Angebot von:")
@@ -69,6 +81,17 @@ struct ContactView: View {
                     .accessibilityLabel("Bathildisheim e.V., Bathildisstraße 7, 34454 Bad Arolsen. In Karten öffnen.")
                     .accessibilityHint("Adresse in Apple Karten anzeigen")
                 }
+                .padding(.bottom)
+
+                VStack {
+                    HStack {
+                        Text("Quellcode:").bold()
+                        Link("github.com/valomedia/tower-ios",
+                             destination: URL(string: "https://github.com/valomedia/tower-ios")!)
+                            .accessibilityHint("Quellcode auf GitHub anzeigen")
+                    }
+                }
+                .padding(.bottom)
             }
             .padding()
         }

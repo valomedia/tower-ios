@@ -1,10 +1,3 @@
-#
-# Podfile
-# tower-ios
-#
-# Copyright (c) 2024-2025 valo.media GmbH. All rights reserved. 
-#
-
 platform :ios, '16.0'
 
 target 'Tower_iOS' do

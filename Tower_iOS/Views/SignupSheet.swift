@@ -46,6 +46,12 @@ struct SignupSheet: View {
                             Text("Nachname")
                         }
                     }
+                } footer: {
+                    if hasAttempted && trimmedFirstName.isEmpty {
+                        Text("Bitte gib deinen Vornamen ein.")
+                    }
+                }
+                Section {
                     HStack {
                         Text("e-Mail")
                         TextField(text: $email, prompt: Text("Erforderlich")) {
@@ -55,20 +61,36 @@ struct SignupSheet: View {
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                     }
+                } footer: {
+                    if hasAttempted && !isEmailValid {
+                        Text(trimmedEmail.isEmpty
+                            ? "Bitte gib deine E-Mail-Adresse ein."
+                            : "Bitte gib eine gültige E-Mail-Adresse ein.")
+                    }
                 }
                 Section {
                     Toggle("Ich möchte euren monatlichen Newsletter erhalten", isOn: $wantsNewsletter)
-                        .disabled(isEmailProvided)
+                        .disabled(!isEmailValid)
+                }
+                if let saveError {
+                    Section {
+                        Text(saveError)
+                            .foregroundColor(.red)
+                    }
                 }
                 Section {
                     Button(action: handleSignup, label: {
                         HStack {
                             Spacer()
-                            Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                            if isSaving {
+                                ProgressView()
+                            } else {
+                                Label("Anmelden", systemImage: "arrow.right").labelStyle(.trailingIcon)
+                            }
                             Spacer()
                         }
                     })
-                        .disabled(firstName.isEmpty || !isEmailProvided)
+                        .disabled(isSaving)
                         .listRowBackground(Color(Asset.Assets.accentColor.color))
                         .foregroundColor(colorScheme == .dark ? .black : .white)
                 }
@@ -82,9 +104,28 @@ struct SignupSheet: View {
     @State private var lastName = Settings.lastNamePreference
     @State private var email = Settings.emailPreference
     @State private var wantsNewsletter = false
-    
-    private var isEmailProvided: Bool {
-        !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    @State private var isSaving = false
+    @State private var hasAttempted = false
+    @State private var saveError: String?
+
+    private var trimmedFirstName: String {
+        firstName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var trimmedLastName: String {
+        lastName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var trimmedEmail: String {
+        email.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var isEmailValid: Bool {
+        UserProfile.isValidEmail(trimmedEmail)
+    }
+
+    private var canSubmit: Bool {
+        !trimmedFirstName.isEmpty && isEmailValid
     }
 
     @Environment(\.dismiss)
@@ -93,17 +134,35 @@ struct SignupSheet: View {
     // MARK: - Methods
 
     private func handleSignup() {
-        Settings.firstNamePreference = firstName
-        Settings.lastNamePreference = lastName
-        Settings.emailPreference = email
-        dismiss()
+        hasAttempted = true
+        saveError = nil
+        guard canSubmit else { return }
+
+        var profile = UserProfile.fromSettings()
+        profile.firstName = trimmedFirstName
+        profile.lastName = trimmedLastName.isEmpty ? nil : trimmedLastName
+        profile.email = trimmedEmail
+
+        isSaving = true
         Task {
-            await NewsletterApi.signup(
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                wantsNewsletter: wantsNewsletter
-            )
+            do {
+                try await TowerApi.updateUser(profile)
+                await MainActor.run {
+                    profile.writeToSettings()
+                    dismiss()
+                }
+                await NewsletterApi.signup(
+                    firstName: trimmedFirstName,
+                    lastName: trimmedLastName,
+                    email: trimmedEmail,
+                    wantsNewsletter: wantsNewsletter
+                )
+            } catch {
+                await MainActor.run {
+                    saveError = "Speichern fehlgeschlagen. Bitte versuche es erneut."
+                    isSaving = false
+                }
+            }
         }
     }
 

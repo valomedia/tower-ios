@@ -50,18 +50,30 @@ struct UserProfile: Codable {
 
     // MARK: - Life cycle methods
 
-    init() {
-        firstName = (Settings.firstNamePreference != "") .!! Settings.firstNamePreference
-        lastName = (Settings.lastNamePreference != "") .!! Settings.lastNamePreference
-        gender = Gender.init(rawValue: Settings.genderPreference)
-        birthdate = Self.apiBirthdate(fromPreference: Settings.birthdatePreference)
-        phone = (Settings.phonePreference != "") .!! Settings.phonePreference
-        email = (Settings.emailPreference != "") .!! Settings.emailPreference
+    init(
+        firstName: String?,
+        lastName: String?,
+        gender: Gender?,
+        birthdate: String?,
+        phone: String?,
+        email: String?
+    ) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.gender = gender
+        self.birthdate = birthdate
+        self.phone = phone
+        self.email = email
+    }
 
-        // If the birthdate is not valid, unset it.
-        if birthdate == nil && !Settings.birthdatePreference.isEmpty {
-            Settings.birthdatePreference = ""
-        }
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
+        lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
+        gender = try? container.decodeIfPresent(Gender.self, forKey: .gender)
+        birthdate = try container.decodeIfPresent(String.self, forKey: .birthdate)
+        phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        email = try container.decodeIfPresent(String.self, forKey: .email)
     }
 
     // MARK: - Properties
@@ -92,6 +104,85 @@ struct UserProfile: Codable {
 
     // MARK: - Methods
 
+    /// Build a profile from the locally cached Settings values.
+    ///
+    static func fromSettings() -> UserProfile {
+        var profile = UserProfile(
+            firstName: (Settings.firstNamePreference != "") .!! Settings.firstNamePreference,
+            lastName: (Settings.lastNamePreference != "") .!! Settings.lastNamePreference,
+            gender: Gender(rawValue: Settings.genderPreference),
+            birthdate: apiBirthdate(fromPreference: Settings.birthdatePreference),
+            phone: (Settings.phonePreference != "") .!! Settings.phonePreference,
+            email: (Settings.emailPreference != "") .!! Settings.emailPreference
+        )
+
+        if profile.birthdate == nil && !Settings.birthdatePreference.isEmpty {
+            Settings.birthdatePreference = ""
+        }
+
+        return profile
+    }
+
+    /// Synchronise the local profile cache with the server.
+    ///
+    /// On first launch after an update the server may not have a profile yet, so local data is pushed up.
+    /// Otherwise the server is treated as the source of truth.
+    ///
+    static func syncWithServer() async throws {
+        let localProfile = fromSettings()
+        do {
+            let serverProfile = try await TowerApi.getUser().user
+            if serverProfile.isEmpty {
+                if !localProfile.isEmpty {
+                    try await TowerApi.updateUser(localProfile)
+                }
+            } else {
+                serverProfile.writeToSettings()
+            }
+        } catch TowerError.notFound {
+            if !localProfile.isEmpty {
+                try await TowerApi.updateUser(localProfile)
+            }
+        }
+    }
+
+    /// True when the profile does not contain any user-supplied data.
+    ///
+    var isEmpty: Bool {
+        Self.normalized(firstName) == nil
+            && Self.normalized(lastName) == nil
+            && gender == nil
+            && Self.normalized(birthdate) == nil
+            && Self.normalized(phone) == nil
+            && Self.normalized(email) == nil
+    }
+
+    static func fromFormFields(
+        firstName: String,
+        lastName: String,
+        gender: String,
+        birthdate: String,
+        phone: String,
+        email: String
+    ) -> UserProfile {
+        UserProfile(
+            firstName: firstName.isEmpty ? nil : firstName,
+            lastName: lastName.isEmpty ? nil : lastName,
+            gender: Gender(rawValue: gender),
+            birthdate: apiBirthdate(fromPreference: birthdate),
+            phone: phone.isEmpty ? nil : phone,
+            email: email.isEmpty ? nil : email
+        )
+    }
+
+    /// Validate an e-mail address using the same rule as the backend.
+    ///
+    static func isValidEmail(_ email: String) -> Bool {
+        let trimmed = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return false }
+        return trimmed.range(of: #"^[^\s@]+@[^\s@]+\.[^\s@]+$"#, options: .regularExpression) != nil
+    }
+
     static func date(fromPreference value: String) -> Date? {
         let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedValue.isEmpty else { return nil }
@@ -101,6 +192,28 @@ struct UserProfile: Codable {
     static func apiBirthdate(fromPreference value: String) -> String? {
         guard let date = date(fromPreference: value) else { return nil }
         return apiBirthdateFormatter.string(from: date)
+    }
+
+    static func preferenceBirthdate(fromApi value: String?) -> String? {
+        guard let value, !value.isEmpty else { return nil }
+        guard let date = apiBirthdateFormatter.date(from: value) else { return nil }
+        return preferenceBirthdateFormatter.string(from: date)
+    }
+
+    /// Write this profile's data to the local Settings cache.
+    ///
+    func writeToSettings() {
+        Settings.firstNamePreference = firstName ?? ""
+        Settings.lastNamePreference = lastName ?? ""
+        Settings.genderPreference = gender?.rawValue ?? ""
+        Settings.birthdatePreference = Self.preferenceBirthdate(fromApi: birthdate) ?? ""
+        Settings.phonePreference = phone ?? ""
+        Settings.emailPreference = email ?? ""
+    }
+
+    private static func normalized(_ value: String?) -> String? {
+        guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty else { return nil }
+        return value
     }
 
 }

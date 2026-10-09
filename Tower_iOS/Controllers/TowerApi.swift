@@ -59,6 +59,34 @@ class TowerApi {
             as: RegisterUserResponse.self)
     }
 
+    /// Fetch the user's profile from the server.
+    ///
+    /// - Returns: The GetUserResponse containing the user profile.
+    /// - Throws:
+    ///
+    class func getUser() async throws -> GetUserResponse {
+        try await request(
+            "POST",
+            "/getUser",
+            ["userId": Settings.userIdPreference],
+            as: GetUserResponse.self)
+    }
+
+    /// Update the user's profile on the server.
+    ///
+    /// The server replaces the entire profile row, so all fields the caller wants to keep must be included.
+    ///
+    /// - Parameters:
+    ///   - profile: The complete profile to store.
+    /// - Throws:
+    ///
+    class func updateUser(_ profile: UserProfile) async throws {
+        try await request(
+            "POST",
+            "/updateUser",
+            UpdateUserBody(profile: profile))
+    }
+
     /// Make a request for an assistance session.
     /// 
     /// This will retrieve an access token for Azure Communication Services from the backend and add the user to the
@@ -130,7 +158,7 @@ class TowerApi {
     private class func request<T>(
         _ method: String,
         _ path: String,
-        _ body: Codable? = nil,
+        _ body: Encodable? = nil,
         as type: T.Type = [String: String].self
     ) async throws -> T where T: Decodable {
         let url = URL(string: Settings.endpointPreference + path)
@@ -164,5 +192,27 @@ class TowerApi {
         default:throw TowerError.unexpectedError
         }
     }
-    
+
+    // MARK: - Types
+
+    private struct UpdateUserBody: Encodable {
+        var userId: String
+        var profile: UserProfile
+
+        init(profile: UserProfile) {
+            self.userId = Settings.userIdPreference
+            self.profile = profile
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(userId, forKey: .userId)
+            try profile.encode(to: encoder)
+        }
+
+        enum CodingKeys: String, CodingKey {
+            case userId
+        }
+    }
+
 }

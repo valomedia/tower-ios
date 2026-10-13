@@ -27,6 +27,12 @@ struct CallSheet: View {
 
     // MARK: - Properties
 
+    let onCallEnd: () -> Void
+
+    init(onCallEnd: @escaping () -> Void = {}) {
+        self.onCallEnd = onCallEnd
+    }
+
     var body: some View {
         VStack {
             Spacer()
@@ -48,9 +54,10 @@ struct CallSheet: View {
                 .onAppear {
                     UIApplication.shared.isIdleTimerDisabled = true
                     controller.startSession(
-                        onCallEnd: { [self] in
+                        onCallEnd: { [self] hasConnectedCall in
                             Task { @MainActor in
                                 UIApplication.shared.isIdleTimerDisabled = false
+                                if hasConnectedCall { onCallEnd() }
                                 dismiss()
                             }
                         },

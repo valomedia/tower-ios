@@ -101,6 +101,7 @@ class CallController: NSObject, ObservableObject {
     private var videoHandler: VideoHandler?
     private var locationHandler: LocationHandler?
     private var dataHandler: DataHandler?
+    fileprivate var hasConnectedCall = false
     
     // MARK: - Life cycle methods
 
@@ -129,8 +130,9 @@ class CallController: NSObject, ObservableObject {
     /// Callback to invoke when the call ends.
     ///
     /// This will be called whenever the call ends, no matter the reason.
+    /// The argument indicates whether the user had connected to an assistant before the call ended.
     ///
-    var onCallEnd: (() -> Void)? = nil
+    var onCallEnd: ((Bool) -> Void)? = nil
 
     /// Callback to invoke when the call ends because of a fata Error during the initial connection.
     ///
@@ -147,7 +149,7 @@ class CallController: NSObject, ObservableObject {
     /// This will make a request to the /requestAssistance-endpoint, connect to ACS using the token returned by the
     /// endpoint and wait for an incoming call from an assistant.
     ///
-    func startSession(onCallEnd: @escaping (() -> Void), onCallError: @escaping ((Error) -> Void)) {
+    func startSession(onCallEnd: @escaping ((Bool) -> Void), onCallError: @escaping ((Error) -> Void)) {
         do {
             try audioSession.setCategory(
                 .playAndRecord,
@@ -168,6 +170,7 @@ class CallController: NSObject, ObservableObject {
             print("Failed to route audio to loudspeaker:", error)
         }
         playCallTone(AVPlayerItem.callRingbackTone, repeating: true)
+        hasConnectedCall = false
         sessionState = .initializing
 
         let callHandler = CallHandler()
@@ -359,7 +362,7 @@ class CallController: NSObject, ObservableObject {
             self.locationHandler = nil
             self.dataHandler = nil
 
-            self.onCallEnd?()
+            self.onCallEnd?(self.hasConnectedCall)
             self.onCallEnd = nil
             self.queuePosition = nil
             self.sessionState = .disconnected
@@ -569,6 +572,7 @@ class CallHandler: NSObject, CallDelegate, CallAgentDelegate {
     private func handleCallConnected(_ call: Call) {
         DispatchQueue.main.async { [weak self] in
             guard let callController = self?.callController else { return }
+            callController.hasConnectedCall = true
             callController.sessionState = .connected
             callController.playCallTone(AVPlayerItem.callStartTone)
         }

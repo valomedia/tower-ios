@@ -90,7 +90,13 @@ struct ContentView: View {
                 ErrorView(errorWrapper: errorWrapper)
             }
             .sheet(isPresented: $isPresentingCallSheet) {
-                CallSheet().interactiveDismissDisabled()
+                CallSheet(onCallEnd: startTrialAfterFirstCall)
+                    .interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $isPresentingPricingSheet, onDismiss: markTrialPricingAsSeen) {
+                NavigationView {
+                    PricingView(presentationMode: .trialStarted)
+                }
             }
             .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
                 OnboardingSheet().interactiveDismissDisabled()
@@ -103,6 +109,9 @@ struct ContentView: View {
             }
             .sheet(isPresented: $isPresentingUpdatePrompt, onDismiss: login) {
                 UpdatePrompt().interactiveDismissDisabled()
+            }
+            .onChange(of: isPresentingCallSheet) { isPresentingCallSheet in
+                if !isPresentingCallSheet { presentPricingAfterFirstCallIfNeeded() }
             }
             .onChange(of: phase) { phase in
                 if (phase == .active && env.errorWrapper == nil) { login() }
@@ -122,6 +131,10 @@ struct ContentView: View {
 
     @State private var isPresentingOpeningHours = false
 
+    @State private var isPresentingPricingSheet = false
+
+    @State private var shouldPresentPricingAfterCall = false
+
     @State private var openingHours: String = ""
 
     @State private var isPresentingUpdatePrompt = false
@@ -139,11 +152,28 @@ struct ContentView: View {
 
     // MARK: - Methods
 
+    private func startTrialAfterFirstCall() {
+        let didStartTrial = SubscriptionStatus.startTrialIfNeeded()
+        shouldPresentPricingAfterCall = didStartTrial && !SubscriptionStatus.hasSeenTrialPricing
+    }
+
+    private func presentPricingAfterFirstCallIfNeeded() {
+        guard shouldPresentPricingAfterCall else { return }
+        shouldPresentPricingAfterCall = false
+        isPresentingPricingSheet = true
+    }
+
+    private func markTrialPricingAsSeen() {
+        SubscriptionStatus.hasSeenTrialPricing = true
+        login()
+    }
+
     private func login() {
         Task {
             guard !isPresentingCallSheet 
                 && !isPresentingSignupSheet
                 && !isPresentingOnboardingSheet
+                && !isPresentingPricingSheet
                 && !isPresentingUpdatePrompt
             else { return }
             isConnected = false
@@ -183,6 +213,11 @@ struct ContentView: View {
                 }
 
                 guard !isPresentingSignupSheet else { return }
+
+                if SubscriptionStatus.hasStartedTrial && !SubscriptionStatus.hasSeenTrialPricing {
+                    isPresentingPricingSheet = true
+                    return
+                }
 
                 // Show What's New tab once per version if there are new entries.
                 if WhatsNewEntry.isUnread {

@@ -183,7 +183,7 @@ private struct PricingTierView: View {
                 return "Einführungspreis: \(offer.displayPrice) für \(periodText(for: offer))"
             case .payUpFront:
                 return "Einführungspreis: \(offer.displayPrice) für \(periodText(for: offer))"
-            @unknown default:
+            default:
                 return nil
         }
     }

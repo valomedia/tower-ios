@@ -165,6 +165,8 @@ struct ContentView: View {
                 }
                 isConnected = true
 
+                try await UserProfile.syncWithServer()
+
                 // If we don't have permissions prompt the user for permissions (and welcome them if they are new).
                 isPresentingOnboardingSheet
                     = AVAudioSession.sharedInstance().recordPermission != .granted

@@ -1,0 +1,59 @@
+//
+// Copyright (c) 2026 valo.media GmbH
+// All rights reserved.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+import Foundation
+
+// MARK: SubscriptionStatus
+
+/// Persists local subscription onboarding state.
+enum SubscriptionStatus {
+
+    // MARK: - Static properties
+
+    /// Indicates whether the user has started the initial free trial.
+    static var hasStartedTrial: Bool {
+        UserDefaults.standard.bool(forKey: trialStartedKey)
+    }
+
+    /// Indicates whether the trial pricing sheet has already been dismissed.
+    static var hasSeenTrialPricing: Bool {
+        get { UserDefaults.standard.bool(forKey: trialPricingSeenKey) }
+        set { UserDefaults.standard.set(newValue, forKey: trialPricingSeenKey) }
+    }
+
+    /// Short status text shown in the profile settings row.
+    static var profileDescription: String {
+        hasStartedTrial ? "Kostenlose Testphase" : ""
+    }
+
+    private static let trialStartedKey = "subscription_trial_started"
+    private static let trialPricingSeenKey = "subscription_trial_pricing_seen"
+
+    // MARK: - Static methods
+
+    /// Starts the free trial if it has not already started.
+    ///
+    /// - Returns: `true` when this call started the trial.
+    @discardableResult
+    static func startTrialIfNeeded() -> Bool {
+        guard !hasStartedTrial else { return false }
+        UserDefaults.standard.set(true, forKey: trialStartedKey)
+        return true
+    }
+
+}

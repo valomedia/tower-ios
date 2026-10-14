@@ -1,15 +1,12 @@
 {
   "images": [
     {
-      "filename": "SubscriptionBasic.svg",
+      "filename": "SubscriptionBasic.png",
       "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }

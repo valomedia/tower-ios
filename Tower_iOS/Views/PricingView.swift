@@ -34,6 +34,13 @@ struct PricingView: View {
         case trialStarted
     }
 
+    private enum Layout {
+        static let contentSpacing: CGFloat = 24
+        static let headerSpacing: CGFloat = 8
+        static let tierSpacing: CGFloat = 16
+        static let infoCardCornerRadius: CGFloat = 16
+    }
+
     // MARK: - Properties
 
     /// Controls the copy and actions used for this presentation.
@@ -41,7 +48,7 @@ struct PricingView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: Layout.contentSpacing) {
                 header
                 freeMinutes
                 pricingTiers
@@ -70,7 +77,7 @@ struct PricingView: View {
     private var dismiss
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Layout.headerSpacing) {
             if presentationMode == .trialStarted {
                 Text("Deine kostenlose Testphase läuft")
                     .font(.title.bold())
@@ -90,11 +97,11 @@ struct PricingView: View {
             .font(.headline)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: Layout.infoCardCornerRadius))
     }
 
     private var pricingTiers: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Layout.tierSpacing) {
             if let errorMessage = pricingProducts.errorMessage {
                 Text(errorMessage)
                     .font(.footnote)
@@ -120,7 +127,7 @@ struct PricingView: View {
         .font(.headline)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: Layout.infoCardCornerRadius))
     }
 
     @ViewBuilder

@@ -112,6 +112,17 @@ struct PricingView: View {
 
 private struct PricingTierView: View {
 
+    // MARK: - Types
+
+    private enum Layout {
+        static let artworkSize: CGFloat = 72
+        static let cardCornerRadius: CGFloat = 18
+        static let cardBorderWidth: CGFloat = 3
+        static let cardSpacing: CGFloat = 16
+        static let textSpacing: CGFloat = 6
+        static let borderCircleWidth: CGFloat = 1
+    }
+
     // MARK: - Properties
 
     let tier: PricingTier
@@ -119,17 +130,17 @@ private struct PricingTierView: View {
     let hasLoadedProducts: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .top, spacing: 16) {
+        VStack(alignment: .leading, spacing: Layout.cardSpacing) {
+            HStack(alignment: .top, spacing: Layout.cardSpacing) {
                 Image(tier.imageName)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 72, height: 72)
+                    .frame(width: Layout.artworkSize, height: Layout.artworkSize)
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(.quaternary, lineWidth: 1))
+                    .overlay(Circle().stroke(.quaternary, lineWidth: Layout.borderCircleWidth))
                     .accessibilityHidden(true)
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: Layout.textSpacing) {
                     Text(displayName)
                         .font(.title3.bold())
                     Text(description)
@@ -139,7 +150,7 @@ private struct PricingTierView: View {
                 }
             }
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: Layout.textSpacing) {
                 if let introductoryOfferText {
                     Text(introductoryOfferText)
                         .font(.headline)
@@ -152,8 +163,8 @@ private struct PricingTierView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(tier.accentColor, lineWidth: 3)
+            RoundedRectangle(cornerRadius: Layout.cardCornerRadius)
+                .stroke(tier.accentColor, lineWidth: Layout.cardBorderWidth)
         )
     }
 

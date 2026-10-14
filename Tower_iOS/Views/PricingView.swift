@@ -46,16 +46,28 @@ struct PricingView: View {
                 freeMinutes
                 pricingTiers
                 guarantee
+                dismissButton
             }
             .padding()
         }
         .navigationTitle("Preise")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if presentationMode == .trialStarted {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Schließen") { dismiss() }
+                        .accessibilitySortPriority(-1)
+                }
+            }
+        }
         .dynamicTypeSize(...DynamicTypeSize.accessibility4)
         .task { await pricingProducts.load() }
     }
 
     @StateObject private var pricingProducts = PricingProducts()
+
+    @Environment(\.dismiss)
+    private var dismiss
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -65,7 +77,7 @@ struct PricingView: View {
                 Text("Du bist jetzt auf der 7-tägigen kostenlosen Testphase.")
             }
             else {
-                Text("Wähle dein Minutenpaket")
+                Text("Deine Minutenpakete")
                     .font(.title.bold())
             }
             Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
@@ -109,6 +121,19 @@ struct PricingView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+    }
+
+    @ViewBuilder
+    private var dismissButton: some View {
+        if presentationMode == .trialStarted {
+            Button {
+                dismiss()
+            } label: {
+                Text("Weiter")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.darkModeAwareProminent)
+        }
     }
 
 }

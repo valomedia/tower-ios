@@ -20,19 +20,23 @@ import Foundation
 
 // MARK: SubscriptionStatus
 
+/// Persists local subscription onboarding state.
 enum SubscriptionStatus {
 
     // MARK: - Static properties
 
+    /// Indicates whether the user has started the initial free trial.
     static var hasStartedTrial: Bool {
         UserDefaults.standard.bool(forKey: trialStartedKey)
     }
 
+    /// Indicates whether the trial pricing sheet has already been dismissed.
     static var hasSeenTrialPricing: Bool {
         get { UserDefaults.standard.bool(forKey: trialPricingSeenKey) }
         set { UserDefaults.standard.set(newValue, forKey: trialPricingSeenKey) }
     }
 
+    /// Short status text shown in the profile settings row.
     static var profileDescription: String {
         hasStartedTrial ? "Kostenlose Testphase" : ""
     }
@@ -42,6 +46,9 @@ enum SubscriptionStatus {
 
     // MARK: - Static methods
 
+    /// Starts the free trial if it has not already started.
+    ///
+    /// - Returns: `true` when this call started the trial.
     @discardableResult
     static func startTrialIfNeeded() -> Bool {
         guard !hasStartedTrial else { return false }

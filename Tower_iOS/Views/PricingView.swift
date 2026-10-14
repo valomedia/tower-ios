@@ -21,17 +21,22 @@ import SwiftUI
 
 // MARK: PricingView
 
+/// Displays the subscription tiers and StoreKit pricing details.
 struct PricingView: View {
 
     // MARK: - Types
 
+    /// Describes the context in which the pricing screen is presented.
     enum PresentationMode {
+        /// The screen is opened from the profile settings.
         case profile
+        /// The screen is shown after the user's trial has started.
         case trialStarted
     }
 
     // MARK: - Properties
 
+    /// Controls the copy and actions used for this presentation.
     let presentationMode: PresentationMode
 
     var body: some View {

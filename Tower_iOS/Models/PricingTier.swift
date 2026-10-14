@@ -22,22 +22,29 @@ import SwiftUI
 
 // MARK: PricingTier
 
+/// A monthly subscription tier sold through App Store Connect.
 enum PricingTier: String, CaseIterable, Identifiable {
 
     // MARK: - Cases
 
+    /// The smallest monthly minutes package.
     case mini
+    /// The default monthly minutes package.
     case basic
+    /// The largest monthly minutes package.
     case power
 
     // MARK: - Properties
 
+    /// The stable identifier used by SwiftUI lists.
     var id: String { rawValue }
 
+    /// The StoreKit product identifier configured in App Store Connect.
     var productID: String {
         "media.valo.towerios.\(rawValue).1month.1"
     }
 
+    /// Number of remote-assistance minutes included each month.
     var includedMinutes: Int {
         switch self {
             case .mini: return 20
@@ -46,6 +53,7 @@ enum PricingTier: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Accent color used for the tier artwork and pricing card outline.
     var accentColor: Color {
         switch self {
             case .mini: return Color(red: 227 / 255, green: 181 / 255, blue: 5 / 255)
@@ -54,6 +62,7 @@ enum PricingTier: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Local display name used while StoreKit data is unavailable.
     var fallbackDisplayName: String {
         switch self {
             case .mini: return "Mini"
@@ -62,10 +71,12 @@ enum PricingTier: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Local description used while StoreKit data is unavailable.
     var fallbackDescription: String {
         "\(includedMinutes) Minuten Fernassistenz pro Monat"
     }
 
+    /// Asset catalog image name for the tier artwork.
     var imageName: String {
         "Subscription\(fallbackDisplayName)"
     }
@@ -74,18 +85,24 @@ enum PricingTier: String, CaseIterable, Identifiable {
 
 // MARK: - PricingProducts
 
+/// Loads and caches StoreKit products for all pricing tiers.
 @MainActor
 final class PricingProducts: ObservableObject {
 
     // MARK: - Properties
 
+    /// Products returned by StoreKit, keyed by App Store Connect product identifier.
     @Published private(set) var products: [String: Product] = [:]
+    /// Localized message describing a failed or partial product load.
     @Published private(set) var errorMessage: String?
+    /// Indicates that at least one product lookup has completed.
     @Published private(set) var hasLoaded = false
+    /// Indicates that a product lookup is currently in progress.
     @Published private(set) var isLoading = false
 
     // MARK: - Methods
 
+    /// Loads products from StoreKit unless a successful lookup already completed.
     func load() async {
         guard !isLoading else { return }
         guard !hasLoaded || errorMessage != nil else { return }
@@ -108,6 +125,7 @@ final class PricingProducts: ObservableObject {
         }
     }
 
+    /// Returns the StoreKit product for a pricing tier when it is available.
     func product(for tier: PricingTier) -> Product? {
         products[tier.productID]
     }

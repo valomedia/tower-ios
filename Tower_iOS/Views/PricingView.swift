@@ -182,8 +182,6 @@ private struct PricingTierView: View {
                         .font(.title3.bold())
                     Text(description)
                         .foregroundStyle(.secondary)
-                    Text("\(tier.includedMinutes) Minuten pro Monat")
-                        .font(.subheadline.weight(.semibold))
                 }
             }
 

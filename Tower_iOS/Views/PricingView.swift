@@ -84,7 +84,7 @@ struct PricingView: View {
                 Text("Du bist jetzt auf der 7-tägigen kostenlosen Testphase.")
             }
             else {
-                Text("Deine Minutenpakete")
+                Text("Unsere Minutenpakete")
                     .font(.title.bold())
             }
             Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")

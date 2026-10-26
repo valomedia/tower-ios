@@ -122,7 +122,7 @@ struct ProfileEditView: View {
 
             Section("Weitere Einstellungen") {
                 NavigationLink {
-                    PricingView(presentationMode: .profile)
+                    PricingScreen()
                 } label: {
                     HStack {
                         Label("Abonnement", systemImage: "creditcard")

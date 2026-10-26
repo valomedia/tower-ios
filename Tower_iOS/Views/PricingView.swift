@@ -19,77 +19,113 @@
 import StoreKit
 import SwiftUI
 
-// MARK: PricingView
+// MARK: PricingSheet
 
-/// Displays the subscription tiers and StoreKit pricing details.
-struct PricingView: View {
-
-    // MARK: - Types
-
-    /// Describes the context in which the pricing screen is presented.
-    enum PresentationMode {
-        /// The screen is opened from the profile settings.
-        case profile
-        /// The screen is shown after the user's trial has started.
-        case trialStarted
-    }
-
-    private enum Layout {
-        static let contentSpacing: CGFloat = 24
-        static let headerSpacing: CGFloat = 8
-        static let tierSpacing: CGFloat = 16
-        static let infoCardCornerRadius: CGFloat = 16
-    }
+/// Pricing presentation shown after the user's free trial starts.
+struct PricingSheet: View {
 
     // MARK: - Properties
 
-    /// Controls the copy and actions used for this presentation.
-    let presentationMode: PresentationMode
-
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Layout.contentSpacing) {
-                header
-                freeMinutes
-                pricingTiers
-                guarantee
-                dismissButton
+        NavigationView {
+            PricingView {
+                VStack(alignment: .leading, spacing: PricingViewLayout.headerSpacing) {
+                    Text("Deine kostenlose Testphase läuft")
+                        .font(.title.bold())
+                    Text("Du bist jetzt auf der 7-tägigen kostenlosen Testphase.")
+                    Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
+                        .foregroundStyle(.secondary)
+                }
+            } footer: {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Weiter")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.darkModeAwareProminent)
             }
-            .padding()
-        }
-        .navigationTitle("Preise")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            if presentationMode == .trialStarted {
+            .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Schließen") { dismiss() }
                         .accessibilitySortPriority(-1)
                 }
             }
         }
+        .navigationViewStyle(.stack)
+    }
+
+    @Environment(\.dismiss)
+    private var dismiss
+
+}
+
+// MARK: - PricingScreen
+
+/// Pricing screen opened from profile settings.
+struct PricingScreen: View {
+
+    // MARK: - Properties
+
+    var body: some View {
+        PricingView {
+            VStack(alignment: .leading, spacing: PricingViewLayout.headerSpacing) {
+                Text("Unsere Minutenpakete")
+                    .font(.title.bold())
+                Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
+                    .foregroundStyle(.secondary)
+            }
+        } footer: {
+            EmptyView()
+        }
+    }
+
+}
+
+// MARK: - PricingViewLayout
+
+private enum PricingViewLayout {
+    static let contentSpacing: CGFloat = 24
+    static let headerSpacing: CGFloat = 8
+    static let tierSpacing: CGFloat = 16
+    static let infoCardCornerRadius: CGFloat = 16
+}
+
+// MARK: - PricingView
+
+/// Displays the subscription tiers and StoreKit pricing details.
+private struct PricingView<Header: View, Footer: View>: View {
+
+    // MARK: - Properties
+
+    let header: Header
+    let footer: Footer
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: PricingViewLayout.contentSpacing) {
+                header
+                freeMinutes
+                pricingTiers
+                guarantee
+                footer
+            }
+            .padding()
+        }
+        .navigationTitle("Preise")
+        .navigationBarTitleDisplayMode(.inline)
         .dynamicTypeSize(...DynamicTypeSize.accessibility4)
         .task { await pricingProducts.load() }
     }
 
     @StateObject private var pricingProducts = PricingProducts()
 
-    @Environment(\.dismiss)
-    private var dismiss
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: Layout.headerSpacing) {
-            if presentationMode == .trialStarted {
-                Text("Deine kostenlose Testphase läuft")
-                    .font(.title.bold())
-                Text("Du bist jetzt auf der 7-tägigen kostenlosen Testphase.")
-            }
-            else {
-                Text("Unsere Minutenpakete")
-                    .font(.title.bold())
-            }
-            Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
-                .foregroundStyle(.secondary)
-        }
+    init(
+        @ViewBuilder header: () -> Header,
+        @ViewBuilder footer: () -> Footer
+    ) {
+        self.header = header()
+        self.footer = footer()
     }
 
     private var freeMinutes: some View {
@@ -97,11 +133,11 @@ struct PricingView: View {
             .font(.headline)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: Layout.infoCardCornerRadius))
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: PricingViewLayout.infoCardCornerRadius))
     }
 
     private var pricingTiers: some View {
-        VStack(spacing: Layout.tierSpacing) {
+        VStack(spacing: PricingViewLayout.tierSpacing) {
             if let errorMessage = pricingProducts.errorMessage {
                 Text(errorMessage)
                     .font(.footnote)
@@ -127,20 +163,7 @@ struct PricingView: View {
         .font(.headline)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: Layout.infoCardCornerRadius))
-    }
-
-    @ViewBuilder
-    private var dismissButton: some View {
-        if presentationMode == .trialStarted {
-            Button {
-                dismiss()
-            } label: {
-                Text("Weiter")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.darkModeAwareProminent)
-        }
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: PricingViewLayout.infoCardCornerRadius))
     }
 
 }
@@ -258,7 +281,7 @@ class PricingView_Previews: PreviewProvider {
 
     static var previews: some View {
         NavigationView {
-            PricingView(presentationMode: .trialStarted)
+            PricingScreen()
         }
     }
 

@@ -94,9 +94,7 @@ struct ContentView: View {
                     .interactiveDismissDisabled()
             }
             .sheet(isPresented: $isPresentingPricingSheet, onDismiss: markTrialPricingAsSeen) {
-                NavigationView {
-                    PricingView(presentationMode: .trialStarted)
-                }
+                PricingSheet()
             }
             .sheet(isPresented: $isPresentingOnboardingSheet, onDismiss: login) {
                 OnboardingSheet().interactiveDismissDisabled()

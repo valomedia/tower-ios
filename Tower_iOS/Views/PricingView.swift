@@ -126,32 +126,32 @@ private struct PricingTierView: View {
     let hasLoadedProducts: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Layout.cardSpacing) {
-            HStack(alignment: .top, spacing: Layout.cardSpacing) {
-                Image(tier.imageName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: Layout.artworkSize, height: Layout.artworkSize)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(.quaternary, lineWidth: Layout.borderCircleWidth))
-                    .accessibilityHidden(true)
+        HStack(alignment: .top, spacing: Layout.cardSpacing) {
+            Image(tier.imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: Layout.artworkSize, height: Layout.artworkSize)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(.quaternary, lineWidth: Layout.borderCircleWidth))
+                .accessibilityHidden(true)
 
+            VStack(alignment: .leading, spacing: Layout.cardSpacing) {
                 VStack(alignment: .leading, spacing: Layout.textSpacing) {
                     Text(displayName)
                         .font(.title3.bold())
                     Text(description)
                         .foregroundStyle(.secondary)
                 }
-            }
 
-            VStack(alignment: .leading, spacing: Layout.textSpacing) {
-                if let introductoryOfferText {
-                    Text(introductoryOfferText)
+                VStack(alignment: .leading, spacing: Layout.textSpacing) {
+                    if let introductoryOfferText {
+                        Text(introductoryOfferText)
+                            .font(.headline)
+                    }
+
+                    Text(priceText)
                         .font(.headline)
                 }
-
-                Text(priceText)
-                    .font(.headline)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

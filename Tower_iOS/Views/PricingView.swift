@@ -19,74 +19,10 @@
 import StoreKit
 import SwiftUI
 
-// MARK: PricingSheet
-
-/// Pricing presentation shown after the user's free trial starts.
-struct PricingSheet: View {
-
-    // MARK: - Properties
-
-    var body: some View {
-        NavigationView {
-            PricingView {
-                VStack(alignment: .leading, spacing: PricingViewLayout.headerSpacing) {
-                    Text("Deine kostenlose Testphase läuft")
-                        .font(.title.bold())
-                    Text("Du bist jetzt auf der 7-tägigen kostenlosen Testphase.")
-                    Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
-                        .foregroundStyle(.secondary)
-                }
-            } footer: {
-                Button {
-                    dismiss()
-                } label: {
-                    Text("Weiter")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.darkModeAwareProminent)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Schließen") { dismiss() }
-                        .accessibilitySortPriority(-1)
-                }
-            }
-        }
-        .navigationViewStyle(.stack)
-    }
-
-    @Environment(\.dismiss)
-    private var dismiss
-
-}
-
-// MARK: - PricingScreen
-
-/// Pricing screen opened from profile settings.
-struct PricingScreen: View {
-
-    // MARK: - Properties
-
-    var body: some View {
-        PricingView {
-            VStack(alignment: .leading, spacing: PricingViewLayout.headerSpacing) {
-                Text("Unsere Minutenpakete")
-                    .font(.title.bold())
-                Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
-                    .foregroundStyle(.secondary)
-            }
-        } footer: {
-            EmptyView()
-        }
-    }
-
-}
-
-// MARK: - PricingViewLayout
+// MARK: PricingViewLayout
 
 private enum PricingViewLayout {
     static let contentSpacing: CGFloat = 24
-    static let headerSpacing: CGFloat = 8
     static let tierSpacing: CGFloat = 16
     static let infoCardCornerRadius: CGFloat = 16
 }
@@ -94,7 +30,7 @@ private enum PricingViewLayout {
 // MARK: - PricingView
 
 /// Displays the subscription tiers and StoreKit pricing details.
-private struct PricingView<Header: View, Footer: View>: View {
+struct PricingView<Header: View, Footer: View>: View {
 
     // MARK: - Properties
 
@@ -269,20 +205,6 @@ private struct PricingTierView: View {
         }
 
         return "\(value) \(unit)"
-    }
-
-}
-
-// MARK: - PricingView_Previews
-
-class PricingView_Previews: PreviewProvider {
-
-    // MARK: - Static properties
-
-    static var previews: some View {
-        NavigationView {
-            PricingScreen()
-        }
     }
 
 }

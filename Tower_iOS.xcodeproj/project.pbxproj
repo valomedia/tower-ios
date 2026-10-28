@@ -36,6 +36,8 @@
 		E20400022E00000100000001 /* PricingTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400012E00000100000001 /* PricingTier.swift */; };
 		E20400042E00000100000001 /* SubscriptionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400032E00000100000001 /* SubscriptionStatus.swift */; };
 		E20400062E00000100000001 /* PricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400052E00000100000001 /* PricingView.swift */; };
+		E20600022E00000100000001 /* PricingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20600012E00000100000001 /* PricingScreen.swift */; };
+		E20600042E00000100000001 /* PricingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20600032E00000100000001 /* PricingSheet.swift */; };
 		E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490D2D41A0BA00C40146 /* UserProfile.swift */; };
 		E18C49102D41A0EA00C40146 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490F2D41A0EA00C40146 /* Gender.swift */; };
 		E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C49112D41A94C00C40146 /* Regex+matches.swift */; };
@@ -186,6 +188,8 @@
 		E20400012E00000100000001 /* PricingTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingTier.swift; sourceTree = "<group>"; };
 		E20400032E00000100000001 /* SubscriptionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStatus.swift; sourceTree = "<group>"; };
 		E20400052E00000100000001 /* PricingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingView.swift; sourceTree = "<group>"; };
+		E20600012E00000100000001 /* PricingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingScreen.swift; sourceTree = "<group>"; };
+		E20600032E00000100000001 /* PricingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSheet.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E1896BD12D18A45100BBB943 /* Tower_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tower_iOS.entitlements; sourceTree = "<group>"; };
 		E18C490D2D41A0BA00C40146 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
@@ -376,6 +380,8 @@
 				E9E97EB3DFB54D930AF9F92A /* NoContentView.swift */,
 				E9E97F677B23E66B4EA4066E /* OnboardingSheet.swift */,
 				E1D96C402D64F926003F187E /* OpeningHoursSheet.swift */,
+				E20600012E00000100000001 /* PricingScreen.swift */,
+				E20600032E00000100000001 /* PricingSheet.swift */,
 				E20400052E00000100000001 /* PricingView.swift */,
 				E17A00032E00000100000001 /* ProfileEditView.swift */,
 				E13F5A6B2D53C9B40067CDFD /* SignupSheet.swift */,
@@ -863,6 +869,8 @@
 				14CF25592DA7CA9E006B5C16 /* DarkModeAwareProminentButtonStyle.swift in Sources */,
 				E9E9781549327F384DC28A51 /* NoContentView.swift in Sources */,
 				E17A00042E00000100000001 /* ProfileEditView.swift in Sources */,
+				E20600022E00000100000001 /* PricingScreen.swift in Sources */,
+				E20600042E00000100000001 /* PricingSheet.swift in Sources */,
 				E20400062E00000100000001 /* PricingView.swift in Sources */,
 				E20400022E00000100000001 /* PricingTier.swift in Sources */,
 				E20400042E00000100000001 /* SubscriptionStatus.swift in Sources */,

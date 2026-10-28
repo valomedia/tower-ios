@@ -121,16 +121,13 @@ struct ProfileEditView: View {
             }
 
             Section("Weitere Einstellungen") {
-                Button {
-                    if let url = URL(string: UIApplication.openSettingsURLString) {
-                        UIApplication.shared.open(url)
-                    }
+                NavigationLink {
+                    PricingScreen()
                 } label: {
                     HStack {
-                        Label("iOS-Einstellungen öffnen", systemImage: "gear")
+                        Label("Abonnement", systemImage: "creditcard")
                         Spacer()
-                        Image(systemName: "arrow.up.forward.app")
-                            .font(.footnote)
+                        Text(SubscriptionStatus.profileDescription)
                             .foregroundStyle(.secondary)
                     }
                 }

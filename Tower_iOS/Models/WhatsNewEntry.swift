@@ -33,6 +33,29 @@ struct WhatsNewEntry: Identifiable {
     ///
     static let all: [WhatsNewEntry] = [
         WhatsNewEntry(
+            id: "v1.4.1",
+            version: "Version 1.4.1",
+            title: "Neu: Minutenpakete und Open Source",
+            body: """
+                  Ab sofort gibt es Minutenpakete. \
+                  Damit kaufst du Zeit mit unserer Assistenz. \
+                  Du wählst das Paket, \
+                  das zu dir passt, \
+                  und buchst es direkt hier in der App.
+
+                  Außerdem ist die TOWER Assist App jetzt Open Source. \
+                  Das heißt, \
+                  ihr Bauplan ist öffentlich \
+                  und alle können nachprüfen, \
+                  wie sie funktioniert. \
+                  An der Bedienung ändert sich nichts.
+
+                  Wenn du Fragen hast, \
+                  ruf uns einfach an. \
+                  Wir helfen dir gern.
+                  """
+        ),
+        WhatsNewEntry(
             id: "v1.4.0",
             version: "Version 1.4.0",
             title: "Herzlich willkommen in der TOWER Assist App",

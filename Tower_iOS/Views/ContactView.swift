@@ -49,9 +49,9 @@ struct ContactView: View {
 
                     HStack {
                         Text("Telefon:").bold()
-                        Link("0173 8406203",
-                             destination: URL(string: "tel:01738406203")!)
-                            .accessibilityLabel("Telefonnummer 0173 8406203 anrufen")
+                        Link("0173 5331781",
+                             destination: URL(string: "tel:00491735331781")!)
+                            .accessibilityLabel("Telefonnummer 0173 5331781 anrufen")
                             .accessibilityHint("Anruf starten")
                     }
 

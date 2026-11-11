@@ -33,11 +33,6 @@
 		E15F9B312CD64B0D005FBB8C /* CallQualityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */; };
 		E1638CB82C48FC5A003A8A1B /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1638CB72C48FC5A003A8A1B /* CameraController.swift */; };
 		E17A00042E00000100000001 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A00032E00000100000001 /* ProfileEditView.swift */; };
-		E20400022E00000100000001 /* PricingTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400012E00000100000001 /* PricingTier.swift */; };
-		E20400042E00000100000001 /* SubscriptionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400032E00000100000001 /* SubscriptionStatus.swift */; };
-		E20400062E00000100000001 /* PricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400052E00000100000001 /* PricingView.swift */; };
-		E20600022E00000100000001 /* PricingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20600012E00000100000001 /* PricingScreen.swift */; };
-		E20600042E00000100000001 /* PricingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20600032E00000100000001 /* PricingSheet.swift */; };
 		E18C490E2D41A0BA00C40146 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490D2D41A0BA00C40146 /* UserProfile.swift */; };
 		E18C49102D41A0EA00C40146 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C490F2D41A0EA00C40146 /* Gender.swift */; };
 		E18C49122D41A94C00C40146 /* Regex+matches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18C49112D41A94C00C40146 /* Regex+matches.swift */; };
@@ -74,6 +69,11 @@
 		E1E32B2F2D08A41F00617B34 /* RequestAssistanceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */; };
 		E1E32B312D08A42B00617B34 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B302D08A42B00617B34 /* User.swift */; };
 		E1E32B332D08C00600617B34 /* AssistanceSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */; };
+		E20400022E00000100000001 /* PricingTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400012E00000100000001 /* PricingTier.swift */; };
+		E20400042E00000100000001 /* SubscriptionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400032E00000100000001 /* SubscriptionStatus.swift */; };
+		E20400062E00000100000001 /* PricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20400052E00000100000001 /* PricingView.swift */; };
+		E20600022E00000100000001 /* PricingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20600012E00000100000001 /* PricingScreen.swift */; };
+		E20600042E00000100000001 /* PricingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20600032E00000100000001 /* PricingSheet.swift */; };
 		E9E970154CE4DA57BDFDBB82 /* CLLocationCoordinate2D+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E971BAD21CD422E07B49CA /* CLLocationCoordinate2D+Codable.swift */; };
 		E9E97019B37499CA04712337 /* Tower_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E9716E829BE958A2504321 /* Tower_iOSUITests.swift */; };
 		E9E9703F5A4E3253CBF969A2 /* Strings.stencil in Resources */ = {isa = PBXBuildFile; fileRef = E9E97449F17B1C6ABD985920 /* Strings.stencil */; };
@@ -185,11 +185,6 @@
 		E15F9B302CD64B01005FBB8C /* CallQualityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityLevel.swift; sourceTree = "<group>"; };
 		E1638CB72C48FC5A003A8A1B /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		E17A00032E00000100000001 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
-		E20400012E00000100000001 /* PricingTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingTier.swift; sourceTree = "<group>"; };
-		E20400032E00000100000001 /* SubscriptionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStatus.swift; sourceTree = "<group>"; };
-		E20400052E00000100000001 /* PricingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingView.swift; sourceTree = "<group>"; };
-		E20600012E00000100000001 /* PricingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingScreen.swift; sourceTree = "<group>"; };
-		E20600032E00000100000001 /* PricingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSheet.swift; sourceTree = "<group>"; };
 		E181F16C2BF11AE00081A83D /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		E1896BD12D18A45100BBB943 /* Tower_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tower_iOS.entitlements; sourceTree = "<group>"; };
 		E18C490D2D41A0BA00C40146 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
@@ -231,6 +226,11 @@
 		E1E32B2E2D08A41F00617B34 /* RequestAssistanceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestAssistanceResponse.swift; sourceTree = "<group>"; };
 		E1E32B302D08A42B00617B34 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E1E32B322D08C00600617B34 /* AssistanceSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistanceSessionState.swift; sourceTree = "<group>"; };
+		E20400012E00000100000001 /* PricingTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingTier.swift; sourceTree = "<group>"; };
+		E20400032E00000100000001 /* SubscriptionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStatus.swift; sourceTree = "<group>"; };
+		E20400052E00000100000001 /* PricingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingView.swift; sourceTree = "<group>"; };
+		E20600012E00000100000001 /* PricingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingScreen.swift; sourceTree = "<group>"; };
+		E20600032E00000100000001 /* PricingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingSheet.swift; sourceTree = "<group>"; };
 		E9E9700F363770A1847466DE /* TowerEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TowerEnvironment.swift; sourceTree = "<group>"; };
 		E9E9701FB102ED2BA117951D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		E9E97082EE84DC39CD0A5259 /* Settings.stencil */ = {isa = PBXFileReference; lastKnownFileType = file.stencil; path = Settings.stencil; sourceTree = "<group>"; };
@@ -1119,7 +1119,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				ENABLE_PREVIEWS = YES;
@@ -1142,7 +1142,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.5.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "media.valo.Tower-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1179,7 +1179,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Tower_iOS/Tower_iOS.entitlements;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_ASSET_PATHS = "\"Tower_iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 56PYS8YMG4;
 				ENABLE_PREVIEWS = YES;
@@ -1202,7 +1202,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.5.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "media.valo.Tower-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";

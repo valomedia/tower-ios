@@ -37,7 +37,7 @@ struct PricingSheet: View {
                 VStack(alignment: .leading, spacing: Layout.headerSpacing) {
                     Text("Deine kostenlose Testphase läuft")
                         .font(.title.bold())
-                    Text("Du bist jetzt auf der 7-tägigen kostenlosen Testphase.")
+                    Text("Du bist jetzt auf der 10-tägigen kostenlosen Testphase.")
                     Text("Alle Abos laufen monatlich und ergänzen dein kostenloses Minutenkontingent.")
                         .foregroundStyle(.secondary)
                 }
